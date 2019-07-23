@@ -1,0 +1,17 @@
+{
+  "axios": {
+    "baseURL": "https://api.kyber.network",
+    "timeout": 2000
+  },
+  "web3": {
+    "rpcURL": "https://mainnet.infura.io/v3"
+  },
+  "contracts": {
+    "KyberNetworkProxy": "0x818E6FECD516Ecc3849DAf6845e3EC868087B755",
+    "KyberNetwork": "0x9ae49C0d7F8F9EF4B864e004FE86Ac8294E20950",
+    "KyberNetworkStaging": "0x65897aDCBa42dcCA5DD162c647b1cC3E31238490",
+    "PermissionlessOrderbookReserveLister": "0x84afa106fbf9b45e369724024cae14e8c7529c26",
+    "FeeBurner": "0x52166528FCC12681aF996e409Ee3a421a4e128A3",
+    "WrapFeeBurner": "0x405A5FAE110c86eb2E5A76809a17FC5Bee2d3CcD"
+  }
+}

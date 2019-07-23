@@ -1,0 +1,47 @@
+{
+  "name": "telegram-query-bot",
+  "description": "Telegram bot for querying data from Kyber",
+  "version": "0.0.1",
+  "main": "src",
+  "contributors": [
+    "ayobuenavista",
+    "AnyhowClick",
+    "STYJ"
+  ],
+  "bugs": {
+    "url": "https://github.com/KyberNetwork/telegram-query-bot/issues"
+  },
+  "engines": {
+    "node": "^10.0.0",
+    "npm": ">= 3.0.0"
+  },
+  "scripts": {
+    "test": "npm run eslint && NODE_ENV= npm run mocha",
+    "eslint": "eslint src/. test/. --config .eslintrc.json",
+    "dev": "nodemon src/",
+    "start": "node src/"
+  },
+  "dependencies": {
+    "axios": "^0.19.0",
+    "bn.js": "^5.0.0",
+    "dotenv": "^8.0.0",
+    "telegraf": "^3.30.1",
+    "web3": "^1.0.0-beta.55",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-config-standard": "^13.0.1",
+    "eslint-friendly-formatter": "^4.0.1",
+    "eslint-import-resolver-node": "^0.3.2",
+    "eslint-loader": "^2.2.1",
+    "eslint-plugin-json": "^1.4.0",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "nodemon": "^1.19.1",
+    "prettier": "^1.18.2"
+  }
+}
