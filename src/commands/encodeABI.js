@@ -21,7 +21,7 @@ module.exports = () => {
       }
 
       try {
-        result = await KyberNetworkStaging.methods.addReserve(args[1], args[2]).encodeABI();
+        result = await KyberNetworkStaging.methods.addReserve(args[1], JSON.parse(args[2])).encodeABI();
       } catch (e) {
         reply(`ERROR: ${e}`);
         return;
@@ -38,9 +38,9 @@ module.exports = () => {
         result = await KyberNetworkStaging.methods.listPairForReserve(
           args[1],
           args[2],
-          args[3],
-          args[4],
-          args[5],
+          JSON.parse(args[3]),
+          JSON.parse(args[4]),
+          JSON.parse(args[5]),
         ).encodeABI();
       } catch (e) {
         reply(`ERROR: ${e}`);
