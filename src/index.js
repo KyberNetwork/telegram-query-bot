@@ -27,7 +27,8 @@ You can control me by sending these commands:
 /getReservesOfToken <token_symbol>
 /getTokensOfReserve <reserve_address>
 /isFeeSharingWallet <wallet_address>
-/isReserveListed <reserve_address>`,
+/isReserveListed <reserve_address>
+/update`,
     Extra.inReplyTo(ctx.message.message_id),
   );
 });

@@ -11,6 +11,7 @@ const getReservesOfToken = require('./getReservesOfToken');
 const getTokensOfReserve = require('./getTokensOfReserve');
 const isFeeSharingWallet = require('./isFeeSharingWallet');
 const isReserveListed = require('./isReserveListed');
+const update = require('./update');
 
 module.exports = app => {
   app.command('convert', convert());
@@ -36,6 +37,7 @@ module.exports = app => {
   app.command('isFeeSharingWallet', isFeeSharingWallet());
   app.command('isreservelisted', isReserveListed());
   app.command('isReserveListed', isReserveListed());
+  app.command('update', update());
 
   logger.info('Initialized commands');
 };
