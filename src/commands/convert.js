@@ -1,9 +1,11 @@
+const BN = require('bn.js');
 const Extra = require('telegraf/extra');
 
 module.exports = () => {
   return async ctx => {
-    const { axios, message, reply, replyWithMarkdown, state } = ctx;
+    const { axios, contracts, message, reply, replyWithMarkdown, state, web3 } = ctx;
     const { inReplyTo } = Extra;
+    const { KyberNetworkProxy } = contracts;
     const { args } = state.command;
 
     if (args.length !== 3) {
@@ -15,69 +17,35 @@ module.exports = () => {
     let qty = args[0];
     let srcToken = args[1].toUpperCase();
     let destToken = args[2].toUpperCase();
+    let srcQty;
     let result;
 
     srcToken = currencies.find(o => o.symbol === srcToken);
     destToken = currencies.find(o => o.symbol === destToken);
 
     if (!srcToken || !destToken) {
-      reply('Invalid source or destination token symbol.', inReplyTo(message.message_id));
+      reply('Invalid source or destination token symbol.', inReplyTo(message.message_id), Extra.markdown());
       return;
     }
 
     if (srcToken.symbol === 'ETH') {
-      result = (await axios.get('/buy_rate', {
-        params: {
-          id: destToken.address,
-          qty: qty,
-        }
-      })).data;
-
-      if (result.error) {
-        reply('Conversion for the pair is unavailable.');
-        return;
-      }
-
-      result = (qty ** 2) / result.data[0].src_qty[0];
-    } else if (destToken.symbol === 'ETH') {
-      result = (await axios.get('/sell_rate', {
-        params: {
-          id: srcToken.address,
-          qty: qty,
-        }
-      })).data;
-
-      if (result.error) {
-        reply('Conversion for the pair is unavailable.');
-        return;
-      }
-
-      result = result.data[0].dst_qty[0];
+      srcQty = web3.utils.toWei(qty);
     } else {
-      let src = (await axios.get('/sell_rate', {
-        params: {
-          id: srcToken.address,
-          qty,
-        }
-      })).data;
-
-      let dest = (await axios.get('/sell_rate', {
-        params: {
-          id: destToken.address,
-          qty,
-        }
-      })).data;
-
-      if (src.error || dest.error) {
-        reply('Conversion for the pair is unavailable.');
-        return;
-      }
-
-      src = src.data[0].dst_qty[0] / qty;
-      dest = dest.data[0].dst_qty[0] / qty;
-
-      result = (src / dest) * qty;
+      srcQty = new BN(qty).mul(new BN(String(10 ** srcToken.decimals)));
     }
+
+    result = await KyberNetworkProxy.methods.getExpectedRate(
+      srcToken.address,
+      destToken.address,
+      srcQty.toString(),
+    ).call();
+
+    if (result.expectedRate === '0') {
+      reply('Conversion for the pair is unavailable.');
+      return;
+    }
+
+    result = web3.utils.fromWei(result.expectedRate.toString()) * qty;
 
     replyWithMarkdown(`*${qty} ${srcToken.symbol} => ${result} ${destToken.symbol}*`, inReplyTo(message.message_id));
   };
