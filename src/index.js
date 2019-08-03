@@ -19,16 +19,21 @@ You can control me by sending these commands:
 /convert <qty> <srcToken_symbol> <destToken_symbol>
 /encodeABI <function> <...args>
 /getAddressOfToken <token_symbol>
-/getExpectedRate <srcToken_symbol> <destToken_symbol> <srcQty>
+/getAPRCollectedFees <reserve_address>
+/getConversionRate <reserve_address> <srcToken_symbol> <destToken_symbol> <srcQty> <blockNumber>
+/getExpectedRate <srcToken_symbol> <destToken_symbol> <srcQty> <optional: network>
 /getKNCFeeWallet <reserve_address>
 /getLiquidityParams <json_input>
 /getReserveBalances <reserve_address>
-/getReserveIndex <reserve_address>
+/getReserveFeesInBPS <reserve_address>
+/getReserveIndex <reserve_address> <optional: network>
+/getReservePaidFees <reserve_address>
 /getReservesOfToken <token_symbol>
 /getTokensOfReserve <reserve_address>
 /isFeeSharingWallet <wallet_address>
 /isReserveListed <reserve_address>
 /update`,
+
     Extra.inReplyTo(ctx.message.message_id),
   );
 });

@@ -13,7 +13,7 @@ module.exports = () => {
     }
 
     const currencies = (await axios.get('/currencies')).data.data;
-    const reserve = args[0].toLowerCase();
+    const reserve = args[0];
     const reserveABI = JSON.parse(fs.readFileSync('src/contracts/abi/KyberReserve.abi', 'utf8'));
     const reserveInstance = new web3.eth.Contract(reserveABI, reserve);
     const tokenABI = JSON.parse(fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8'));

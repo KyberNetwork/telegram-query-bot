@@ -10,6 +10,10 @@ module.exports = app => {
   const KyberNetworkProxyABI = JSON.parse(fs.readFileSync('src/contracts/abi/KyberNetworkProxy.abi', 'utf8'));
   const KyberNetworkProxy = new web3.eth.Contract(KyberNetworkProxyABI, KyberNetworkProxyAddress);
 
+  const KyberNetworkProxyStagingAddress = config.contracts.KyberNetworkProxyStaging;
+  const KyberNetworkProxyStagingABI = JSON.parse(fs.readFileSync('src/contracts/abi/KyberNetworkProxy.abi', 'utf8'));
+  const KyberNetworkProxyStaging = new web3.eth.Contract(KyberNetworkProxyStagingABI, KyberNetworkProxyStagingAddress);
+
   const KyberNetworkAddress = config.contracts.KyberNetwork;
   const KyberNetworkABI = JSON.parse(fs.readFileSync('src/contracts/abi/KyberNetwork.abi', 'utf8'));
   const KyberNetwork = new web3.eth.Contract(KyberNetworkABI, KyberNetworkAddress);
@@ -32,6 +36,7 @@ module.exports = app => {
 
   app.context.contracts = {
     KyberNetworkProxy,
+    KyberNetworkProxyStaging,
     KyberNetwork,
     KyberNetworkStaging,
     FeeBurner,
