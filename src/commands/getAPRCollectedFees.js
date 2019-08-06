@@ -38,6 +38,6 @@ module.exports = () => {
 
     const result = await conversionRatesInstance.methods.collectedFeesInTwei().call();
 
-    replyWithMarkdown(`*${new BN(result.toString()).div(new BN(String(10 ** token.decimals)))} ${token.symbol}*`, inReplyTo(message.message_id));
+    replyWithMarkdown(`*${new BN(result.toString()) / new BN(String(10 ** token.decimals))} ${token.symbol}*`, inReplyTo(message.message_id));
   };
 };
