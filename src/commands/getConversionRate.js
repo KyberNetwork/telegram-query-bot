@@ -34,7 +34,7 @@ module.exports = () => {
     if (srcToken.symbol === 'ETH') {
       srcQty = web3.utils.toWei(srcQty);
     } else {
-      srcQty = new BN(srcQty).mul(new BN(String(10 ** srcToken.decimals)));
+      srcQty = Math.round(srcQty * (10 ** srcToken.decimals)).toString();
     }
 
     if (blockNumber == 'latest') {

@@ -31,7 +31,7 @@ module.exports = () => {
     if (srcToken.symbol === 'ETH') {
       srcQty = web3.utils.toWei(qty);
     } else {
-      srcQty = new BN(qty).mul(new BN(String(10 ** srcToken.decimals)));
+      srcQty = Math.round(qty * (10 ** srcToken.decimals)).toString();
     }
 
     result = await KyberNetworkProxy.methods.getExpectedRate(
