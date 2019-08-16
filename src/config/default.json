@@ -4,7 +4,7 @@
     "timeout": 2000
   },
   "web3": {
-    "rpcURL": "https://mainnet.infura.io/v3"
+    "rpcURL": "https://eth-mainnet.alchemyapi.io/jsonrpc"
   },
   "contracts": {
     "KyberNetworkProxy": "0x818E6FECD516Ecc3849DAf6845e3EC868087B755",

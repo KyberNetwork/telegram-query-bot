@@ -1,5 +1,5 @@
-const BN = require('bn.js');
 const Extra = require('telegraf/extra');
+const fs = require('fs');
 
 module.exports = () => {
   return async ctx => {
@@ -14,22 +14,38 @@ module.exports = () => {
     }
 
     const currencies = (await axios.get('/currencies')).data.data;
-    let srcToken = args[0].toUpperCase();
-    let destToken = args[1].toUpperCase();
+    const tokenABI = JSON.parse(fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8'));
+    let srcToken = args[0];
+    let destToken = args[1];
     let srcQty = args[2];
 
-    srcToken = currencies.find(o => o.symbol === srcToken);
-    destToken = currencies.find(o => o.symbol === destToken);
+    if (!srcToken.startsWith('0x')) {
+      srcToken = currencies.find(o => o.symbol === srcToken.toUpperCase());
+    } else if (srcToken.length === 42 && srcToken.startsWith('0x')) {
+      srcToken = { address: srcToken };
+    } else {
+      srcToken = undefined;
+    }
+
+    if (!destToken.startsWith('0x')) {
+      destToken = currencies.find(o => o.symbol === destToken.toUpperCase());
+    } else if (destToken.length === 42 && destToken.startsWith('0x')) {
+      destToken = { address: destToken };
+    } else {
+      destToken = undefined;
+    }
 
     if (!srcToken || !destToken) {
-      reply('Invalid source or destination token symbol.', inReplyTo(message.message_id), Extra.markdown());
+      reply('Invalid source or destination token symbol or address.', inReplyTo(message.message_id), Extra.markdown());
       return;
     }
 
-    if (srcToken.symbol === 'ETH') {
+    if (srcToken.symbol === 'ETH' || srcToken.address.toLowerCase() === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
       srcQty = web3.utils.toWei(srcQty);
     } else {
-      srcQty = Math.round(srcQty * (10 ** srcToken.decimals)).toString();
+      const srcTokenInstance = new web3.eth.Contract(tokenABI, srcToken.address);
+      const decimals = srcToken.decimals || await srcTokenInstance.methods.decimals().call();
+      srcQty = Math.round(srcQty * (10 ** decimals)).toString();
     }
 
     let result;
