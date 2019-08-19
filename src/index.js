@@ -17,6 +17,7 @@ app.help(ctx => {
 You can control me by sending these commands:
 
 /convert <qty> <srcToken_symbol> <destToken_symbol>
+/debugReserve <token_symbol> <reserve_address>
 /encodeABI <function> <...args>
 /getAddressOfToken <token_symbol>
 /getAPRCollectedFees <reserve_address>

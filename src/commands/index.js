@@ -1,5 +1,6 @@
 const logger = require('../logger');
 const convert = require('./convert');
+const debugReserve = require('./debugReserve');
 const encodeABI = require('./encodeABI');
 const getAddressOfToken = require('./getAddressOfToken');
 const getAPRCollectedFees = require('./getAPRCollectedFees');
@@ -19,6 +20,8 @@ const update = require('./update');
 
 module.exports = app => {
   app.command('convert', convert());
+  app.command('debugreserve', debugReserve());
+  app.command('debugReserve', debugReserve());
   app.command('encodeabi', encodeABI());
   app.command('encodeABI', encodeABI());
   app.command('getaddressoftoken', getAddressOfToken());

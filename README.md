@@ -13,13 +13,16 @@ $ npm install
 
 ### Setup
 
-Create an .env file in the root directory, containing your Infura project ID and Telegram bot token. Note: Omit the bot prefix in the Telegram token.
+1) Create an .env file in the root directory, containing your node API key and Telegram bot token. Note: Omit the bot prefix in the Telegram token.
 
 e.g.
 ```
-INFURA_PROJECT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+NODE_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 TELEGRAM_TOKEN=xxxxxxxxx:xxxxxxxxxxxxxxxxxxxx-xxxxxxxxxxxxxx
 ```
+
+2) Edit the `rpcURL` in `./src/config/default.json` if you are using Infura or your own node.
+
 
 ### Running
 
@@ -40,6 +43,11 @@ Send the following commands directly to the bot or in a group where the bot is p
 Converts one token to another given a quantity.
 ```
 /convert <qty> <srcToken_symbol> <destToken_symbol>
+```
+
+Debugs a reserve to find out why it's returning zero rate(s)
+```
+/debugReserve <token_symbol> <reserve_address>
 ```
 
 Encodes the ABI for certain methods. This can be used to send a transaction, call a method, or pass it into another smart contracts method as arguments.
