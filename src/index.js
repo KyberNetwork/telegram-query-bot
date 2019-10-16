@@ -25,6 +25,7 @@ You can control me by sending these commands:
 /getExpectedRate <srcToken_symbol> <destToken_symbol> <srcQty> <optional: network>
 /getKNCFeeWallet <reserve_address>
 /getLiquidityParams <json_input>
+/getLiquidityRate <eth> <pmin>
 /getReserveBalances <reserve_address>
 /getReserveFeesInBPS <reserve_address>
 /getReserveIndex <reserve_address> <optional: network>

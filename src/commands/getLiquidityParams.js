@@ -86,7 +86,7 @@ module.exports = () => {
     const { args } = state.command;
 
     if (Object.entries(args).length === 0 || args.length > 0) {
-      reply('ERROR: Invalid JSON passed.');
+      reply('ERROR: Invalid JSON passed.', inReplyTo(sent.message_id));
       return;
     }
 

@@ -49,7 +49,7 @@ module.exports = () => {
     }
 
     let result;
-    if (args[3] && args[3] === 'staging') {
+    if (args[3] && args[3].toLowerCase() === 'staging') {
       result = await KyberNetworkProxyStaging.methods.getExpectedRate(
         srcToken.address,
         destToken.address,

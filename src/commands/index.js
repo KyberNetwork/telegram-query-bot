@@ -8,6 +8,7 @@ const getConversionRate = require('./getConversionRate');
 const getExpectedRate = require('./getExpectedRate');
 const getKNCFeeWallet = require('./getKNCFeeWallet');
 const getLiquidityParams = require('./getLiquidityParams');
+const getLiquidityRate = require('./getLiquidityRate');
 const getReserveBalances = require('./getReserveBalances');
 const getReserveFeesInBPS = require('./getReserveFeesInBPS');
 const getReserveIndex = require('./getReserveIndex');
@@ -36,6 +37,8 @@ module.exports = app => {
   app.command('getKNCFeeWallet', getKNCFeeWallet());
   app.command('getliquidityparams', getLiquidityParams());
   app.command('getLiquidityParams', getLiquidityParams());
+  app.command('getliquidityrate', getLiquidityRate());
+  app.command('getLiquidityRate', getLiquidityRate());
   app.command('getreservebalances', getReserveBalances());
   app.command('getReserveBalances', getReserveBalances());
   app.command('getreservefeesinbps', getReserveFeesInBPS());

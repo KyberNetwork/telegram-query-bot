@@ -2,9 +2,9 @@ const Extra = require('telegraf/extra');
 
 module.exports = () => {
   return async ctx => {
-    const { contracts, message, reply, replyWithMarkdown, state } = ctx;
+    const { contracts, message, reply, replyWithMarkdown, state, web3 } = ctx;
     const { inReplyTo } = Extra;
-    const { KyberNetworkStaging } = contracts;
+    const { KyberNetworkStaging, KyberReserve } = contracts;
     const { args } = state.command;
     let result;
 
@@ -56,6 +56,48 @@ module.exports = () => {
 
       try {
         result = await KyberNetworkStaging.methods.removeReserve(args[1], args[2]).encodeABI();
+      } catch (e) {
+        reply(`ERROR: ${e}`);
+        return;
+      }
+
+      break;
+    case 'approvewithdrawaddress':
+      const account = web3.eth.accounts.privateKeyToAccount('0xfcbe1f277e55194746d35dc1981c67eaad96d4bd68cc859d7c69eca345b77a71');
+      
+      if (args.length-1 !== 3) {
+        reply(`ERROR: Invalid number of arguments. ${args.length-1} of 3 provided.`);
+        return;
+      }
+
+      try {
+        const txObject = KyberReserve.methods.approveWithdrawAddress(args[1], args[2], args[3]);
+        const nonce = 14;
+        const txData = txObject.encodeABI();
+        const txFrom = account.address;
+        const txTo = '0x0dFB149316f04B022F86095c864e1265b1c0Eb5F';
+        const txValue = 0;
+        const txKey = account.privateKey;
+        let gas_limit;
+      
+        try {
+          gas_limit = 1600000;
+        } catch (e) {
+          gas_limit = 100000;
+        }
+      
+        const txParams = {
+          from: txFrom,
+          to: txTo,
+          data: txData,
+          value: txValue,
+          gas: gas_limit,
+          gasPrice: 20000000000,
+          nonce: nonce
+        };
+        
+        result = await web3.eth.accounts.signTransaction(txParams, txKey);
+        console.log(result);
       } catch (e) {
         reply(`ERROR: ${e}`);
         return;

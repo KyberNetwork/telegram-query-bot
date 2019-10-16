@@ -15,7 +15,7 @@ module.exports = () => {
     const reserve = args[0].toLowerCase();
 
     let reserves;
-    if (args[1] && args[1] === 'staging') {
+    if (args[1] && args[1].toLowerCase() === 'staging') {
       reserves = await KyberNetworkStaging.methods.getReserves().call();
     } else {
       reserves = await KyberNetwork.methods.getReserves().call();
