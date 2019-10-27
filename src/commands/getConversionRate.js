@@ -49,7 +49,7 @@ module.exports = () => {
     } else {
       const srcTokenInstance = new web3.eth.Contract(tokenABI, srcToken.address);
       const decimals = srcToken.decimals || await srcTokenInstance.methods.decimals().call();
-      srcQty = Math.round(srcQty * (10 ** decimals)).toString();
+      srcQty = Math.round(srcQty * (10 ** decimals)).toLocaleString('fullwide', {useGrouping:false});
     }
 
     if (blockNumber == 'latest') {

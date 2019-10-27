@@ -1,4 +1,3 @@
-const BN = require('bn.js');
 const Extra = require('telegraf/extra');
 
 module.exports = () => {
@@ -31,7 +30,7 @@ module.exports = () => {
     if (srcToken.symbol === 'ETH') {
       srcQty = web3.utils.toWei(qty);
     } else {
-      srcQty = Math.round(qty * (10 ** srcToken.decimals)).toString();
+      srcQty = Math.round(qty * (10 ** srcToken.decimals)).toLocaleString('fullwide', {useGrouping:false});
     }
 
     result = await KyberNetworkProxy.methods.getExpectedRate(
