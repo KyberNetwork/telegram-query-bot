@@ -8,11 +8,11 @@
   },
   "contracts": {
     "KyberNetworkProxy": "0x818E6FECD516Ecc3849DAf6845e3EC868087B755",
-    "KyberNetworkProxyStaging": "0xC14f34233071543E979F6A79AA272b0AB1B4947D",
-    "KyberNetwork": "0x9ae49C0d7F8F9EF4B864e004FE86Ac8294E20950",
-    "KyberNetworkStaging": "0x65897aDCBa42dcCA5DD162c647b1cC3E31238490",
-    "PermissionlessOrderbookReserveLister": "0x84afa106fbf9b45e369724024cae14e8c7529c26",
-    "FeeBurner": "0x52166528FCC12681aF996e409Ee3a421a4e128A3",
-    "WrapFeeBurner": "0x405A5FAE110c86eb2E5A76809a17FC5Bee2d3CcD"
+    "KyberNetworkProxyStaging": "0x6326dd73E368c036D4C4997053a021CBc52c7367",
+    "KyberNetwork": "0x65bF64Ff5f51272f729BDcD7AcFB00677ced86Cd",
+    "KyberNetworkStaging": "0xafBf0D08269a7eEe8d587121f3B0616c8CeF5077",
+    "PermissionlessOrderbookReserveLister": "0xc19bD6b976abC0AD70394Fbb3EDEe741fce9509e",
+    "FeeBurner": "0x8007aa43792A392b221DC091bdb2191E5fF626d1",
+    "WrapFeeBurner": "0x3b32f992D5f98beF76C74ECbc3a16DBF2f308BaA"
   }
 }
