@@ -12,7 +12,8 @@ const getLiquidityRate = require('./getLiquidityRate');
 const getReserveBalances = require('./getReserveBalances');
 const getReserveFeesInBPS = require('./getReserveFeesInBPS');
 const getReserveIndex = require('./getReserveIndex');
-const getReservePaidFees= require('./getReservePaidFees');
+const getReservePaidFees = require('./getReservePaidFees');
+const getReservesRates = require('./getReservesRates');
 const getReservesOfToken = require('./getReservesOfToken');
 const getTokensOfReserve = require('./getTokensOfReserve');
 const isFeeSharingWallet = require('./isFeeSharingWallet');
@@ -47,6 +48,8 @@ module.exports = app => {
   app.command('getReserveIndex', getReserveIndex());
   app.command('getreservepaidfees', getReservePaidFees());
   app.command('getReservePaidFees', getReservePaidFees());
+  app.command('getreservesrates', getReservesRates());
+  app.command('getReservesRates', getReservesRates());
   app.command('getreservesoftoken', getReservesOfToken());
   app.command('getReservesOfToken', getReservesOfToken());
   app.command('gettokensofreserve', getTokensOfReserve());

@@ -30,6 +30,7 @@ You can control me by sending these commands:
 /getReserveFeesInBPS <reserve_address>
 /getReserveIndex <reserve_address> <optional: network>
 /getReservePaidFees <reserve_address>
+/getReserveRates <token_symbol> <qty>
 /getReservesOfToken <token_symbol>
 /getTokensOfReserve <reserve_address>
 /isFeeSharingWallet <wallet_address>
