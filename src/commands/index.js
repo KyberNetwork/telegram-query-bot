@@ -19,6 +19,7 @@ const getTokensOfReserve = require('./getTokensOfReserve');
 const isFeeSharingWallet = require('./isFeeSharingWallet');
 const isReserveListed = require('./isReserveListed');
 const update = require('./update');
+const whois = require('./whois');
 
 module.exports = app => {
   app.command('convert', convert());
@@ -59,6 +60,7 @@ module.exports = app => {
   app.command('isreservelisted', isReserveListed());
   app.command('isReserveListed', isReserveListed());
   app.command('update', update());
+  app.command('whois', whois());
 
   logger.info('Initialized commands');
 };
