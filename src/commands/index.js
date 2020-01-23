@@ -59,6 +59,7 @@ module.exports = app => {
   app.command('isFeeSharingWallet', isFeeSharingWallet());
   app.command('isreservelisted', isReserveListed());
   app.command('isReserveListed', isReserveListed());
+  app.command('rates', getReservesRates());
   app.command('update', update());
   app.command('whois', whois());
 
