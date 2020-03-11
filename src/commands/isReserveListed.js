@@ -2,9 +2,8 @@ const Extra = require('telegraf/extra');
 
 module.exports = () => {
   return async ctx => {
-    const { contracts, message, reply, replyWithMarkdown, state } = ctx;
+    const { helpers, message, reply, replyWithMarkdown, state } = ctx;
     const { inReplyTo } = Extra;
-    const { KyberNetwork, KyberNetworkStaging } = contracts;
     const { args } = state.command;
 
     if (args.length !== 1) {
@@ -13,19 +12,28 @@ module.exports = () => {
     }
 
     const reserve = args[0].toLowerCase();
-    const mainnetReserves = await KyberNetwork.methods.getReserves().call();
-    const stagingReserves = await KyberNetworkStaging.methods.getReserves().call();
-    const mainnetResult = mainnetReserves.findIndex(r => reserve.toLowerCase() === r.toLowerCase());
-    const stagingResult = stagingReserves.findIndex(r => reserve.toLowerCase() === r.toLowerCase());
+    const reserves = {};
+    const networks = ['mainnet', 'staging', 'ropsten', 'rinkeby', 'kovan'];
+    let getReserves;
+    let result;
 
-    if (mainnetResult === -1 && stagingResult === -1) {
-      replyWithMarkdown('*Reserve not found.*', inReplyTo(message.message_id));
-    } else if (mainnetResult !== -1 && stagingResult !== -1) {
-      replyWithMarkdown('*Mainnet and Staging*', inReplyTo(message.message_id));
-    } else if (mainnetResult !== -1) {
-      replyWithMarkdown('*Mainnet*', inReplyTo(message.message_id));
-    } else if (stagingResult !== -1) {
-      replyWithMarkdown('*Staging*', inReplyTo(message.message_id));      
+    for (let i in networks) {
+      getReserves = helpers.getNetworkFunction(networks[i], 'getReserves');
+      result = await getReserves().call();
+      reserves[networks[i]] = result.findIndex(r => reserve.toLowerCase() === r.toLowerCase());
+    }
+
+    let msg = '';
+    Object.keys(reserves).forEach(network => {
+      if (reserves[network] !== -1) {
+        msg = msg.concat(`**${network}**\n`);
+      }
+    });
+
+    if (msg === '') {
+      replyWithMarkdown('*Reserve not found on any network.*', inReplyTo(message.message_id));
+    } else {
+      replyWithMarkdown(msg, inReplyTo(message.message_id));
     }
   };
 };

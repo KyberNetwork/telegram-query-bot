@@ -3,6 +3,7 @@ require('dotenv').config();
 const Telegraf = require('telegraf');
 const commands = require('./commands');
 const contracts = require('./contracts');
+const helpers = require('./helpers');
 const middleware = require('./middleware');
 const handlers = require('./handlers');
 const plugins = require('./plugins');
@@ -18,5 +19,6 @@ middleware(app);
 commands(app);
 contracts(app);
 handlers(app);
+helpers(app);
 
 module.exports = app;

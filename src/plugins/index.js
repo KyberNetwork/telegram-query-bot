@@ -1,10 +1,10 @@
 const logger = require('../logger');
 const axios = require('./axios');
-const web3 = require('./web3');
+const ethereum = require('./ethereum');
 
 module.exports = app => {
   app.context.axios = axios;
-  app.context.web3 = web3;
+  app.context.ethereum = ethereum;
 
   logger.info('Initialized plugins');
 };

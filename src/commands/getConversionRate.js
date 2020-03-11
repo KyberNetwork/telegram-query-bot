@@ -3,15 +3,17 @@ const fs = require('fs');
 
 module.exports = () => {
   return async ctx => {
-    const { axios, message, reply, replyWithMarkdown, state, web3 } = ctx;
+    const { axios, helpers, message, reply, replyWithMarkdown, state } = ctx;
     const { inReplyTo } = Extra;
     const { args } = state.command;
 
-    if (args.length !== 5) {
-      reply(`ERROR: Invalid number of arguments. ${args.length} of 5 provided.`);
+    if (args.length < 5) {
+      reply(`ERROR: Invalid number of arguments. ${args.length} of required 5 provided.`);
       return;
     }
 
+    const network = (args[5]) ? args[5].toLowerCase() : 'mainnet';
+    const web3 = helpers.getWeb3(network);
     const currencies = (await axios.get('/currencies')).data.data;
     let reserve = args[0];
     let srcToken = args[1];
@@ -23,17 +25,33 @@ module.exports = () => {
     const reserveInstance = new web3.eth.Contract(reserveABI, reserve);
     const tokenABI = JSON.parse(fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8'));
 
-    if (!srcToken.startsWith('0x')) {
+    if (srcToken.toUpperCase() === 'ETH') {
+      srcToken = { address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' };
+    } else if (
+      !srcToken.startsWith('0x') &&
+      (network.toLowerCase() == 'mainnet' || network.toLowerCase() == 'staging')
+    ) {
       srcToken = currencies.find(o => o.symbol === srcToken.toUpperCase());
-    } else if (srcToken.length === 42 && srcToken.startsWith('0x')) {
+    } else if (
+      srcToken.length === 42 &&
+      srcToken.startsWith('0x')
+    ) {
       srcToken = { address: srcToken };
     } else {
       srcToken = undefined;
     }
 
-    if (!destToken.startsWith('0x')) {
+    if (destToken.toUpperCase() === 'ETH') {
+      destToken = { address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' };
+    } else if (
+      !destToken.startsWith('0x') &&
+      (network.toLowerCase() == 'mainnet' || network.toLowerCase() == 'staging')
+    ) {
       destToken = currencies.find(o => o.symbol === destToken.toUpperCase());
-    } else if (destToken.length === 42 && destToken.startsWith('0x')) {
+    } else if (
+      destToken.length === 42 &&
+      destToken.startsWith('0x')
+    ) {
       destToken = { address: destToken };
     } else {
       destToken = undefined;

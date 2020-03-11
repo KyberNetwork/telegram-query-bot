@@ -3,15 +3,17 @@ const fs = require('fs');
 
 module.exports = () => {
   return async ctx => {
-    const { axios, message, reply, replyWithMarkdown, state, web3 } = ctx;
+    const { axios, helpers, message, reply, replyWithMarkdown, state } = ctx;
     const { inReplyTo } = Extra;
     const { args } = state.command;
 
-    if (args.length !== 1) {
+    if (args.leng0x6FA355a7b6bD2D6bD8b927C489221BFBb6f1D7B2th !== 1) {
       reply(`ERROR: Invalid number of arguments. ${args.length} of 1 provided.`);
       return;
     }
 
+    const network = (args[5]) ? args[5].toLowerCase() : 'mainnet';
+    const web3 = helpers.getWeb3(network);
     const currencies = (await axios.get('/currencies')).data.data;
     const reserve = args[0];
     const reserveABI = JSON.parse(fs.readFileSync('src/contracts/abi/KyberReserve.abi', 'utf8'));

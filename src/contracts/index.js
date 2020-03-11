@@ -2,46 +2,98 @@ const fs = require('fs');
 const logger = require('../logger');
 
 const config = JSON.parse(fs.readFileSync('src/config/default.json', 'utf8'));
+const KyberNetworkProxyABI = JSON.parse(fs.readFileSync('src/contracts/abi/KyberNetworkProxy.abi', 'utf8'));
+const KyberNetworkABI = JSON.parse(fs.readFileSync('src/contracts/abi/KyberNetwork.abi', 'utf8'));
+const FeeBurnerABI = JSON.parse(fs.readFileSync('src/contracts/abi/FeeBurner.abi', 'utf8'));
+const WrapFeeBurnerABI = JSON.parse(fs.readFileSync('src/contracts/abi/WrapFeeBurner.abi', 'utf8'));
+const PermissionlessOrderbookReserveListerABI = JSON.parse(fs.readFileSync('src/contracts/abi/PermissionlessOrderbookReserveLister.abi', 'utf8'));
+let KyberNetworkProxyAddress;
+let KyberNetworkProxy;
+let KyberNetworkAddress;
+let KyberNetwork;
+let FeeBurnerAddress;
+let FeeBurner;
+let WrapFeeBurnerAddress;
+let WrapFeeBurner;
+let PermissionlessOrderbookReserveListerAddress;
+let PermissionlessOrderbookReserveLister;
 
 module.exports = app => {
-  const web3 = app.context.web3;
+  const { ethereum } = app.context;
 
-  const KyberNetworkProxyAddress = config.contracts.KyberNetworkProxy;
-  const KyberNetworkProxyABI = JSON.parse(fs.readFileSync('src/contracts/abi/KyberNetworkProxy.abi', 'utf8'));
-  const KyberNetworkProxy = new web3.eth.Contract(KyberNetworkProxyABI, KyberNetworkProxyAddress);
+  KyberNetworkProxyAddress = config.contracts.mainnet.KyberNetworkProxy;  
+  KyberNetworkProxy = new ethereum.mainnet.eth.Contract(KyberNetworkProxyABI, KyberNetworkProxyAddress);
+  
+  KyberNetworkAddress = config.contracts.mainnet.KyberNetwork;  
+  KyberNetwork = new ethereum.mainnet.eth.Contract(KyberNetworkABI, KyberNetworkAddress);
 
-  const KyberNetworkProxyStagingAddress = config.contracts.KyberNetworkProxyStaging;
-  const KyberNetworkProxyStagingABI = JSON.parse(fs.readFileSync('src/contracts/abi/KyberNetworkProxy.abi', 'utf8'));
-  const KyberNetworkProxyStaging = new web3.eth.Contract(KyberNetworkProxyStagingABI, KyberNetworkProxyStagingAddress);
+  FeeBurnerAddress = config.contracts.mainnet.FeeBurner;
+  FeeBurner = new ethereum.mainnet.eth.Contract(FeeBurnerABI, FeeBurnerAddress);
 
-  const KyberNetworkAddress = config.contracts.KyberNetwork;
-  const KyberNetworkABI = JSON.parse(fs.readFileSync('src/contracts/abi/KyberNetwork.abi', 'utf8'));
-  const KyberNetwork = new web3.eth.Contract(KyberNetworkABI, KyberNetworkAddress);
+  WrapFeeBurnerAddress = config.contracts.mainnet.WrapFeeBurner;
+  WrapFeeBurner = new ethereum.mainnet.eth.Contract(WrapFeeBurnerABI, WrapFeeBurnerAddress);
 
-  const KyberNetworkStagingAddress = config.contracts.KyberNetworkStaging;
-  const KyberNetworkStagingABI = JSON.parse(fs.readFileSync('src/contracts/abi/KyberNetwork.abi', 'utf8'));
-  const KyberNetworkStaging = new web3.eth.Contract(KyberNetworkStagingABI, KyberNetworkStagingAddress);
+  PermissionlessOrderbookReserveListerAddress = config.contracts.mainnet.PermissionlessOrderbookReserveLister;
+  PermissionlessOrderbookReserveLister = new ethereum.mainnet.eth.Contract(PermissionlessOrderbookReserveListerABI, PermissionlessOrderbookReserveListerAddress);
 
-  const FeeBurnerAddress = config.contracts.FeeBurner;
-  const FeeBurnerABI = JSON.parse(fs.readFileSync('src/contracts/abi/FeeBurner.abi', 'utf8'));
-  const FeeBurner = new web3.eth.Contract(FeeBurnerABI, FeeBurnerAddress);
+  const mainnet = {
+    'KyberNetworkProxy': KyberNetworkProxy,
+    'KyberNetwork': KyberNetwork,
+    'FeeBurner': FeeBurner,
+    'WrapFeeBurner': WrapFeeBurner,
+    'PermissionlessOrderbookReserveLister': PermissionlessOrderbookReserveLister,
+  };
 
-  const WrapFeeBurnerAddress = config.contracts.WrapFeeBurner;
-  const WrapFeeBurnerABI = JSON.parse(fs.readFileSync('src/contracts/abi/WrapFeeBurner.abi', 'utf8'));
-  const WrapFeeBurner = new web3.eth.Contract(WrapFeeBurnerABI, WrapFeeBurnerAddress);
+  KyberNetworkProxyAddress = config.contracts.staging.KyberNetworkProxy;
+  KyberNetworkProxy = new ethereum.mainnet.eth.Contract(KyberNetworkProxyABI, KyberNetworkProxyAddress);
 
-  const PermissionlessOrderbookReserveListerAddress = config.contracts.PermissionlessOrderbookReserveLister;
-  const PermissionlessOrderbookReserveListerABI = JSON.parse(fs.readFileSync('src/contracts/abi/PermissionlessOrderbookReserveLister.abi', 'utf8'));
-  const PermissionlessOrderbookReserveLister = new web3.eth.Contract(PermissionlessOrderbookReserveListerABI, PermissionlessOrderbookReserveListerAddress);
+  KyberNetworkAddress = config.contracts.staging.KyberNetwork;
+  KyberNetwork = new ethereum.mainnet.eth.Contract(KyberNetworkABI, KyberNetworkAddress);
+
+  const staging = {
+    'KyberNetworkProxy': KyberNetworkProxy,
+    'KyberNetwork': KyberNetwork,
+  };
+
+  KyberNetworkProxyAddress = config.contracts.ropsten.KyberNetworkProxy;
+  KyberNetworkProxy = new ethereum.ropsten.eth.Contract(KyberNetworkProxyABI, KyberNetworkProxyAddress);
+
+  KyberNetworkAddress = config.contracts.ropsten.KyberNetwork;
+  KyberNetwork = new ethereum.ropsten.eth.Contract(KyberNetworkABI, KyberNetworkAddress);
+
+  const ropsten = {
+    'KyberNetworkProxy': KyberNetworkProxy,
+    'KyberNetwork': KyberNetwork,
+  };
+
+  KyberNetworkProxyAddress = config.contracts.rinkeby.KyberNetworkProxy;
+  KyberNetworkProxy = new ethereum.rinkeby.eth.Contract(KyberNetworkProxyABI, KyberNetworkProxyAddress);
+
+  KyberNetworkAddress = config.contracts.rinkeby.KyberNetwork;
+  KyberNetwork = new ethereum.rinkeby.eth.Contract(KyberNetworkABI, KyberNetworkAddress);
+
+  const rinkeby = {
+    'KyberNetworkProxy': KyberNetworkProxy,
+    'KyberNetwork': KyberNetwork,
+  };
+
+  KyberNetworkProxyAddress = config.contracts.kovan.KyberNetworkProxy;
+  KyberNetworkProxy = new ethereum.kovan.eth.Contract(KyberNetworkProxyABI, KyberNetworkProxyAddress);
+
+  KyberNetworkAddress = config.contracts.kovan.KyberNetwork;
+  KyberNetwork = new ethereum.kovan.eth.Contract(KyberNetworkABI, KyberNetworkAddress);
+
+  const kovan = {
+    'KyberNetworkProxy': KyberNetworkProxy,
+    'KyberNetwork': KyberNetwork,
+  };
 
   app.context.contracts = {
-    KyberNetworkProxy,
-    KyberNetworkProxyStaging,
-    KyberNetwork,
-    KyberNetworkStaging,
-    FeeBurner,
-    WrapFeeBurner,
-    PermissionlessOrderbookReserveLister,
+    mainnet,
+    staging,
+    ropsten,
+    rinkeby,
+    kovan,
   };
 
   logger.info('Initialized contracts');

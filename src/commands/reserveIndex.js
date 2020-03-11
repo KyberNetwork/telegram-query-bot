@@ -2,9 +2,8 @@ const Extra = require('telegraf/extra');
 
 module.exports = () => {
   return async ctx => {
-    const { contracts, message, reply, replyWithMarkdown, state } = ctx;
+    const { helpers, message, reply, replyWithMarkdown, state } = ctx;
     const { inReplyTo } = Extra;
-    const { KyberNetwork, KyberNetworkStaging } = contracts;
     const { args } = state.command;
 
     if (args.length < 1) {
@@ -12,14 +11,11 @@ module.exports = () => {
       return;
     }
 
+    const network = (args[1]) ? args[1].toLowerCase() : 'mainnet';
     const reserve = args[0].toLowerCase();
 
-    let reserves;
-    if (args[1] && args[1].toLowerCase() === 'staging') {
-      reserves = await KyberNetworkStaging.methods.getReserves().call();
-    } else {
-      reserves = await KyberNetwork.methods.getReserves().call();
-    }
+    const getReserves = helpers.getNetworkFunction(network, 'getReserves');
+    const reserves = await getReserves().call();
 
     const result = reserves.findIndex(r => reserve.toLowerCase() === r.toLowerCase());
 

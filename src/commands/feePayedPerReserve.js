@@ -2,9 +2,9 @@ const Extra = require('telegraf/extra');
 
 module.exports = () => {
   return async ctx => {
-    const { contracts, message, reply, replyWithMarkdown, state, web3 } = ctx;
+    const { contracts, helpers, message, reply, replyWithMarkdown, state } = ctx;
     const { inReplyTo } = Extra;
-    const { FeeBurner } = contracts;
+    const { FeeBurner } = contracts.mainnet;
     const { args } = state.command;
 
     if (args.length !== 1) {
@@ -12,6 +12,7 @@ module.exports = () => {
       return;
     }
 
+    const web3 = helpers.getWeb3('mainnet');
     const reserve = args[0];
     const result = await FeeBurner.methods.feePayedPerReserve(reserve).call();
 

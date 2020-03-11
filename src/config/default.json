@@ -4,16 +4,35 @@
     "timeout": 2000
   },
   "web3": {
-    "rpcURL": "https://eth-mainnet.alchemyapi.io/jsonrpc"
+    "mainnet": "https://eth-mainnet.alchemyapi.io/jsonrpc",
+    "ropsten": "https://eth-ropsten.alchemyapi.io/jsonrpc",
+    "rinkeby": "https://eth-rinkeby.alchemyapi.io/jsonrpc",
+    "kovan": "https://eth-kovan.alchemyapi.io/jsonrpc"
   },
   "contracts": {
-    "KyberNetworkProxy": "0x818E6FECD516Ecc3849DAf6845e3EC868087B755",
-    "KyberNetworkProxyStaging": "0x6326dd73E368c036D4C4997053a021CBc52c7367",
-    "KyberNetwork": "0x65bF64Ff5f51272f729BDcD7AcFB00677ced86Cd",
-    "KyberNetworkStaging": "0xafBf0D08269a7eEe8d587121f3B0616c8CeF5077",
-    "PermissionlessOrderbookReserveLister": "0xc19bD6b976abC0AD70394Fbb3EDEe741fce9509e",
-    "FeeBurner": "0x8007aa43792A392b221DC091bdb2191E5fF626d1",
-    "WrapFeeBurner": "0x3b32f992D5f98beF76C74ECbc3a16DBF2f308BaA"
+    "mainnet": {
+      "KyberNetworkProxy": "0x818E6FECD516Ecc3849DAf6845e3EC868087B755",
+      "KyberNetwork": "0x65bF64Ff5f51272f729BDcD7AcFB00677ced86Cd",
+      "PermissionlessOrderbookReserveLister": "0xc19bD6b976abC0AD70394Fbb3EDEe741fce9509e",
+      "FeeBurner": "0x8007aa43792A392b221DC091bdb2191E5fF626d1",
+      "WrapFeeBurner": "0x3b32f992D5f98beF76C74ECbc3a16DBF2f308BaA"
+    },
+    "staging": {
+      "KyberNetworkProxy": "0x6326dd73E368c036D4C4997053a021CBc52c7367",
+      "KyberNetwork": "0xafBf0D08269a7eEe8d587121f3B0616c8CeF5077"
+    },
+    "ropsten": {
+      "KyberNetworkProxy": "0x818E6FECD516Ecc3849DAf6845e3EC868087B755",
+      "KyberNetwork": "0x753fe1914db38ee744e071baadd123f50f9c8e46"
+    },
+    "rinkeby": {
+      "KyberNetworkProxy": "0xF77eC7Ed5f5B9a5aee4cfa6FFCaC6A4C315BaC76",
+      "KyberNetwork": "0x037d8c47d75D76950C2Eb738D1F7403b99208ECd"
+    },
+    "kovan": {
+      "KyberNetworkProxy": "0x692f391bCc85cefCe8C237C01e1f636BbD70EA4D",
+      "KyberNetwork": "0xb5034418f6cc1fd494535f2d38f770c9827f88a1"
+    }
   },
   "whois": {
     "file": "/home/ubuntu/addresses.json"

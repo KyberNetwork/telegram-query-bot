@@ -4,7 +4,7 @@ module.exports = () => {
   return async ctx => {
     const { contracts, message, reply, replyWithMarkdown, state } = ctx;
     const { inReplyTo } = Extra;
-    const { FeeBurner } = contracts;
+    const { FeeBurner } = contracts.mainnet;
     const { args } = state.command;
 
     if (args.length !== 1) {

@@ -132,5 +132,5 @@ module.exports = () => {
     result = await debugReserve(ETH_ADDRESS,srcToken.address,BUY_QTY,SELL_QTY,reserveInstance,pricingInstance);
     replyWithMarkdown(`${result}`, inReplyTo(message.message_id));
     return;
-    }
+  }
 };

@@ -3,9 +3,8 @@ const fs = require('fs');
 
 module.exports = () => {
   return async ctx => {
-    const { axios, contracts, message, reply, replyWithMarkdown, state, web3 } = ctx;
+    const { axios, helpers, message, reply, replyWithMarkdown, state } = ctx;
     const { inReplyTo } = Extra;
-    const { KyberNetwork, KyberNetworkStaging } = contracts;
     const { args } = state.command;
 
     if (args.length < 2) {
@@ -13,8 +12,10 @@ module.exports = () => {
       return;
     }
 
-    const currencies = (await axios.get('/currencies')).data.data;
+    const network = (args[2]) ? args[2].toLowerCase() : '';
+    const web3 = helpers.getWeb3(network);
     const tokenABI = JSON.parse(fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8'));
+    const currencies = (await axios.get('/currencies')).data.data;
     let token = args[0];
     let qty = args[1];
 
@@ -39,25 +40,18 @@ module.exports = () => {
       qty = Math.round(qty * (10 ** decimals)).toLocaleString('fullwide', {useGrouping:false});
     }
 
-    let result;
-    if (args[2] && args[2].toLowerCase() === 'staging') {
-      result = await KyberNetworkStaging.methods.getReservesRates(
-        token.address,
-        qty.toString(),
-      ).call();
-    } else {
-      result = await KyberNetwork.methods.getReservesRates(
-        token.address,
-        qty.toString(),
-      ).call();
-    }
+    const getReservesRates = helpers.getNetworkFunction(network, 'getReservesRates');
+    const result = await getReservesRates(
+      token.address,
+      qty.toString(),
+    ).call();  
 
     let msg = '*BUY*\n';
-    for (var index in result.buyReserves) {
+    for (let index in result.buyReserves) {
       msg = msg.concat(`${index}] ${result.buyReserves[index]} : ${web3.utils.fromWei(result.buyRates[index].toString())}\n`);
     }
     msg = msg.concat('\n*SELL*\n');
-    for (var index in result.sellReserves) {
+    for (let index in result.sellReserves) {
       msg = msg.concat(`${index}] ${result.sellReserves[index]} : ${web3.utils.fromWei(result.sellRates[index].toString())}\n`);
     }
 

@@ -10,33 +10,21 @@ app.catch(err => {
   logger.error(err);
 });
 
+let help = '';
+help = help.concat(
+  'I can query Kyber data for you.\n\n',
+  'You can control me by sending these commands:\n\n',
+  '/collectedFeesInTwei <reserve> <optional: network>\n',
+  '/convert <qty> <srcToken> <destToken> <optional: network>\n',
+  '/debugReserve <token> <reserve>\n',
+  '/getConversionRate <reserve> <srcToken> <destToken> <srcQty> <blockNumber> <optional: network>\n',
+  '/getexpectedrate <srcToken> <destToken> <srcQty> <optional: network>\n',
+  '/getreservefeesinbps <reserve>\n',
+  '/update',
+);
 app.help(ctx => {
-  ctx.reply(
-    `I can query Kyber data for you.
-
-You can control me by sending these commands:
-
-/convert <qty> <srcToken_symbol> <destToken_symbol>
-/debugReserve <token_symbol> <reserve_address>
-/encodeABI <function> <...args>
-/getAddressOfToken <token_symbol>
-/getAPRCollectedFees <reserve_address>
-/getConversionRate <reserve_address> <srcToken_symbol> <destToken_symbol> <srcQty> <blockNumber>
-/getExpectedRate <srcToken_symbol> <destToken_symbol> <srcQty> <optional: network>
-/getKNCFeeWallet <reserve_address>
-/getLiquidityParams <json_input>
-/getLiquidityRate <eth> <pmin>
-/getReserveBalances <reserve_address>
-/getReserveFeesInBPS <reserve_address>
-/getReserveIndex <reserve_address> <optional: network>
-/getReservePaidFees <reserve_address>
-/getReserveRates <token_symbol> <qty>
-/getReservesOfToken <token_symbol>
-/getTokensOfReserve <reserve_address>
-/isFeeSharingWallet <wallet_address>
-/isReserveListed <reserve_address>
-/update`,
-
+  ctx.replyWithMarkdown(
+    help,
     Extra.inReplyTo(ctx.message.message_id),
   );
 });
