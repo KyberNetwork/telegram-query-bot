@@ -26,6 +26,7 @@ help = help.concat(
   '/latestBlock <optional: network>\n',
   '/liquidityParams <json>\n',
   '/liquidityRate <eth> <pmin>\n',
+  '/networkContracts <optional: network>\n',
   '/rates <token> <qty> <optional: network>\n',
   '/reserveBalances <reserve> <optional: network>\n',
   '/reserveContracts <reserve> <optional: network>\n',

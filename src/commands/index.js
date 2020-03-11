@@ -11,6 +11,7 @@ const isReserveListed = require('./isReserveListed');
 const latestBlock = require('./latestBlock');
 const liquidityParams = require('./liquidityParams');
 const liquidityRate = require('./liquidityRate');
+const networkContracts = require('./networkContracts');
 const reserveBalances = require('./reserveBalances');
 const reserveContracts = require('./reserveContracts');
 const reserveFeesInBps = require('./reserveFeesInBps');
@@ -46,6 +47,8 @@ module.exports = app => {
   app.command('liquidityParams', liquidityParams());
   app.command('liquidityrate', liquidityRate());
   app.command('liquidityRate', liquidityRate());
+  app.command('networkcontracts', networkContracts());
+  app.command('networkContracts', networkContracts());
   app.command('rates', getReservesRates());
   app.command('reservebalances', reserveBalances());
   app.command('reserveBalances', reserveBalances());
