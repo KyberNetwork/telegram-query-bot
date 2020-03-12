@@ -7,12 +7,12 @@ module.exports = () => {
     const { inReplyTo } = Extra;
     const { args } = state.command;
 
-    if (args.leng0x6FA355a7b6bD2D6bD8b927C489221BFBb6f1D7B2th !== 1) {
+    if (args.length < 1) {
       reply(`ERROR: Invalid number of arguments. ${args.length} of 1 provided.`);
       return;
     }
 
-    const network = (args[5]) ? args[5].toLowerCase() : 'mainnet';
+    const network = (args[1]) ? args[1].toLowerCase() : 'mainnet';
     const web3 = helpers.getWeb3(network);
     const currencies = (await axios.get('/currencies')).data.data;
     const reserve = args[0];
