@@ -1,7 +1,17 @@
 {
   "axios": {
-    "baseURL": "https://api.kyber.network",
-    "timeout": 2000
+    "kyber": {
+      "baseURL": "https://api.kyber.network",
+      "timeout": 2000
+    },
+    "ethgasstation": {
+      "baseURL": "https://ethgasstation.info",
+      "timeout": 20000
+    },
+    "feargreedindex": {
+      "baseURL": "https://api.alternative.me",
+      "timeout": 20000
+    }
   },
   "web3": {
     "mainnet": "https://eth-mainnet.alchemyapi.io/jsonrpc",

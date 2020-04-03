@@ -4,6 +4,7 @@ const fs = require('fs');
 module.exports = () => {
   return async ctx => {
     const { axios, helpers, message, reply, replyWithMarkdown, state } = ctx;
+    const { kyber } = axios;
     const { inReplyTo } = Extra;
     const { args } = state.command;
 
@@ -14,7 +15,7 @@ module.exports = () => {
 
     const network = (args[3]) ? args[3].toLowerCase() : 'mainnet';
     const web3 = helpers.getWeb3(network);
-    const currencies = (await axios.get('/currencies')).data.data;
+    const currencies = (await kyber.get('/currencies')).data.data;
     let srcToken = args[0];
     let destToken = args[1];
     let srcQty = args[2];

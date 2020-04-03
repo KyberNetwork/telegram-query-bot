@@ -4,6 +4,7 @@ const fs = require('fs');
 module.exports = () => {
   return async ctx => {
     const { axios, helpers, message, reply, replyWithMarkdown, state } = ctx;
+    const { kyber } = axios;
     const { inReplyTo } = Extra;
     const { args } = state.command;
 
@@ -14,7 +15,7 @@ module.exports = () => {
 
     const network = (args[3]) ? args[3].toLowerCase() : 'mainnet';
     const web3 = helpers.getWeb3(network);
-    const currencies = (await axios.get('/currencies')).data.data;
+    const currencies = (await kyber.get('/currencies')).data.data;
     const tokenABI = JSON.parse(fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8'));
     let qty = args[0];
     let srcToken = args[1];

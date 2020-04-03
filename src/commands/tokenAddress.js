@@ -3,6 +3,7 @@ const Extra = require('telegraf/extra');
 module.exports = () => {
   return async ctx => {
     const { axios, message, reply, replyWithMarkdown, state } = ctx;
+    const { kyber } = axios;
     const { inReplyTo } = Extra;
     const { args } = state.command;
 
@@ -11,7 +12,7 @@ module.exports = () => {
       return;
     }
 
-    const currencies = (await axios.get('/currencies')).data.data;
+    const currencies = (await kyber.get('/currencies')).data.data;
     const token = args[0].toUpperCase();
     const result = currencies.find(o => o.symbol === token);
 

@@ -4,6 +4,7 @@ const fs = require('fs');
 module.exports = () => {
   return async ctx => {
     const { axios, message, reply, replyWithMarkdown, state } = ctx;
+    const { kyber } = axios;
     const { inReplyTo } = Extra;
     const { args } = state.command;
     const config = JSON.parse(fs.readFileSync('src/config/default.json', 'utf8'));
@@ -25,7 +26,7 @@ module.exports = () => {
     if (result) {
       result = addresses[result];
     } else {
-      const currencies = (await axios.get('/currencies')).data.data;
+      const currencies = (await kyber.get('/currencies')).data.data;
       result = currencies.find(o => o.address.toLowerCase() === address.toLowerCase());
       result = `${result.symbol} Token`;
     }

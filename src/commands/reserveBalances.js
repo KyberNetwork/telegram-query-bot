@@ -4,6 +4,7 @@ const fs = require('fs');
 module.exports = () => {
   return async ctx => {
     const { axios, helpers, message, reply, replyWithMarkdown, state } = ctx;
+    const { kyber } = axios;
     const { inReplyTo } = Extra;
     const { args } = state.command;
 
@@ -14,7 +15,7 @@ module.exports = () => {
 
     const network = (args[1]) ? args[1].toLowerCase() : 'mainnet';
     const web3 = helpers.getWeb3(network);
-    const currencies = (await axios.get('/currencies')).data.data;
+    const currencies = (await kyber.get('/currencies')).data.data;
     const reserve = args[0];
     const reserveABI = JSON.parse(fs.readFileSync('src/contracts/abi/KyberReserve.abi', 'utf8'));
     const reserveInstance = new web3.eth.Contract(reserveABI, reserve);
