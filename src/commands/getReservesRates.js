@@ -42,20 +42,25 @@ module.exports = () => {
     }
 
     const getReservesRates = helpers.getNetworkFunction(network, 'getReservesRates');
-    const result = await getReservesRates(
-      token.address,
-      qty.toString(),
-    ).call();  
+    let result;
+    try {
+      result = await getReservesRates(
+        token.address,
+        qty.toString(),
+      ).call();
 
-    let msg = '*BUY*\n';
-    for (let index in result.buyReserves) {
-      msg = msg.concat(`${index}] ${result.buyReserves[index]} : ${web3.utils.fromWei(result.buyRates[index].toString())}\n`);
-    }
-    msg = msg.concat('\n*SELL*\n');
-    for (let index in result.sellReserves) {
-      msg = msg.concat(`${index}] ${result.sellReserves[index]} : ${web3.utils.fromWei(result.sellRates[index].toString())}\n`);
-    }
+      let msg = '*BUY*\n';
+      for (let index in result.buyReserves) {
+        msg = msg.concat(`${index}] ${result.buyReserves[index]} : ${web3.utils.fromWei(result.buyRates[index].toString())}\n`);
+      }
+      msg = msg.concat('\n*SELL*\n');
+      for (let index in result.sellReserves) {
+        msg = msg.concat(`${index}] ${result.sellReserves[index]} : ${web3.utils.fromWei(result.sellRates[index].toString())}\n`);
+      }
 
-    replyWithMarkdown(msg, inReplyTo(message.message_id));
+      replyWithMarkdown(msg, inReplyTo(message.message_id));
+    } catch (e) {
+      replyWithMarkdown(e.toString(), inReplyTo(message.message_id));
+    }
   };
 };

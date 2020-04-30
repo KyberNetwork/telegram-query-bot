@@ -1,10 +1,12 @@
 module.exports = () => {
   return (ctx, next) => {
     if (ctx.updateType === 'message' && ctx.updateSubTypes.includes('text')) {
-      const text = ctx.update.message.text.toLowerCase();
+      let text = ctx.update.message.text.toLowerCase();
+      let match;
 
       if (text.startsWith('/') && !text.includes('{')) {
-        const match = text.match(/^\/([^\s]+)\s?(.+)?/);
+        text = text.replace(/^\s+|\s+$|\s+(?=\s)/g, '');
+        match = text.match(/^\/([^\s]+)\s?(.+)?/);
         let args = [];
         let command;
 
@@ -23,7 +25,7 @@ module.exports = () => {
           args,
         };
       } else if (text.startsWith('/') && text.includes('{')) {
-        const match = text.match(/^\/([^\s]+)\s+([^}]+})/);
+        match = text.match(/^\/([^\s]+)\s+([^}]+})/);
         let args = {};
         let command;
 
