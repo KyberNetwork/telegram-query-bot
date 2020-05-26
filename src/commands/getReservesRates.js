@@ -1,7 +1,50 @@
 const Extra = require('telegraf/extra');
 const fs = require('fs');
 
-module.exports = () => {
+function formatLabel(type, symbol) {
+  let label;
+
+  switch (type) {
+    case 'eth':
+      label = ' (in ETH)';
+      break;
+    case 'token':
+      label = ` (in ${symbol.toUpperCase()})`;
+      break;
+    default:
+      label = '';
+      break;
+  }
+
+  return label;
+}
+function formatValue(web3, type, rate, isBuy) {
+  let value;
+
+  switch (type) {
+    case 'eth':
+      if (isBuy) {
+        value = rate > 0 ? 1 / web3.utils.fromWei(rate.toString()) : 0;
+      } else {
+        value = web3.utils.fromWei(rate.toString());
+      }
+      break;
+    case 'token':
+      if (isBuy) {
+        value = web3.utils.fromWei(rate.toString());
+      } else {
+        value = rate > 0 ? 1 / web3.utils.fromWei(rate.toString()) : 0;
+      }
+      break;
+    default:
+      value = web3.utils.fromWei(rate.toString());
+      break;
+  }
+
+  return value;
+}
+
+module.exports = (type) => {
   return async (ctx) => {
     const { axios, helpers, message, reply, replyWithMarkdown, state } = ctx;
     const { kyber } = axios;
@@ -44,6 +87,8 @@ module.exports = () => {
     const tokenInstance = new web3.eth.Contract(tokenABI, token.address);
     const decimals =
       token.decimals || (await tokenInstance.methods.decimals().call());
+    const symbol =
+      token.symbol || (await tokenInstance.methods.symbol().call());
     const qtyToken = Math.round(qty * 10 ** decimals).toLocaleString(
       'fullwide',
       { useGrouping: false }
@@ -67,22 +112,19 @@ module.exports = () => {
         qtyToken.toString()
       ).call();
 
-      let msg = '*BUY*\n';
+      let msg = `*BUY${formatLabel(type, symbol)}*\n`;
+      let msgValue = '';
       for (let index in resultETH.buyReserves) {
+        msgValue = formatValue(web3, type, resultETH.buyRates[index], true);
         msg = msg.concat(
-          `${index}] ${resultETH.buyReserves[index]} : ${
-            resultETH.buyRates[index] > 0
-              ? 1 / web3.utils.fromWei(resultETH.buyRates[index].toString())
-              : 0
-          }\n`
+          `${index}] ${resultETH.buyReserves[index]} : ${msgValue}\n`
         );
       }
-      msg = msg.concat('\n*SELL*\n');
+      msg = msg.concat(`\n*SELL${formatLabel(type, symbol)}*\n`);
       for (let index in resultToken.sellReserves) {
+        msgValue = formatValue(web3, type, resultToken.sellRates[index], false);
         msg = msg.concat(
-          `${index}] ${resultToken.sellReserves[index]} : ${web3.utils.fromWei(
-            resultToken.sellRates[index].toString()
-          )}\n`
+          `${index}] ${resultToken.sellReserves[index]} : ${msgValue}\n`
         );
       }
 

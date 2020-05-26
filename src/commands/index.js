@@ -27,10 +27,12 @@ const whois = require('./whois');
 
 module.exports = app => {
   app.command('convert', convert());
-  app.command('debugreserve', debugReserve());
-  app.command('debugReserve', debugReserve());
   app.command('collectedfeesintwei', collectedFeesInTwei());
   app.command('collectedFeesInTwei', collectedFeesInTwei());
+  app.command('debugreserve', debugReserve());
+  app.command('debugReserve', debugReserve());
+  app.command('erates', getReservesRates('eth'));
+  app.command('eRates', getReservesRates('eth'));
   app.command('getconversionrate', getConversionRate());
   app.command('getConversionRate', getConversionRate());
   app.command('gas', gasPrice());
@@ -70,6 +72,8 @@ module.exports = app => {
   app.command('tokenAddress', tokenAddress());
   app.command('tokensofreserve', tokensOfReserve());
   app.command('tokensOfReserve', tokensOfReserve());
+  app.command('trates', getReservesRates('token'));
+  app.command('tRates', getReservesRates('token'));
   app.command('update', update());
   app.command('whois', whois());
 
