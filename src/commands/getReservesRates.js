@@ -64,9 +64,9 @@ module.exports = (type) => {
       fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8')
     );
     const currencies = (await kyber.get('/currencies')).data.data;
-    let token = args[0];
-    let qty = args[1];
+    const qty = args[1];
 
+    let token = args[0];
     if (!token.startsWith('0x')) {
       token = currencies.find((o) => o.symbol === token.toUpperCase());
     } else if (token.length === 42 && token.startsWith('0x')) {
