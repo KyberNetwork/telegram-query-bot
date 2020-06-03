@@ -16,8 +16,10 @@ help = help.concat(
   'You can control me by sending these commands:\n\n',
   '/collectedFeesInTwei <reserve> <optional: network>\n',
   '/convert <qty> <srcToken> <destToken> <optional: network>\n',
-  '/debugReserve <token> <reserve>\n',
+  '/eRates <token> <qty> <optional: network>\n',
   '/feePayedPerReserve <reserve>\n',
+  '/fromTwei <qty> <token> <optional: network>\n',
+  '/fromWei <qty>\n',
   '/gas\n',
   '/getConversionRate <reserve> <srcToken> <destToken> <srcQty> <blockNumber> <optional: network>\n',
   '/getExpectedRate <srcToken> <destToken> <srcQty> <optional: network>\n',
@@ -37,9 +39,12 @@ help = help.concat(
   '/reservesOfToken <token>\n',
   '/sentiment\n',
   '/tokenAddress <token>\n',
+  '/tokenInfo <token> <optional: network>\n',
   '/tokensOfReserve <reserve>\n',
-  '/update\n',
-  '/whois <address>',
+  '/tRates <token> <qty> <optional: network>\n',
+  '/toTwei <qty> <token> <optional: network>\n',
+  '/toWei <qty>\n',
+  '/update',
 );
 app.help(ctx => {
   ctx.replyWithMarkdown(

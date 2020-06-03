@@ -1,7 +1,6 @@
 const logger = require('../logger');
 const collectedFeesInTwei = require('./collectedFeesInTwei');
 const convert = require('./convert');
-const debugReserve = require('./debugReserve');
 const gasPrice = require('./gasPrice');
 const getConversionRate = require('./getConversionRate');
 const getExpectedRate = require('./getExpectedRate');
@@ -28,14 +27,11 @@ const tokensOfReserve = require('./tokensOfReserve');
 const toTwei = require('./toTwei');
 const toWei = require('./toWei');
 const update = require('./update');
-const whois = require('./whois');
 
 module.exports = app => {
   app.command('convert', convert());
   app.command('collectedfeesintwei', collectedFeesInTwei());
   app.command('collectedFeesInTwei', collectedFeesInTwei());
-  app.command('debugreserve', debugReserve());
-  app.command('debugReserve', debugReserve());
   app.command('erates', getReservesRates('eth'));
   app.command('eRates', getReservesRates('eth'));
   app.command('getconversionrate', getConversionRate());
@@ -90,7 +86,6 @@ module.exports = app => {
   app.command('trates', getReservesRates('token'));
   app.command('tRates', getReservesRates('token'));
   app.command('update', update());
-  app.command('whois', whois());
 
   logger.info('Initialized commands');
 };
