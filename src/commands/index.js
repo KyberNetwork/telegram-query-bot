@@ -32,6 +32,8 @@ module.exports = app => {
   app.command('convert', convert());
   app.command('collectedfeesintwei', collectedFeesInTwei());
   app.command('collectedFeesInTwei', collectedFeesInTwei());
+  app.command('drates', getReservesRates('usd'));
+  app.command('dRates', getReservesRates('usd'));
   app.command('erates', getReservesRates('eth'));
   app.command('eRates', getReservesRates('eth'));
   app.command('getconversionrate', getConversionRate());

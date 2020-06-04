@@ -11,6 +11,9 @@ function formatLabel(type, symbol) {
     case 'token':
       label = ` (in ${symbol.toUpperCase()})`;
       break;
+    case 'usd':
+      label = ' (in USD)';
+      break;
     default:
       label = '';
       break;
@@ -18,8 +21,10 @@ function formatLabel(type, symbol) {
 
   return label;
 }
-function formatValue(web3, type, rate, isBuy) {
+
+async function formatValue(web3, type, rate, isBuy, medianizer) {
   let value;
+  let usd;
 
   switch (type) {
     case 'eth':
@@ -36,6 +41,18 @@ function formatValue(web3, type, rate, isBuy) {
         value = rate > 0 ? 1 / web3.utils.fromWei(rate.toString()) : 0;
       }
       break;
+    case 'usd':
+      usd = web3.utils.toBN(await medianizer.methods.read().call());
+      if (isBuy) {
+        value = rate > 0 ? 1 / web3.utils.fromWei(rate.toString()) : 0;
+        value *= web3.utils.fromWei(usd);
+        value = `$${value}`;
+      } else {
+        value = web3.utils.fromWei(rate.toString());
+        value *= web3.utils.fromWei(usd);
+        value = `$${value}`;
+      }
+      break;
     default:
       value = web3.utils.fromWei(rate.toString());
       break;
@@ -46,7 +63,7 @@ function formatValue(web3, type, rate, isBuy) {
 
 module.exports = (type) => {
   return async (ctx) => {
-    const { axios, helpers, message, reply, replyWithMarkdown, state } = ctx;
+    const { axios, contracts, helpers, message, reply, replyWithMarkdown, state } = ctx;
     const { kyber } = axios;
     const { inReplyTo } = Extra;
     const { args } = state.command;
@@ -58,7 +75,7 @@ module.exports = (type) => {
       return;
     }
 
-    const network = args[2] ? args[2].toLowerCase() : '';
+    const network = args[2] ? args[2].toLowerCase() : 'mainnet';
     const web3 = helpers.getWeb3(network);
     const tokenABI = JSON.parse(
       fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8')
@@ -115,14 +132,26 @@ module.exports = (type) => {
       let msg = `*BUY${formatLabel(type, symbol)}*\n`;
       let msgValue = '';
       for (let index in resultETH.buyReserves) {
-        msgValue = formatValue(web3, type, resultETH.buyRates[index], true);
+        msgValue = await formatValue(
+          web3,
+          type,
+          resultETH.buyRates[index],
+          true,
+          contracts[network].Medianizer,
+        );
         msg = msg.concat(
           `${index}] ${resultETH.buyReserves[index]} : ${msgValue}\n`
         );
       }
       msg = msg.concat(`\n*SELL${formatLabel(type, symbol)}*\n`);
       for (let index in resultToken.sellReserves) {
-        msgValue = formatValue(web3, type, resultToken.sellRates[index], false);
+        msgValue = await formatValue(
+          web3,
+          type,
+          resultToken.sellRates[index],
+          false,
+          contracts[network].Medianizer,
+        );
         msg = msg.concat(
           `${index}] ${resultToken.sellReserves[index]} : ${msgValue}\n`
         );

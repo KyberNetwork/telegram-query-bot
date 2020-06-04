@@ -25,7 +25,8 @@
       "KyberNetwork": "0x65bF64Ff5f51272f729BDcD7AcFB00677ced86Cd",
       "PermissionlessOrderbookReserveLister": "0xc19bD6b976abC0AD70394Fbb3EDEe741fce9509e",
       "FeeBurner": "0x8007aa43792A392b221DC091bdb2191E5fF626d1",
-      "WrapFeeBurner": "0x3b32f992D5f98beF76C74ECbc3a16DBF2f308BaA"
+      "WrapFeeBurner": "0x3b32f992D5f98beF76C74ECbc3a16DBF2f308BaA",
+      "Medianizer": "0x729D19f657BD0614b4985Cf1D82531c67569197B"
     },
     "staging": {
       "KyberNetworkProxy": "0x6326dd73E368c036D4C4997053a021CBc52c7367",

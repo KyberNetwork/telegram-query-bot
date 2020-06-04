@@ -7,6 +7,7 @@ const KyberNetworkABI = JSON.parse(fs.readFileSync('src/contracts/abi/KyberNetwo
 const FeeBurnerABI = JSON.parse(fs.readFileSync('src/contracts/abi/FeeBurner.abi', 'utf8'));
 const WrapFeeBurnerABI = JSON.parse(fs.readFileSync('src/contracts/abi/WrapFeeBurner.abi', 'utf8'));
 const PermissionlessOrderbookReserveListerABI = JSON.parse(fs.readFileSync('src/contracts/abi/PermissionlessOrderbookReserveLister.abi', 'utf8'));
+const MedianizerABI = JSON.parse(fs.readFileSync('src/contracts/abi/Medianizer.abi', 'utf8'));
 let KyberNetworkProxyAddress;
 let KyberNetworkProxy;
 let KyberNetworkAddress;
@@ -17,6 +18,8 @@ let WrapFeeBurnerAddress;
 let WrapFeeBurner;
 let PermissionlessOrderbookReserveListerAddress;
 let PermissionlessOrderbookReserveLister;
+let MedianizerAddress;
+let Medianizer;
 
 module.exports = app => {
   const { ethereum } = app.context;
@@ -36,12 +39,16 @@ module.exports = app => {
   PermissionlessOrderbookReserveListerAddress = config.contracts.mainnet.PermissionlessOrderbookReserveLister;
   PermissionlessOrderbookReserveLister = new ethereum.mainnet.eth.Contract(PermissionlessOrderbookReserveListerABI, PermissionlessOrderbookReserveListerAddress);
 
+  MedianizerAddress = config.contracts.mainnet.Medianizer;
+  Medianizer = new ethereum.mainnet.eth.Contract(MedianizerABI, MedianizerAddress);
+
   const mainnet = {
     'KyberNetworkProxy': KyberNetworkProxy,
     'KyberNetwork': KyberNetwork,
     'FeeBurner': FeeBurner,
     'WrapFeeBurner': WrapFeeBurner,
     'PermissionlessOrderbookReserveLister': PermissionlessOrderbookReserveLister,
+    'Medianizer': Medianizer,
   };
 
   KyberNetworkProxyAddress = config.contracts.staging.KyberNetworkProxy;
