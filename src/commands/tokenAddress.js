@@ -21,6 +21,6 @@ module.exports = () => {
       return;
     }
 
-    replyWithMarkdown(`*${result.address}*`, inReplyTo(message.message_id));
+    replyWithMarkdown(`${result.address}`, inReplyTo(message.message_id));
   };
 };

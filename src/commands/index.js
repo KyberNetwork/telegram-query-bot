@@ -1,4 +1,5 @@
 const logger = require('../logger');
+const checkAPRRate = require('./checkAPRRate');
 const collectedFeesInTwei = require('./collectedFeesInTwei');
 const convert = require('./convert');
 const gasPrice = require('./gasPrice');
@@ -30,6 +31,8 @@ const update = require('./update');
 
 module.exports = app => {
   app.command('convert', convert());
+  app.command('checkaprrate', checkAPRRate());
+  app.command('checkAPRRate', checkAPRRate());
   app.command('collectedfeesintwei', collectedFeesInTwei());
   app.command('collectedFeesInTwei', collectedFeesInTwei());
   app.command('drates', getReservesRates('usd'));

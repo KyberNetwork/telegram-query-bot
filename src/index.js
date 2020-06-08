@@ -14,6 +14,8 @@ let help = '';
 help = help.concat(
   'I can query Kyber data for you.\n\n',
   'You can control me by sending these commands:\n\n',
+  '`Checks if the rates returned follows the liquidity params configured`\n',
+  '/checkAPRRate <reserve> <optional: network>\n\n',
   '`Returns the collected fees of an APR`\n',
   '/collectedFeesInTwei <reserve> <optional: network>\n\n',
   '`Returns the convertion of the source token to the destination token given a quantity`\n',
