@@ -2,9 +2,14 @@ const Extra = require('telegraf/extra');
 
 module.exports = () => {
   return async ctx => {
-    const { axios, message, replyWithMarkdown } = ctx;
+    const { axios, message, reply, replyWithMarkdown, state } = ctx;
     const { ethgasstation } = axios;
     const { inReplyTo } = Extra;
+
+    if (!state.allowed) {
+      reply('You are not whitelisted to use this bot', inReplyTo(message.message_id));
+      return;
+    }
 
     const gasPrice = (await ethgasstation.get('json/ethgasAPI.json')).data;
 

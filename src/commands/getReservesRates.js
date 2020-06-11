@@ -68,6 +68,11 @@ module.exports = (type) => {
     const { inReplyTo } = Extra;
     const { args } = state.command;
 
+    if (!state.allowed) {
+      reply('You are not whitelisted to use this bot', inReplyTo(message.message_id));
+      return;
+    }
+
     if (args.length < 2) {
       reply(
         `ERROR: Invalid number of arguments. ${args.length} of required 2 provided.`

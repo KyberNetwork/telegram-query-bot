@@ -85,6 +85,11 @@ module.exports = () => {
     const { inReplyTo } = Extra;
     const { args } = state.command;
 
+    if (!state.allowed) {
+      reply('You are not whitelisted to use this bot', inReplyTo(message.message_id));
+      return;
+    }
+
     if (Object.entries(args).length === 0 || args.length > 0) {
       reply('ERROR: Invalid JSON passed.', inReplyTo(sent.message_id));
       return;
