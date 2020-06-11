@@ -13,7 +13,10 @@ module.exports = () => {
     }
 
     if (args.length !== 1) {
-      reply(`ERROR: Invalid number of arguments. ${args.length} of 1 provided.`);
+      reply(
+        `ERROR: Invalid number of arguments. ${args.length} of 1 provided.`,
+        inReplyTo(message.message_id),
+      );
       return;
     }
 
@@ -24,7 +27,7 @@ module.exports = () => {
     if (result.toString() === '0') {
       replyWithMarkdown('Reserve not registered to FeeBurner.', inReplyTo(message.message_id));
     } else {
-      replyWithMarkdown(`*${web3.utils.fromWei(result.toString())} KNC*`, inReplyTo(message.message_id));
+      replyWithMarkdown(`${web3.utils.fromWei(result.toString())} KNC`, inReplyTo(message.message_id));
     }
   };
 };

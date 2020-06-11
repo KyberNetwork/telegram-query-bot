@@ -14,7 +14,10 @@ module.exports = () => {
     }
 
     if (args.length < 1) {
-      reply(`ERROR: Invalid number of arguments. ${args.length} of required 1 provided.`);
+      reply(
+        `ERROR: Invalid number of arguments. ${args.length} of required 1 provided.`,
+        inReplyTo(message.message_id),
+      );
       return;
     }
 
@@ -39,11 +42,11 @@ module.exports = () => {
     const result = await conversionRatesInstance.methods.collectedFeesInTwei().call();
 
     replyWithMarkdown(
-      `*${
+      `${
         new BN(result.toString()) / new BN(
           String(10 ** await tokenInstance.methods.decimals().call())
         )
-      } ${await tokenInstance.methods.symbol().call()}*`,
+      } ${await tokenInstance.methods.symbol().call()}`,
       inReplyTo(message.message_id)
     );
   };

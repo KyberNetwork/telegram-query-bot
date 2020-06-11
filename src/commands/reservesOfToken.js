@@ -13,7 +13,10 @@ module.exports = () => {
     }
 
     if (args.length !== 1) {
-      reply(`ERROR: Invalid number of arguments. ${args.length} of 1 provided.`);
+      reply(
+        `ERROR: Invalid number of arguments. ${args.length} of 1 provided.`,
+        inReplyTo(message.message_id),
+      );
       return;
     }
 
@@ -28,9 +31,15 @@ module.exports = () => {
     }
 
     if (token.symbol === 'ETH') {
-      replyWithMarkdown('ETH is the native cryptoasset, and therefore no reserves.', inReplyTo(message.message_id));
+      replyWithMarkdown(
+        'ETH is the native cryptoasset, and therefore no reserves.',
+        inReplyTo(message.message_id),
+      );
     } else {
-      replyWithMarkdown(token.reserves_src.join(', '), inReplyTo(message.message_id));
+      replyWithMarkdown(
+        token.reserves_src.map(reserve => `\`${reserve}\``).join('\n'),
+        inReplyTo(message.message_id),
+      );
     }
   };
 };

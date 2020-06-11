@@ -15,7 +15,8 @@ module.exports = () => {
 
     if (args.length < 2) {
       reply(
-        `ERROR: Invalid number of arguments. ${args.length} of required 2 provided.`
+        `ERROR: Invalid number of arguments. ${args.length} of required 2 provided.`,
+        inReplyTo(message.message_id),
       );
       return;
     }

@@ -9,7 +9,10 @@ module.exports = () => {
     const { args } = state.command;
 
     if (!state.allowed) {
-      reply('You are not whitelisted to use this bot', inReplyTo(message.message_id));
+      reply(
+        'You are not whitelisted to use this bot', inReplyTo(message.message_id),
+        inReplyTo(message.message_id),
+      );
       return;
     }
 
@@ -47,7 +50,7 @@ module.exports = () => {
       return;
     }
 
-    result.push(`ETH: ${web3.utils.fromWei(await web3.eth.getBalance(reserve))}`);
+    result.push(`ETH: \`${web3.utils.fromWei(await web3.eth.getBalance(reserve))}\``);
 
     for (let index in tokens) {
       let tokenInstance = new web3.eth.Contract(tokenABI, tokens[index].address);
@@ -61,7 +64,7 @@ module.exports = () => {
         tokenBalance = (await tokenInstance.methods.balanceOf(reserve).call()) / (10 ** tokens[index].decimals);
       }
 
-      result.push(`${tokens[index].symbol}: ${tokenBalance}`);
+      result.push(`${tokens[index].symbol}: \`${tokenBalance}\``);
     }
 
     replyWithMarkdown(result.sort().join('\n'), inReplyTo(message.message_id));

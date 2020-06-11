@@ -11,7 +11,7 @@ module.exports = () => {
       return;
     }
 
-    if (shell.exec('cd /home/seifer/Work/telegram-query-bot', { silent : true }).code === 1) {
+    if (shell.exec('cd /home/ubuntu/telegram-query-bot', { silent : true }).code === 1) {
       reply('ERROR: Unexpected shell error has occured.', inReplyTo(message.message_id));
       return;
     }

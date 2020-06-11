@@ -12,13 +12,16 @@ module.exports = () => {
     }
 
     if (args.length !== 2) {
-      reply(`ERROR: Invalid number of arguments. ${args.length} of 2 provided.`);
+      reply(
+        `ERROR: Invalid number of arguments. ${args.length} of 2 provided.`,
+        inReplyTo(message.message_id),
+      );
       return;
     }
 
     const ether = args[0];
     const pMin = args[1];
 
-    replyWithMarkdown(`Liquidity Rate: *${Math.log(1 / pMin) / ether}*`, inReplyTo(message.message_id));
+    replyWithMarkdown(`r: \`${Math.log(1 / pMin) / ether}\``, inReplyTo(message.message_id));
   };
 };

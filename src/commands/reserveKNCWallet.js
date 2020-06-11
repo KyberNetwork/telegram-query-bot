@@ -13,7 +13,10 @@ module.exports = () => {
     }
 
     if (args.length !== 1) {
-      reply(`ERROR: Invalid number of arguments. ${args.length} of 1 provided.`);
+      reply(
+        `ERROR: Invalid number of arguments. ${args.length} of 1 provided.`,
+        inReplyTo(message.message_id),
+      );
       return;
     }
 
@@ -23,7 +26,7 @@ module.exports = () => {
     if (result === '0x0000000000000000000000000000000000000000') {
       replyWithMarkdown('KNC Fee Wallet not registered for reserve.');
     } else {
-      replyWithMarkdown(`*${result}*`, inReplyTo(message.message_id));
+      replyWithMarkdown(`${result}`, inReplyTo(message.message_id));
     }
   };
 };

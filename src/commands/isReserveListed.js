@@ -12,7 +12,10 @@ module.exports = () => {
     }
 
     if (args.length !== 1) {
-      reply(`ERROR: Invalid number of arguments. ${args.length} of 1 provided.`, inReplyTo(message.message_id));
+      reply(
+        `ERROR: Invalid number of arguments. ${args.length} of 1 provided.`,
+        inReplyTo(message.message_id),
+      );
       return;
     }
 
@@ -31,12 +34,12 @@ module.exports = () => {
     let msg = '';
     Object.keys(reserves).forEach(network => {
       if (reserves[network] !== -1) {
-        msg = msg.concat(`**${network}**\n`);
+        msg = msg.concat(`${network}\n`);
       }
     });
 
     if (msg === '') {
-      replyWithMarkdown('*Reserve not found on any network.*', inReplyTo(message.message_id));
+      replyWithMarkdown('Reserve not found on any network.', inReplyTo(message.message_id));
     } else {
       replyWithMarkdown(msg, inReplyTo(message.message_id));
     }

@@ -14,7 +14,10 @@ module.exports = () => {
     }
 
     if (args.length < 3) {
-      reply(`ERROR: Invalid number of arguments. ${args.length} of required 3 provided.`);
+      reply(
+        `ERROR: Invalid number of arguments. ${args.length} of required 3 provided.`,
+        inReplyTo(message.message_id),
+      );
       return;
     }
 
@@ -81,6 +84,6 @@ module.exports = () => {
     const expectedRate = web3.utils.fromWei(result.expectedRate.toString());
     const slippageRate = web3.utils.fromWei(result.slippageRate.toString());
 
-    replyWithMarkdown(`*Expected Rate: ${expectedRate}\nSlippage Rate: ${slippageRate}*`, inReplyTo(message.message_id));
+    replyWithMarkdown(`Expected Rate: \`${expectedRate}\`\nSlippage Rate: \`${slippageRate}\``, inReplyTo(message.message_id));
   };
 };

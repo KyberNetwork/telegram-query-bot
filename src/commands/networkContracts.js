@@ -7,7 +7,10 @@ module.exports = () => {
     const { args } = state.command;
 
     if (!state.allowed) {
-      reply('You are not whitelisted to use this bot', inReplyTo(message.message_id));
+      reply(
+        'You are not whitelisted to use this bot', inReplyTo(message.message_id),
+        inReplyTo(message.message_id),
+      );
       return;
     }
 

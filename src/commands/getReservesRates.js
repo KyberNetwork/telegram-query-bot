@@ -75,7 +75,8 @@ module.exports = (type) => {
 
     if (args.length < 2) {
       reply(
-        `ERROR: Invalid number of arguments. ${args.length} of required 2 provided.`
+        `ERROR: Invalid number of arguments. ${args.length} of required 2 provided.`,
+        inReplyTo(message.message_id),
       );
       return;
     }
@@ -145,7 +146,7 @@ module.exports = (type) => {
           contracts[network].Medianizer,
         );
         msg = msg.concat(
-          `${index}] ${resultETH.buyReserves[index]} : ${msgValue}\n`
+          `${index}] ${resultETH.buyReserves[index]} : \`${msgValue}\`\n`
         );
       }
       msg = msg.concat(`\n*SELL${formatLabel(type, symbol)}*\n`);
@@ -158,7 +159,7 @@ module.exports = (type) => {
           contracts[network].Medianizer,
         );
         msg = msg.concat(
-          `${index}] ${resultToken.sellReserves[index]} : ${msgValue}\n`
+          `${index}] ${resultToken.sellReserves[index]} : \`${msgValue}\`\n`
         );
       }
 

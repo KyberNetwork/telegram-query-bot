@@ -15,6 +15,6 @@ module.exports = () => {
     const web3 = helpers.getWeb3(network);
     const blockNumber = (await web3.eth.getBlock('latest')).number;
 
-    replyWithMarkdown(`*${blockNumber}*`, inReplyTo(message.message_id));
+    replyWithMarkdown(`${blockNumber}`, inReplyTo(message.message_id));
   };
 };

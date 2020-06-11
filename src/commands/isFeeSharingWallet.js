@@ -13,7 +13,10 @@ module.exports = () => {
     }
 
     if (args.length !== 1) {
-      reply(`ERROR: Invalid number of arguments. ${args.length} of 1 provided.`);
+      reply(
+        `ERROR: Invalid number of arguments. ${args.length} of 1 provided.`,
+        inReplyTo(message.message_id),
+      );
       return;
     }
 
@@ -21,6 +24,6 @@ module.exports = () => {
     const wallets = await WrapFeeBurner.methods.getFeeSharingWallets().call();
     const result = wallets.findIndex(r => wallet.toLowerCase() === r.toLowerCase());
 
-    replyWithMarkdown(`*${result > -1}*`, inReplyTo(message.message_id));
+    replyWithMarkdown(`${result > -1}`, inReplyTo(message.message_id));
   };
 };

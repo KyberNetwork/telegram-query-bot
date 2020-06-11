@@ -12,7 +12,10 @@ module.exports = () => {
     }
 
     if (args.length < 1) {
-      reply(`ERROR: Invalid number of arguments. ${args.length} of required 1 provided.`, inReplyTo(message.message_id));
+      reply(
+        `ERROR: Invalid number of arguments. ${args.length} of required 1 provided.`, inReplyTo(message.message_id),
+        inReplyTo(message.message_id),
+      );
       return;
     }
 
@@ -27,7 +30,7 @@ module.exports = () => {
     if (result === -1) {
       reply('Reserve not found.', inReplyTo(message.message_id));
     } else {
-      replyWithMarkdown(`*${result}*`, inReplyTo(message.message_id));
+      replyWithMarkdown(`${result}`, inReplyTo(message.message_id));
     }
   };
 };

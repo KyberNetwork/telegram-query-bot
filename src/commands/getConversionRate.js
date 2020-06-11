@@ -14,7 +14,10 @@ module.exports = () => {
     }
 
     if (args.length < 5) {
-      reply(`ERROR: Invalid number of arguments. ${args.length} of required 5 provided.`);
+      reply(
+        `ERROR: Invalid number of arguments. ${args.length} of required 5 provided.`,
+        inReplyTo(message.message_id),
+      );
       return;
     }
 
@@ -92,6 +95,6 @@ module.exports = () => {
       return;
     }
 
-    replyWithMarkdown(`*${web3.utils.fromWei(result.toString())}*`, inReplyTo(message.message_id));
+    replyWithMarkdown(`${web3.utils.fromWei(result.toString())}`, inReplyTo(message.message_id));
   };
 };
