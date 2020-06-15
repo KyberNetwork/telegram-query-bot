@@ -1,4 +1,3 @@
-const BN = require('bn.js');
 const Extra = require('telegraf/extra');
 const fs = require('fs');
 
@@ -58,13 +57,23 @@ module.exports = () => {
       ).call();
       r2 = r2 > 0 ? 1 / web3.utils.fromWei(r2.toString()) : 0;
 
-      const rComputed = ((r2 - r1) / r1) * 2;
+      let r3 = await conversionRatesInstance.methods.getRate(
+        token,
+        (await web3.eth.getBlock('latest')).number,
+        true,
+        web3.utils.toWei('3')
+      ).call();
+      r3 = r3 > 0 ? 1 / web3.utils.fromWei(r3.toString()) : 0;
+
+      const rComputed1 = ((r2 - r1) / r1) * 2;
+      const rComputed2 = (r3 - r1) / r1;
       
       let msg = '';
       msg = msg.concat(
         `r: \`${r}\`\n`,
-        `Computed r from rate: \`${rComputed}\`\n`,
-        (10 ** -7) > (r - rComputed)
+        `Computed r from 2 ETH rate: \`${rComputed1}\`\n`,
+        `Computed r from 3 ETH rate: \`${rComputed2}\`\n`,
+        ((10 ** -7) > (r - rComputed1) && (10 ** -7) > (r - rComputed2))
           ? '*Rate COMPLIES with liquidity param settings*'
           : '*Rate DOES NOT COMPLY with liquidity param settings*',
       );
