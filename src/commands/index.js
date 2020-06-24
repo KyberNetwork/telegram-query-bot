@@ -20,6 +20,7 @@ const reserveContracts = require('./reserveContracts');
 const reserveFeesInBps = require('./reserveFeesInBps');
 const reserveIndex = require('./reserveIndex');
 const reserveKNCWallet = require('./reserveKNCWallet');
+const reserveManagers = require('./reserveManagers');
 const reservesOfToken = require('./reservesOfToken');
 const sentiment = require('./sentiment');
 const tokenAddress = require('./tokenAddress');
@@ -75,6 +76,8 @@ module.exports = app => {
   app.command('reserveIndex', reserveIndex());
   app.command('reservekncwallet', reserveKNCWallet());
   app.command('reserveKNCWallet', reserveKNCWallet());
+  app.command('reservemanagers', reserveManagers());
+  app.command('reserveManagers', reserveManagers());
   app.command('reservesoftoken', reservesOfToken());
   app.command('reservesOfToken', reservesOfToken());
   app.command('sentiment', sentiment());
