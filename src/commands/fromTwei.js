@@ -45,7 +45,7 @@ module.exports = () => {
     }
 
     if (!token) {
-      reply('Invalid token symbol or address.', inReplyTo(message.message_id), Extra.markdown());
+      reply('Invalid token symbol or address.', inReplyTo(message.message_id));
       return;
     }
 

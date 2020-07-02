@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const Extra = require('telegraf/extra');
 
 module.exports = () => {
@@ -11,7 +13,9 @@ module.exports = () => {
       return;
     }
 
-    const gasPrice = (await ethgasstation.get('json/ethgasAPI.json')).data;
+    const gasPrice = (await ethgasstation.get('json/ethgasAPI.json', {
+      'api-key': process.env.DEFIPULSE_KEY,
+    })).data;
 
     let result = '';
     result = result.concat(

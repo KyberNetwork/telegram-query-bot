@@ -13,27 +13,25 @@ module.exports = () => {
       return;
     }
 
-    if (args.length < 3) {
+    if (args.length < 5) {
       reply(
-        `ERROR: Invalid number of arguments. ${args.length} of required 3 provided.`,
+        `ERROR: Invalid number of arguments. ${args.length} of required 5 provided.`,
         inReplyTo(message.message_id),
       );
       return;
     }
 
-    const network = (args[3]) ? args[3].toLowerCase() : 'mainnet';
+    const network = (args[5]) ? args[5].toLowerCase() : 'mainnet';
     const web3 = helpers.getWeb3(network);
     const currencies = (await kyber.get('/currencies')).data.data;
-    const tokenABI = JSON.parse(fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8'));
-    let qty = args[0];
-    let srcToken = args[1];
-    let destToken = args[2];
+    let srcToken = args[0];
+    let destToken = args[1];
+    let srcQty = args[2];
+    let platformFeeBps = args[3];
+    let hint = args[4];
 
     if (srcToken.toUpperCase() === 'ETH') {
-      srcToken = {
-        address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-        symbol: 'ETH',
-      };
+      srcToken = { address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' };
     } else if (
       !srcToken.startsWith('0x') &&
       (network.toLowerCase() == 'mainnet' || network.toLowerCase() == 'staging')
@@ -49,10 +47,7 @@ module.exports = () => {
     }
 
     if (destToken.toUpperCase() === 'ETH') {
-      destToken = {
-        address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-        symbol: 'ETH',
-      };
+      destToken = { address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' };
     } else if (
       !destToken.startsWith('0x') &&
       (network.toLowerCase() == 'mainnet' || network.toLowerCase() == 'staging')
@@ -68,41 +63,30 @@ module.exports = () => {
     }
 
     if (!srcToken || !destToken) {
-      reply('Invalid source or destination token symbol.', inReplyTo(message.message_id));
+      reply('Invalid source or destination token symbol or address.', inReplyTo(message.message_id));
       return;
     }
 
-    let srcQty;
-    let result;
-
-    if (srcToken.symbol === 'ETH') {
-      srcQty = web3.utils.toWei(qty);
+    if (srcToken.symbol === 'ETH' || srcToken.address.toLowerCase() === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+      srcQty = web3.utils.toWei(srcQty);
     } else {
+      const tokenABI = JSON.parse(fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8'));
       const srcTokenInstance = new web3.eth.Contract(tokenABI, srcToken.address);
       const decimals = srcToken.decimals || await srcTokenInstance.methods.decimals().call();
-      srcToken.symbol = srcToken.symbol || await srcTokenInstance.methods.symbol().call();
-      srcQty = Math.round(qty * (10 ** decimals)).toLocaleString('fullwide', {useGrouping:false});
+      srcQty = Math.round(srcQty * (10 ** decimals)).toLocaleString('fullwide', {useGrouping:false});
     }
 
-    if (destToken.symbol !== 'ETH') {
-      const destTokenInstance = new web3.eth.Contract(tokenABI, destToken.address);
-      destToken.symbol = destToken.symbol || await destTokenInstance.methods.symbol().call();
-    }
-
-    const getExpectedRate = helpers.getProxyFunction(network, 'getExpectedRate');
-    result = await getExpectedRate(
+    const getExpectedRateAfterFee = helpers.getProxyFunction(network, 'getExpectedRateAfterFee');
+    const result = await getExpectedRateAfterFee(
       srcToken.address,
       destToken.address,
       srcQty.toString(),
+      platformFeeBps.toString(),
+      hint,
     ).call();
 
-    if (result.expectedRate === '0') {
-      reply('Conversion for the pair is unavailable.');
-      return;
-    }
+    const expectedRate = web3.utils.fromWei(result.toString());
 
-    result = web3.utils.fromWei(result.expectedRate.toString()) * qty;
-
-    replyWithMarkdown(`\`${qty}\` ${srcToken.symbol} => \`${result}\` ${destToken.symbol}`, inReplyTo(message.message_id));
+    replyWithMarkdown(`Expected Rate: \`${expectedRate}\``, inReplyTo(message.message_id));
   };
 };

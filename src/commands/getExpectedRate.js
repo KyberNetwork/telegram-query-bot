@@ -61,7 +61,7 @@ module.exports = () => {
     }
 
     if (!srcToken || !destToken) {
-      reply('Invalid source or destination token symbol or address.', inReplyTo(message.message_id), Extra.markdown());
+      reply('Invalid source or destination token symbol or address.', inReplyTo(message.message_id));
       return;
     }
 
@@ -82,7 +82,7 @@ module.exports = () => {
     ).call();
 
     const expectedRate = web3.utils.fromWei(result.expectedRate.toString());
-    const slippageRate = web3.utils.fromWei(result.slippageRate.toString());
+    const slippageRate = web3.utils.fromWei(result.worstRate.toString());
 
     replyWithMarkdown(`Expected Rate: \`${expectedRate}\`\nSlippage Rate: \`${slippageRate}\``, inReplyTo(message.message_id));
   };

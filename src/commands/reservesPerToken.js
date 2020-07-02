@@ -1,8 +1,7 @@
 const Extra = require('telegraf/extra');
-const fs = require('fs');
 
 module.exports = () => {
-  return async (ctx) => {
+  return async ctx => {
     const { axios, helpers, message, reply, replyWithMarkdown, state } = ctx;
     const { kyber } = axios;
     const { inReplyTo } = Extra;
@@ -21,12 +20,13 @@ module.exports = () => {
       return;
     }
 
-    const network = args[1] ? args[1].toLowerCase() : 'mainnet';
-    const web3 = helpers.getWeb3(network);
+    const network = (args[1]) ? args[1].toLowerCase() : 'mainnet';
     const currencies = (await kyber.get('/currencies')).data.data;
-
     let token = args[0];
-    if (
+
+    if (token.toUpperCase() === 'ETH') {
+      token = { address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' };
+    } else if (
       !token.startsWith('0x') &&
       (network.toLowerCase() == 'mainnet' || network.toLowerCase() == 'staging')
     ) {
@@ -45,24 +45,14 @@ module.exports = () => {
       return;
     }
 
-    const tokenABI = JSON.parse(
-      fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8')
+    const reservesPerTokenSrc = helpers.getStorageFunction(network, 'getReserveIdsPerTokenSrc');
+    const reservesPerTokenDest = helpers.getStorageFunction(network, 'getReserveIdsPerTokenDest');
+    const srcReserveIds = await reservesPerTokenSrc(token.address).call();
+    const destReserveIds = await reservesPerTokenDest(token.address).call();
+
+    replyWithMarkdown(
+      `Src ReserveIds: \`${srcReserveIds.join('`, `')}\`\nDest ReserveIds: \`${destReserveIds.join('`, `')}\``,
+      inReplyTo(message.message_id),
     );
-    const tokenInstance = new web3.eth.Contract(tokenABI, token.address);
-
-    const symbol = await tokenInstance.methods.symbol().call();
-    const name = await tokenInstance.methods.name().call();
-    const decimals = await tokenInstance.methods.decimals().call();
-    const totalSupply = await tokenInstance.methods.totalSupply().call() / (10 ** decimals);
-
-    let msg ='';
-    msg = msg.concat(
-      `symbol: \`${symbol}\`\n`,
-      `name: \`${name}\`\n`,
-      `decimals: \`${decimals}\`\n`,
-      `totalSupply: \`${totalSupply.toLocaleString(undefined, { maximumFractionDigits: 16 })}\``,
-    );
-
-    replyWithMarkdown(msg, inReplyTo(message.message_id));
   };
 };
