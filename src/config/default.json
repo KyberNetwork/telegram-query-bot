@@ -29,12 +29,12 @@
       "Medianizer": "0x729D19f657BD0614b4985Cf1D82531c67569197B"
     },
     "staging": {
-      "KyberNetworkProxy": "0x6326dd73E368c036D4C4997053a021CBc52c7367",
-      "KyberNetwork": "0xafBf0D08269a7eEe8d587121f3B0616c8CeF5077"
+      "KyberNetworkProxy": "0xc153eeAD19e0DBbDb3462Dcc2B703cC6D738A37c",
+      "KyberNetwork": "0x9CB7bB6D4795A281860b9Bfb7B1441361Cc9A794"
     },
     "ropsten": {
-      "KyberNetworkProxy": "0x818E6FECD516Ecc3849DAf6845e3EC868087B755",
-      "KyberNetwork": "0x753fe1914db38ee744e071baadd123f50f9c8e46"
+      "KyberNetworkProxy": "0xc153eeAD19e0DBbDb3462Dcc2B703cC6D738A37c",
+      "KyberNetwork": "0x920B322D4B8BAB34fb6233646F5c87F87e79952b"
     },
     "rinkeby": {
       "KyberNetworkProxy": "0xF77eC7Ed5f5B9a5aee4cfa6FFCaC6A4C315BaC76",
