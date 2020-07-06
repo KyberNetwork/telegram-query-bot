@@ -102,7 +102,6 @@ module.exports = (type) => {
       reply(
         'Invalid token symbol or address.',
         inReplyTo(message.message_id),
-        Extra.markdown()
       );
       return;
     }

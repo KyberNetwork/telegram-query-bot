@@ -67,7 +67,7 @@ module.exports = () => {
     }
 
     if (!srcToken || !destToken) {
-      reply('Invalid source or destination token symbol or address.', inReplyTo(message.message_id), Extra.markdown());
+      reply('Invalid source or destination token symbol or address.', inReplyTo(message.message_id));
       return;
     }
 

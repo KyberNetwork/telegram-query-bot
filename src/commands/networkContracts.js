@@ -2,7 +2,7 @@ const Extra = require('telegraf/extra');
 
 module.exports = () => {
   return async ctx => {
-    const { contracts, message, reply, replyWithMarkdown, state } = ctx;
+    const { helpers, message, reply, replyWithMarkdown, state } = ctx;
     const { inReplyTo } = Extra;
     const { args } = state.command;
 
@@ -15,11 +15,23 @@ module.exports = () => {
     }
 
     const network = (args[0]) ? args[0].toLowerCase() : 'mainnet';
+    const kyberNetwork = helpers.getProxyFunction(network, 'kyberNetwork');
+    const kyberHintHandler = helpers.getProxyFunction(network, 'kyberHintHandler');
+    const getContracts = helpers.getNetworkFunction(network, 'getContracts');
+    const staking = helpers.getDaoFunction(network, 'staking');
+    const result = await getContracts().call();
 
     let msg ='';
     msg = msg.concat(
-      `KyberNetworkProxy: \`${contracts[network].KyberNetworkProxy._address}\`\n`,
-      `KyberNetwork: \`${contracts[network].KyberNetwork._address}\``,
+      `KyberNetworkProxies: \`${result[5].join('`, `')}\`\n`,
+      `kyberNetwork: \`${await kyberNetwork().call()}\`\n`,
+      `kyberHintHandler: \`${await kyberHintHandler().call()}\`\n`,
+      `KyberFeeHandler: \`${result[0]}\`\n`,
+      `KyberStaking: \`${await staking().call()}\`\n`,
+      `KyberDao: \`${result[1]}\`\n`,
+      `KyberMatchingEngine: \`${result[2]}\`\n`,
+      `KyberStorage: \`${result[3]}\`\n`,
+      `GasHelper: \`${result[4]}\``,
     );
     
     replyWithMarkdown(msg, inReplyTo(message.message_id));
