@@ -37,6 +37,7 @@ const parseHint = require('./parseHint');
 const permissions = require('./permissions');
 const reserveBalances = require('./reserveBalances');
 const reserveContracts = require('./reserveContracts');
+const reserveAddresses = require('./reserveAddresses');
 const reserveId = require('./reserveId');
 // const reserveFeesInBps = require('./reserveFeesInBps');
 // const reserveIndex = require('./reserveIndex');
@@ -135,6 +136,8 @@ module.exports = app => {
   app.command('reserveBalances', reserveBalances());
   app.command('reservecontracts', reserveContracts());
   app.command('reserveContracts', reserveContracts());
+  app.command('reserveaddresses', reserveAddresses());
+  app.command('reserveAddresses', reserveAddresses());
   app.command('reserveid', reserveId());
   app.command('reserveId', reserveId());
   // app.command('reservefeesinbps', reserveFeesInBps());

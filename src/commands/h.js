@@ -104,6 +104,8 @@ module.exports = () => {
         help = help.concat(
           '**STORAGE**\n',
           '========\n',
+          '`Returns the reserve addresses tied to a reserve ID`\n',
+          '/reserveAddresses <reserrveId> <optional: network>\n\n',
           '`Returns the reserve ID given a reserve address`\n',
           '/reserveId <reserveAddress> <optional: network>\n\n',
           '`Returns all listed reserves in the network`\n',
