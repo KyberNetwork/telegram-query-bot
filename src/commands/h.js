@@ -109,6 +109,8 @@ module.exports = () => {
           '`Returns the reserve ID given a reserve address`\n',
           '/reserveId <reserveAddress> <optional: network>\n\n',
           '`Returns all listed reserves in the network`\n',
+          '/reserveIdToAscii <reserveId>\n\n',
+          '`Translates the reserveId to its ASCII equivalent`\n',
           '/reserves <optional: network>\n\n',
           '`Returns the reserve IDs per token source and dest`\n',
           '/reservesPerToken <token> <optional: network>\n\n',

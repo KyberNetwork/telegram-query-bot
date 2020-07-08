@@ -20,10 +20,10 @@ module.exports = () => {
     let msg ='';
     msg = msg.concat(
       `enabled: \`${await enabled().call()}\`\n`,
-      `expiryTimestamp: \`${helpers.formatTime(networkData.expiryTimestamp)}\`\n`,
       `negligibleDiffBps: \`${networkData.negligibleDiffBps}\`\n`,
-      `networkFeeBps: \`${networkData.networkFeeBps}\`\n`,
       `maxGasPrice: \`${await maxGasPrice().call()}\``,
+      `networkFeeBps: \`${networkData.networkFeeBps}\`\n`,
+      `expiryTimestamp: \`${helpers.formatTime(networkData.expiryTimestamp)}\`\n`,
     );
     
     replyWithMarkdown(msg, inReplyTo(message.message_id));

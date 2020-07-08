@@ -226,6 +226,37 @@ module.exports = app => {
     );
   };
 
+  const reserveIdToAscii = reserveId => {
+    let hex = reserveId.toString().substr(2, reserveId.length).replace(/0+$/, '');
+    let reserveType = hex.substr(0, 2);
+
+    switch (hex.substr(0, 2)) {
+      case 'ff':
+        reserveType = 'FPR';
+        break;
+      case 'aa':
+        reserveType = 'APR';
+        break;
+      case 'bb':
+        reserveType = 'BRIDGE';
+        break;
+      case '00':
+        reserveType = 'UTILITY';
+        break;
+      default:
+        reserveType = 'NONE';
+        break;
+    }
+  
+    hex = hex.substr(2, reserveId.length);
+    let result = '';
+    for (var i = 0; i < hex.length; i += 2) {
+      result += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    }
+
+    return [`${result.replace(/_/g, '\\_')}`, reserveType];
+  };
+
   app.context.helpers = {
     getProxyFunction,
     getNetworkFunction,
@@ -238,6 +269,7 @@ module.exports = app => {
     getRateFunction,
     getWeb3,
     formatTime,
+    reserveIdToAscii,
   };
 
   logger.info('Initialized helpers');

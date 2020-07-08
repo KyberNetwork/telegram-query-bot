@@ -39,6 +39,7 @@ const reserveBalances = require('./reserveBalances');
 const reserveContracts = require('./reserveContracts');
 const reserveAddresses = require('./reserveAddresses');
 const reserveId = require('./reserveId');
+const reserveIdToAscii = require('./reserveIdToAscii');
 // const reserveFeesInBps = require('./reserveFeesInBps');
 // const reserveIndex = require('./reserveIndex');
 // const reserveKNCWallet = require('./reserveKNCWallet');
@@ -138,6 +139,8 @@ module.exports = app => {
   app.command('reserveContracts', reserveContracts());
   app.command('reserveaddresses', reserveAddresses());
   app.command('reserveAddresses', reserveAddresses());
+  app.command('reserveidtoascii', reserveIdToAscii());
+  app.command('reserveIdToAscii', reserveIdToAscii());
   app.command('reserveid', reserveId());
   app.command('reserveId', reserveId());
   // app.command('reservefeesinbps', reserveFeesInBps());

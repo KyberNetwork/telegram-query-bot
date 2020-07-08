@@ -49,7 +49,7 @@
       "FeeHandlerHistory": "0xe938445B6a3E8C97C86f0a8777254172480B7ffe",
       "DaoHistory": "0xF2bCFcF8892c7279B2743E2FeF1893ac622EB38A",
       "MatchingEngineHistory": "0xB222bC4e4Ffcb39e392C93Af9B480019B59f4CC2",
-      "RateHelper": "0xf2756ed51434a23Ff019b3d58FA72B7faf041558"
+      "RateHelper": "0x0b4dC4c4dd510431F861badd5162c8284d912f69"
     },
     "ropsten": {
       "KyberNetworkProxy": "0xd719c34261e099Fdb33030ac8909d5788D3039C4",

@@ -48,6 +48,7 @@ const daoCmds = [
 const storageCmds = [
   'reserveAddresses',
   'reserveId',
+  'reserveIdToAscii',
   'reserves',
   'reservesPerToken',
   'tokensPerReserve',

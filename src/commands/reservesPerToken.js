@@ -52,6 +52,7 @@ module.exports = () => {
 
     let result = srcReserveIds.concat(destReserveIds);
     result = result.filter((element, index) => result.indexOf(element) === index);
+    result = result.map(element => element.replace(/0+$/, ''));
 
     replyWithMarkdown(
       `ReserveIds: \`${result.join('`, `')}\``,

@@ -12,7 +12,7 @@ module.exports = () => {
 
         if (match !== null) {
           if (match[1]) {
-            command = match[1];
+            command = match[1].toLowerCase();
           }
           if (match[2]) {
             args = match[2].split(' ');
@@ -31,7 +31,7 @@ module.exports = () => {
 
         if (match !== null) {
           if (match[1]) {
-            command = match[1];
+            command = match[1].toLowerCase();
           }
           if (match[2]) {
             args = JSON.parse(match[2]);
