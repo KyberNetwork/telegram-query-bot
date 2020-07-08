@@ -254,7 +254,7 @@ module.exports = app => {
       result += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
     }
 
-    return [`${result.replace(/_/g, '\\_')}`, reserveType];
+    return [result, reserveType];
   };
 
   app.context.helpers = {

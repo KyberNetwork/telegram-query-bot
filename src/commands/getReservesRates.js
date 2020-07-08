@@ -149,7 +149,7 @@ module.exports = (type) => {
         );
         msg = msg.concat(
           `${index}] ${resultETH.buyReserves[index].replace(/0+$/, '')}`,
-          ` (${reserveAscii} [[${reserveType}]]) : `,
+          ` (${reserveAscii.replace(/_/g, '\\_')} [[${reserveType}]]) : `,
           `\`${msgValue}\`\n`,
         );
       }
@@ -165,7 +165,7 @@ module.exports = (type) => {
         );
         msg = msg.concat(
           `${index}] ${resultETH.sellReserves[index].replace(/0+$/, '')}`,
-          ` (${reserveAscii} [[${reserveType}]]) : `,
+          ` (${reserveAscii.replace(/_/g, '\\_')} [[${reserveType}]]) : `,
           `\`${msgValue}\`\n`,
         );
       }

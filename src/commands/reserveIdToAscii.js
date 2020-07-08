@@ -19,7 +19,7 @@ module.exports = () => {
       return;
     }
 
-    const reserveId = args[0];
+    const reserveId = args[0].replace(/0+$/, '');
     const [reserveAscii, reserveType] = helpers.reserveIdToAscii(reserveId);
 
     reply(`${reserveAscii} (${reserveType})`, inReplyTo(message.message_id));

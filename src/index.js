@@ -46,6 +46,7 @@ const daoCmds = [
   'daoCampaignWinData',
 ];
 const storageCmds = [
+  'newReserveId',
   'reserveAddresses',
   'reserveId',
   'reserveIdToAscii',
