@@ -22,7 +22,7 @@ module.exports = () => {
 
     const currencies = (await kyber.get('/currencies')).data.data;
     let token = args[0].toUpperCase();
-
+    
     token = currencies.find(o => o.symbol === token);
 
     if (!token) {
@@ -36,8 +36,18 @@ module.exports = () => {
         inReplyTo(message.message_id),
       );
     } else {
+      if (!token.reserves_src && !token.reserves_dest) {
+        replyWithMarkdown(
+          'ERROR: Data not available in API. Use `/reservesPerToken` instead.',
+          inReplyTo(message.message_id),
+        );
+      }
+
+      let result = token.reserves_src.concat(token.reserves_dest);
+      result = result.filter((element, index) => result.indexOf(element) === index);
+
       replyWithMarkdown(
-        token.reserves_src.map(reserve => `\`${reserve}\``).join('\n'),
+        `Reserve Addresses: \`${result.join('`,\n`')}\``,
         inReplyTo(message.message_id),
       );
     }

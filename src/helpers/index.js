@@ -11,6 +11,7 @@ module.exports = app => {
     KyberFeeHandler: KyberFeeHandlerMainnet,
     KyberStaking: KyberStakingMainnet,
     KyberDao: KyberDaoMainnet,
+    RateHelper: RateHelperMainnet,
   } = contracts.mainnet;
   const {
     KyberNetworkProxy: KyberNetworkProxyStaging,
@@ -21,6 +22,7 @@ module.exports = app => {
     KyberFeeHandler: KyberFeeHandlerStaging,
     KyberStaking: KyberStakingStaging,
     KyberDao: KyberDaoStaging,
+    // RateHelper: RateHelperMainnet,
   } = contracts.staging;
   const {
     KyberNetworkProxy: KyberNetworkProxyRopsten,
@@ -31,6 +33,7 @@ module.exports = app => {
     KyberFeeHandler: KyberFeeHandlerRopsten,
     KyberStaking: KyberStakingRopsten,
     KyberDao: KyberDaoRopsten,
+    // RateHelper: RateHelperMainnet,
   } = contracts.ropsten;
   const {
     KyberNetworkProxy: KyberNetworkProxyRinkeby,
@@ -41,6 +44,7 @@ module.exports = app => {
     KyberFeeHandler: KyberFeeHandlerRinkeby,
     KyberStaking: KyberStakingRinkeby,
     KyberDao: KyberDaoRinkeby,
+    // RateHelper: RateHelperMainnet,
   } = contracts.rinkeby;
   const {
     KyberNetworkProxy: KyberNetworkProxyKovan,
@@ -51,6 +55,7 @@ module.exports = app => {
     KyberFeeHandler: KyberFeeHandlerKovan,
     KyberStaking: KyberStakingKovan,
     KyberDao: KyberDaoKovan,
+    // RateHelper: RateHelperMainnet,
   } = contracts.kovan;
   
   const getProxyFunction = (network, func) => {
@@ -173,6 +178,21 @@ module.exports = app => {
     }
   };
 
+  const getRateFunction = (network, func) => {
+    switch (network.toLowerCase()) {
+      case 'staging':
+        return RateHelperMainnet.methods[func];
+      // case 'ropsten':
+      //   return RateHelperRopsten.methods[func];
+      // case 'rinkeby':
+      //   return RateHelperRinkeby.methods[func]; 
+      // case 'kovan':
+      //   return RateHelperKovan.methods[func];
+      default:
+        return RateHelperMainnet.methods[func]; 
+    }
+  };
+
   const getWeb3 = network => {
     switch (network) {
       case 'ropsten':
@@ -215,6 +235,7 @@ module.exports = app => {
     getFeeHandlerFunction,
     getStakingFunction,
     getDaoFunction,
+    getRateFunction,
     getWeb3,
     formatTime,
   };

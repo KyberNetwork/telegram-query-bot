@@ -117,7 +117,7 @@ module.exports = (type) => {
     );
     const qtyETH = web3.utils.toWei(qty);
 
-    const getReservesRates = helpers.getNetworkFunction(
+    const getReservesRates = helpers.getRateFunction(
       network,
       'getReservesRates'
     );

@@ -12,6 +12,7 @@ const KyberStakingABI = JSON.parse(fs.readFileSync('src/contracts/abi/KyberStaki
 const KyberDaoABI = JSON.parse(fs.readFileSync('src/contracts/abi/KyberDao.abi', 'utf8'));
 const FeeBurnerABI = JSON.parse(fs.readFileSync('src/contracts/abi/FeeBurner.abi', 'utf8'));
 const WrapFeeBurnerABI = JSON.parse(fs.readFileSync('src/contracts/abi/WrapFeeBurner.abi', 'utf8'));
+const RateHelperABI = JSON.parse(fs.readFileSync('src/contracts/abi/RateHelper.abi', 'utf8'));
 const MedianizerABI = JSON.parse(fs.readFileSync('src/contracts/abi/Medianizer.abi', 'utf8'));
 let KyberNetworkProxyAddress;
 let KyberNetworkProxy;
@@ -29,6 +30,8 @@ let KyberStakingAddress;
 let KyberStaking;
 let KyberDaoAddress;
 let KyberDao;
+let RateHelperAddress;
+let RateHelper;
 let FeeBurnerAddress;
 let FeeBurner;
 let WrapFeeBurnerAddress;
@@ -63,6 +66,9 @@ module.exports = app => {
   KyberDaoAddress = config.contracts.mainnet.KyberDao;  
   KyberDao = new ethereum.mainnet.eth.Contract(KyberDaoABI, KyberDaoAddress);
 
+  RateHelperAddress = config.contracts.mainnet.RateHelper;  
+  RateHelper = new ethereum.mainnet.eth.Contract(RateHelperABI, RateHelperAddress);
+
   FeeBurnerAddress = config.contracts.mainnet.FeeBurner;
   FeeBurner = new ethereum.mainnet.eth.Contract(FeeBurnerABI, FeeBurnerAddress);
 
@@ -81,6 +87,7 @@ module.exports = app => {
     'KyberFeeHandler': KyberFeeHandler,
     'KyberStaking': KyberStaking,
     'KyberDao': KyberDao,
+    'RateHelper': RateHelper,
     'FeeBurner': FeeBurner,
     'WrapFeeBurner': WrapFeeBurner,
     'Medianizer': Medianizer,

@@ -46,10 +46,13 @@ module.exports = () => {
       } else {
         resDestTokens.push(t.symbol);
       }
-    }    
+    }
+
+    let result = resSrcTokens.concat(resDestTokens);
+    result = result.filter((element, index) => result.indexOf(element) === index);
 
     replyWithMarkdown(
-      `Source Tokens: \`${resSrcTokens.sort().join('`, `')}\`\n\nDestination Tokens: \`${resDestTokens.sort().join('`, `')}\``,
+      `Tokens: \`${result.sort().join('`, `')}\``,
       inReplyTo(message.message_id),
     );
   };

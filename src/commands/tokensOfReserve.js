@@ -22,23 +22,36 @@ module.exports = () => {
 
     const currencies = (await kyber.get('/currencies')).data.data;
     const reserve = args[0].toLowerCase();
-    const result = [];
+    const reservesSrc = [];
+    const reservesDest = [];
 
     currencies.find(o => {
       if (o.reserves_src) {
         o.reserves_src.find(a => {
           if (a.toLowerCase() === reserve) {
-            result.push(o.symbol);
+            reservesSrc.push(o.symbol);
           }
         });
       }
     });
 
-    if (result.length === 0) {
-      reply('Invalid reserve address.', inReplyTo(message.message_id));
-      return;
-    }
+    currencies.find(o => {
+      if (o.reserves_dest) {
+        o.reserves_dest.find(a => {
+          if (a.toLowerCase() === reserve) {
+            reservesDest.push(o.symbol);
+          }
+        });
+      }
+    });
 
-    replyWithMarkdown(result.sort().join(', '), inReplyTo(message.message_id));
+    if (reservesSrc.length === 0 && reservesDest.length === 0) {
+      reply('Invalid reserve address.', inReplyTo(message.message_id));
+    }
+    
+    let result = reservesSrc.concat(reservesDest);
+    result = result.filter((element, index) => result.indexOf(element) === index);
+
+    replyWithMarkdown(`Tokens: \`${result.sort().join('`, `')}\``, inReplyTo(message.message_id));
   };
 };

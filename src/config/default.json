@@ -32,6 +32,7 @@
       "FeeHandlerHistory": "0x27686499DC0b248641f50774272667726b094e6d",
       "DaoHistory": "0xe233855F0dde2045F3cF204E581869f8e377423C",
       "MatchingEngineHistory": "0x26a9eCBEcA589aA575A9806f0555Df0382940ba3",
+      "RateHelper": "0xf2756ed51434a23Ff019b3d58FA72B7faf041558",
       "FeeBurner": "0x8007aa43792A392b221DC091bdb2191E5fF626d1",
       "WrapFeeBurner": "0x3b32f992D5f98beF76C74ECbc3a16DBF2f308BaA",
       "Medianizer": "0x729D19f657BD0614b4985Cf1D82531c67569197B"
@@ -47,7 +48,8 @@
       "NetworkHistory": "0x9B53D7Bb657F5f14a7F73C2d2B90cc084Cae1fE4",
       "FeeHandlerHistory": "0xe938445B6a3E8C97C86f0a8777254172480B7ffe",
       "DaoHistory": "0xF2bCFcF8892c7279B2743E2FeF1893ac622EB38A",
-      "MatchingEngineHistory": "0xB222bC4e4Ffcb39e392C93Af9B480019B59f4CC2"
+      "MatchingEngineHistory": "0xB222bC4e4Ffcb39e392C93Af9B480019B59f4CC2",
+      "RateHelper": "0xf2756ed51434a23Ff019b3d58FA72B7faf041558"
     },
     "ropsten": {
       "KyberNetworkProxy": "0xd719c34261e099Fdb33030ac8909d5788D3039C4",
@@ -60,15 +62,36 @@
       "NetworkHistory": "0xCaEcf8B41247F188C174c06170c0fA13c66fF6D9",
       "FeeHandlerHistory": "0x89e35C62e71955288bC5Ed785A5C15E11DEd152F",
       "DaoHistory": "0x701f73CE836e9E57e3F8641EB1ce3479C631e4d8",
-      "MatchingEngineHistory": "0x7EB9C4C20E1ff590505567b158C91a9578Fe9165"
+      "MatchingEngineHistory": "0x7EB9C4C20E1ff590505567b158C91a9578Fe9165",
+      "RateHelper": "0xf2756ed51434a23Ff019b3d58FA72B7faf041558"
     },
     "rinkeby": {
-      "KyberNetworkProxy": "0xF77eC7Ed5f5B9a5aee4cfa6FFCaC6A4C315BaC76",
-      "KyberNetwork": "0x037d8c47d75D76950C2Eb738D1F7403b99208ECd"
+      "KyberNetworkProxy": "0xd719c34261e099Fdb33030ac8909d5788D3039C4",
+      "KyberNetwork": "0x920B322D4B8BAB34fb6233646F5c87F87e79952b",
+      "KyberStorage": "0x688bf5EeC43E0799c5B9c1612F625F7b93FE5434",
+      "KyberFeeHandler": "0xfF456D9A8cbB5352eF77dEc2337bAC8dEC63bEAC",
+      "KyberStaking": "0x9A73c6217cd595bc449bA6fEF6efF53f29014f42",
+      "KyberMatchingEngine": "0x63f773c026093eEf988e803BdD5772DD235a8E71",
+      "KyberDao": "0x2Be7dC494362e4FCa2c228522047663B17aE17F9",
+      "NetworkHistory": "0xCaEcf8B41247F188C174c06170c0fA13c66fF6D9",
+      "FeeHandlerHistory": "0x89e35C62e71955288bC5Ed785A5C15E11DEd152F",
+      "DaoHistory": "0x701f73CE836e9E57e3F8641EB1ce3479C631e4d8",
+      "MatchingEngineHistory": "0x7EB9C4C20E1ff590505567b158C91a9578Fe9165",
+      "RateHelper": "0xf2756ed51434a23Ff019b3d58FA72B7faf041558"
     },
     "kovan": {
-      "KyberNetworkProxy": "0x692f391bCc85cefCe8C237C01e1f636BbD70EA4D",
-      "KyberNetwork": "0xb5034418f6cc1fd494535f2d38f770c9827f88a1"
+      "KyberNetworkProxy": "0xd719c34261e099Fdb33030ac8909d5788D3039C4",
+      "KyberNetwork": "0x920B322D4B8BAB34fb6233646F5c87F87e79952b",
+      "KyberStorage": "0x688bf5EeC43E0799c5B9c1612F625F7b93FE5434",
+      "KyberFeeHandler": "0xfF456D9A8cbB5352eF77dEc2337bAC8dEC63bEAC",
+      "KyberStaking": "0x9A73c6217cd595bc449bA6fEF6efF53f29014f42",
+      "KyberMatchingEngine": "0x63f773c026093eEf988e803BdD5772DD235a8E71",
+      "KyberDao": "0x2Be7dC494362e4FCa2c228522047663B17aE17F9",
+      "NetworkHistory": "0xCaEcf8B41247F188C174c06170c0fA13c66fF6D9",
+      "FeeHandlerHistory": "0x89e35C62e71955288bC5Ed785A5C15E11DEd152F",
+      "DaoHistory": "0x701f73CE836e9E57e3F8641EB1ce3479C631e4d8",
+      "MatchingEngineHistory": "0x7EB9C4C20E1ff590505567b158C91a9578Fe9165",
+      "RateHelper": "0xf2756ed51434a23Ff019b3d58FA72B7faf041558"
     }
   },
   "whois": {

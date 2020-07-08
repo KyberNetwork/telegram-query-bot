@@ -50,8 +50,11 @@ module.exports = () => {
     const srcReserveIds = await reservesPerTokenSrc(token.address).call();
     const destReserveIds = await reservesPerTokenDest(token.address).call();
 
+    let result = srcReserveIds.concat(destReserveIds);
+    result = result.filter((element, index) => result.indexOf(element) === index);
+
     replyWithMarkdown(
-      `Source ReserveIds: \`${srcReserveIds.join('`, `')}\`\nDestination ReserveIds: \`${destReserveIds.join('`, `')}\``,
+      `ReserveIds: \`${result.join('`, `')}\``,
       inReplyTo(message.message_id),
     );
   };
