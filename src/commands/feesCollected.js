@@ -2,7 +2,7 @@ const Extra = require('telegraf/extra');
 
 module.exports = () => {
   return async ctx => {
-    const { contracts, helpers, message, reply, replyWithMarkdown, state } = ctx;
+    const { helpers, message, reply, replyWithMarkdown, state } = ctx;
     const { inReplyTo } = Extra;
     const { args } = state.command;
 
@@ -13,8 +13,9 @@ module.exports = () => {
 
     const network = (args[0]) ? args[0].toLowerCase() : 'mainnet';
     const web3 = helpers.getWeb3(network);
-    const { KyberFeeHandler } = contracts[network];
-    const result = web3.utils.fromWei(await web3.eth.getBalance(KyberFeeHandler._address));
+    const totalPayoutBalance = helpers.getFeeHandlerFunction(network, 'totalPayoutBalance');
+
+    const result = web3.utils.fromWei(await totalPayoutBalance().call());
     
     replyWithMarkdown(`Current collected fees: \`${result} ETH\``, inReplyTo(message.message_id));
   };
