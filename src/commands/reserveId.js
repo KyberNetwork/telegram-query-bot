@@ -25,6 +25,6 @@ module.exports = () => {
     const getReserveId = helpers.getStorageFunction(network, 'getReserveId');
     const reserveId = await getReserveId(reserveAddress).call(); 
 
-    replyWithMarkdown(`Reserve ID: \`${reserveId}\``, inReplyTo(message.message_id));
+    replyWithMarkdown(`Reserve ID: \`${reserveId.replace(/0+$/, '')}\``, inReplyTo(message.message_id));
   };
 };
