@@ -41,6 +41,7 @@ module.exports = () => {
           'ERROR: Data not available in API. Use `/reservesPerToken` instead.',
           inReplyTo(message.message_id),
         );
+        return;
       }
 
       let result = token.reserves_src.concat(token.reserves_dest);

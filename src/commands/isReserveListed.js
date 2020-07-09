@@ -11,37 +11,24 @@ module.exports = () => {
       return;
     }
 
-    if (args.length !== 1) {
+    if (args.length < 1) {
       reply(
-        `ERROR: Invalid number of arguments. ${args.length} of 1 provided.`,
+        `ERROR: Invalid number of arguments. ${args.length} of required 1 provided.`,
         inReplyTo(message.message_id),
       );
       return;
     }
 
+    const network = (args[1]) ? args[1].toLowerCase() : 'mainnet';
     const reserve = args[0].toLowerCase();
-    const reserves = {};
-    const networks = ['mainnet', 'staging', 'ropsten', 'rinkeby', 'kovan'];
-    let getReserves;
-    let result;
+    const getReserves = helpers.getStorageFunction(network, 'getReserves');
+    const reserves = await getReserves().call();
+    const result = reserves.findIndex(r => reserve.toLowerCase() === r.toLowerCase());
 
-    for (let i in networks) {
-      getReserves = helpers.getNetworkFunction(networks[i], 'getReserves');
-      result = await getReserves().call();
-      reserves[networks[i]] = result.findIndex(r => reserve.toLowerCase() === r.toLowerCase());
-    }
-
-    let msg = '';
-    Object.keys(reserves).forEach(network => {
-      if (reserves[network] !== -1) {
-        msg = msg.concat(`${network}\n`);
-      }
-    });
-
-    if (msg === '') {
-      replyWithMarkdown('Reserve not found on any network.', inReplyTo(message.message_id));
+    if (result !== -1) {
+      replyWithMarkdown('Reserve is *listed*', inReplyTo(message.message_id));
     } else {
-      replyWithMarkdown(msg, inReplyTo(message.message_id));
+      replyWithMarkdown('Reserve *not found*', inReplyTo(message.message_id));
     }
   };
 };

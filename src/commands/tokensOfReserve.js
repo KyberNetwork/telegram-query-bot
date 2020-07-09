@@ -47,6 +47,7 @@ module.exports = () => {
 
     if (reservesSrc.length === 0 && reservesDest.length === 0) {
       reply('Invalid reserve address.', inReplyTo(message.message_id));
+      return;
     }
     
     let result = reservesSrc.concat(reservesDest);

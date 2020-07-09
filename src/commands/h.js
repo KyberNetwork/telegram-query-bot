@@ -142,7 +142,7 @@ module.exports = () => {
           '/collectedFeesInTwei <reserve> <optional: network>\n\n',
           '`Returns the conversion rate from the reserve contract`\n',
           '/getConversionRate <reserve> <srcToken> <destToken> <srcQty> <blockNumber> <optional: network>\n\n',
-          '`Checks if the reserve is listed in any network`\n',
+          '`Checks if the reserve is listed in a network`\n',
           '/isReserveListed <reserve> <optional: network>\n\n',
           '`Computes and returns the liquidity params based on the JSON input`\n',
           '/liquidityParams <json>\n\n',

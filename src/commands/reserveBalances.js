@@ -34,7 +34,7 @@ module.exports = () => {
     currencies.find(o => {
       if (o.reserves_src) {
         o.reserves_src.find(a => {
-          if (a.toLowerCase() === reserve) {
+          if (a.toLowerCase() === reserve.toLowerCase()) {
             tokens.push({
               symbol: o.symbol,
               address: o.address,
