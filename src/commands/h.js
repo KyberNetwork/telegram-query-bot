@@ -70,6 +70,8 @@ module.exports = () => {
           '/stakerData <staker> <epoch> <optional: network>\n\n',
           '`Returns the raw staker data up to current epoch + 1. Returns 0 values if staker data is uninitialized.`\n',
           '/stakerRawData <staker> <epoch> <optional: network>\n\n',
+          '`Returns the latest staking annual percentage yield.`\n',
+          '/stakingAPY <kncAmount> <optional: network>\n\n',
           '`Returns the total staked KNC in the network.`\n',
           '/totalStaked <optional: network>\n\n',
         );
@@ -124,12 +126,16 @@ module.exports = () => {
         help = help.concat(
           '**FEE HANDLER**\n',
           '============\n',
+          '`Returns the basic burn info from FeeHandler`\n',
+          '/burnInfo <optional: network>\n\n',
           '`Returns the latest KNC/ETH sanity rate from FeeHandler`\n',
           '/feeLatestSanityRate <optional: network>\n\n',
           '`Returns list of SanityRates contracts from FeeHandler`\n',
           '/feeSanityRates <optional: network>\n\n',
           '`Returns the current amount of fees collected in the FeeHandler`\n',
           '/feesCollected <optional: network>\n\n',
+          '`Returns the rewards and rewards paid per epoch`\n',
+          '/rewards <epoch> <optional: network>\n\n',
         );
         break;
       case 'reserves':

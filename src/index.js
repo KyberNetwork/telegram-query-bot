@@ -31,6 +31,7 @@ const stakingCmds = [
   'latestStakerData',
   'stakerData',
   'stakerRawData',
+  'stakingAPY',
   'totalStaked',
 ];
 const daoCmds = [
@@ -55,9 +56,11 @@ const storageCmds = [
   'tokensPerReserve',
 ];
 const feehandlerCmds = [
+  'burnInfo',
   'feeLatestSanityRate',
   'feeSanityRates',
   'feesCollected',
+  'rewards',
 ];
 const reservesCmds = [
   'checkAPRRate',

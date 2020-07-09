@@ -20,17 +20,17 @@ module.exports = () => {
     }
 
     const network = (args[1]) ? args[1].toLowerCase() : 'mainnet';
-    const reserve = args[0].toLowerCase();
+    const reserve = args[0];
 
-    const getReserves = helpers.getNetworkFunction(network, 'getReserves');
+    const getReserves = helpers.getStorageFunction(network, 'getReserves');
     const reserves = await getReserves().call();
 
     const result = reserves.findIndex(r => reserve.toLowerCase() === r.toLowerCase());
 
-    if (result === -1) {
-      reply('Reserve not found.', inReplyTo(message.message_id));
+    if (result !== -1) {
+      replyWithMarkdown(`\`${result}\``, inReplyTo(message.message_id));
     } else {
-      replyWithMarkdown(`${result}`, inReplyTo(message.message_id));
+      reply('Reserve not found.', inReplyTo(message.message_id));
     }
   };
 };
