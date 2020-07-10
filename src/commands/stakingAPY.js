@@ -52,6 +52,7 @@ module.exports = () => {
     let msg = '';
     msg = msg.concat(
       `*Estimated APY using epoch ${epoch}*\n`,
+      `Total KNC staked: \`${web3.utils.fromWei(totalKNCStaked)} KNC\`\n`,
       `Total rewards at epoch ${epoch}: \`${web3.utils.fromWei(totalRewards)} ETH\`\n`,
       `Rewards per epoch: \`${rewardsLastEpoch / epochPeriod * 30} ETH\`\n`,
       `Rewards per year: \`${rewardsLastEpoch / epochPeriod * 365} ETH\`\n`,
