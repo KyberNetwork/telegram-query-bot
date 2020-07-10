@@ -117,6 +117,9 @@ module.exports = app => {
   KyberDaoAddress = config.contracts.staging.KyberDao;  
   KyberDao = new ethereum.mainnet.eth.Contract(KyberDaoABI, KyberDaoAddress);
 
+  RateHelperAddress = config.contracts.staging.RateHelper;  
+  RateHelper = new ethereum.mainnet.eth.Contract(RateHelperABI, RateHelperAddress);
+
   const staging = {
     'KyberNetworkProxy': KyberNetworkProxy,
     'KyberNetwork': KyberNetwork,
@@ -126,6 +129,7 @@ module.exports = app => {
     'KyberFeeHandler': KyberFeeHandler,
     'KyberStaking': KyberStaking,
     'KyberDao': KyberDao,
+    'RateHelper': RateHelper,
   };
 
   KyberNetworkProxyAddress = config.contracts.ropsten.KyberNetworkProxy;  

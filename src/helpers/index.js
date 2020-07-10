@@ -22,7 +22,7 @@ module.exports = app => {
     KyberFeeHandler: KyberFeeHandlerStaging,
     KyberStaking: KyberStakingStaging,
     KyberDao: KyberDaoStaging,
-    // RateHelper: RateHelperMainnet,
+    RateHelper: RateHelperStaging,
   } = contracts.staging;
   const {
     KyberNetworkProxy: KyberNetworkProxyRopsten,
@@ -181,7 +181,7 @@ module.exports = app => {
   const getRateFunction = (network, func) => {
     switch (network.toLowerCase()) {
       case 'staging':
-        return RateHelperMainnet.methods[func];
+        return RateHelperStaging.methods[func];
       // case 'ropsten':
       //   return RateHelperRopsten.methods[func];
       // case 'rinkeby':
