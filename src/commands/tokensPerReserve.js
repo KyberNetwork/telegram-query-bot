@@ -6,6 +6,7 @@ module.exports = () => {
     const { kyber } = axios;
     const { inReplyTo } = Extra;
     const { args } = state.command;
+    let result;
 
     if (!state.allowed) {
       reply('You are not whitelisted to use this bot', inReplyTo(message.message_id));
@@ -21,11 +22,19 @@ module.exports = () => {
     }
 
     const network = (args[1]) ? args[1].toLowerCase() : 'mainnet';
-    const currencies = (await kyber.get('/currencies')).data.data;
+    const {ethers: ethers} = helpers.getEthLib(network);
+    const currencies = (await kyber(network).get('/currencies')).data.data;
     let reserveId = args[0];
 
+    // reserve address was parsed instead
+    if (ethers.utils.isAddress(reserveId)) {
+      const getReserveDetailsByAddress = helpers.getStorageFunction(network, 'getReserveDetailsByAddress');
+      result = await getReserveDetailsByAddress(reserveId);
+      reserveId = result.reserveId;
+    }
+
     const getListedTokensByReserveId = helpers.getStorageFunction(network, 'getListedTokensByReserveId');
-    const { srcTokens, destTokens } = await getListedTokensByReserveId(reserveId).call();
+    const { srcTokens, destTokens } = await getListedTokensByReserveId(reserveId);
 
     const resSrcTokens = [];
     const resDestTokens = [];
@@ -48,7 +57,7 @@ module.exports = () => {
       }
     }
 
-    let result = resSrcTokens.concat(resDestTokens);
+    result = resSrcTokens.concat(resDestTokens);
     result = result.filter((element, index) => result.indexOf(element) === index);
 
     replyWithMarkdown(

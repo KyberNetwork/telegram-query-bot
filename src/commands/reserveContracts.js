@@ -21,14 +21,14 @@ module.exports = () => {
     }
 
     const network = (args[1]) ? args[1].toLowerCase() : 'mainnet';
-    const web3 = helpers.getWeb3(network);
+    const {ethers: ethers, provider: provider} = helpers.getEthLib(network);
     const reserve = args[0];
     const reserveABI = JSON.parse(fs.readFileSync('src/contracts/abi/KyberReserve.abi', 'utf8'));
-    const reserveInstance = new web3.eth.Contract(reserveABI, reserve);
+    const reserveInstance = new ethers.Contract(reserve, reserveABI, provider);
 
-    const kyberNetwork = await reserveInstance.methods.kyberNetwork().call();
-    const conversionRates = await reserveInstance.methods.conversionRatesContract().call();
-    const sanityRates = await reserveInstance.methods.sanityRatesContract().call();
+    const kyberNetwork = await reserveInstance.kyberNetwork();
+    const conversionRates = await reserveInstance.conversionRatesContract();
+    const sanityRates = await reserveInstance.sanityRatesContract();
 
     let msg ='';
     msg = msg.concat(

@@ -23,7 +23,7 @@ module.exports = () => {
     const staker = args[0];
     const epoch = args[1];
     const daoStakerReward = helpers.getDaoFunction(network, 'getPastEpochRewardPercentageInPrecision');
-    const result = await daoStakerReward(staker, epoch).call();
+    const result = await daoStakerReward(staker, epoch);
     
     replyWithMarkdown(result, inReplyTo(message.message_id));
   };

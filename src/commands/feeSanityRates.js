@@ -13,7 +13,7 @@ module.exports = () => {
 
     const network = (args[0]) ? args[0].toLowerCase() : 'mainnet';
     const getSanityRateContracts = helpers.getFeeHandlerFunction(network, 'getSanityRateContracts');
-    const result = await getSanityRateContracts().call();
+    const result = await getSanityRateContracts();
     
     replyWithMarkdown((result.length > 0) ? `\`${result.join('`, `')}\`` : 'None', inReplyTo(message.message_id));
   };

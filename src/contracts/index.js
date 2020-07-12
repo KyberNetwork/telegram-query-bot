@@ -14,6 +14,9 @@ const FeeBurnerABI = JSON.parse(fs.readFileSync('src/contracts/abi/FeeBurner.abi
 const WrapFeeBurnerABI = JSON.parse(fs.readFileSync('src/contracts/abi/WrapFeeBurner.abi', 'utf8'));
 const RateHelperABI = JSON.parse(fs.readFileSync('src/contracts/abi/RateHelper.abi', 'utf8'));
 const MedianizerABI = JSON.parse(fs.readFileSync('src/contracts/abi/Medianizer.abi', 'utf8'));
+
+let provider;
+
 let KyberNetworkProxyAddress;
 let KyberNetworkProxy;
 let KyberNetworkAddress;
@@ -22,8 +25,14 @@ let KyberMatchingEngineAddress;
 let KyberMatchingEngine;
 let KyberStorageAddress;
 let KyberStorage;
-let KyberHistoryAddress;
-let KyberHistory;
+let NetworkHistoryAddress;
+let NetworkHistory;
+let FeeHandlerHistoryAddress;
+let FeeHandlerHistory;
+let DaoHistoryAddress;
+let DaoHistory;
+let MatchingEngineHistoryAddress;
+let MatchingEngineHistory;
 let KyberFeeHandlerAddress;
 let KyberFeeHandler;
 let KyberStakingAddress;
@@ -41,49 +50,63 @@ let Medianizer;
 
 module.exports = app => {
   const { ethereum } = app.context;
+  const ethers = ethereum.mainnet.ethers;
+  provider = ethereum.mainnet.provider;
 
   KyberNetworkProxyAddress = config.contracts.mainnet.KyberNetworkProxy;  
-  KyberNetworkProxy = new ethereum.mainnet.eth.Contract(KyberNetworkProxyABI, KyberNetworkProxyAddress);
+  KyberNetworkProxy = new ethers.Contract(KyberNetworkProxyAddress, KyberNetworkProxyABI, provider);
   
-  KyberNetworkAddress = config.contracts.mainnet.KyberNetwork;  
-  KyberNetwork = new ethereum.mainnet.eth.Contract(KyberNetworkABI, KyberNetworkAddress);
+  KyberNetworkAddress = config.contracts.mainnet.KyberNetwork;
+  KyberNetwork =new ethers.Contract(KyberNetworkAddress, KyberNetworkABI, provider);
 
-  KyberMatchingEngineAddress = config.contracts.mainnet.KyberMatchingEngine;  
-  KyberMatchingEngine = new ethereum.mainnet.eth.Contract(KyberMatchingEngineABI, KyberMatchingEngineAddress);
+  KyberMatchingEngineAddress = config.contracts.mainnet.KyberMatchingEngine;
+  KyberMatchingEngine = new ethers.Contract(KyberMatchingEngineAddress, KyberMatchingEngineABI, provider);
 
-  KyberStorageAddress = config.contracts.mainnet.KyberStorage;  
-  KyberStorage = new ethereum.mainnet.eth.Contract(KyberStorageABI, KyberStorageAddress);
+  KyberStorageAddress = config.contracts.mainnet.KyberStorage;
+  KyberStorage = new ethers.Contract(KyberStorageAddress, KyberStorageABI, provider);
 
-  KyberHistoryAddress = config.contracts.mainnet.KyberHistory;  
-  KyberHistory = new ethereum.mainnet.eth.Contract(KyberHistoryABI, KyberHistoryAddress);
+  NetworkHistoryAddress = config.contracts.mainnet.NetworkHistory;
+  NetworkHistory = new ethers.Contract(NetworkHistoryAddress, KyberHistoryABI, provider);
 
-  KyberFeeHandlerAddress = config.contracts.mainnet.KyberFeeHandler;  
-  KyberFeeHandler = new ethereum.mainnet.eth.Contract(KyberFeeHandlerABI, KyberFeeHandlerAddress);
+  FeeHandlerHistoryAddress = config.contracts.mainnet.FeeHandlerHistory;
+  FeeHandlerHistory = new ethers.Contract(FeeHandlerHistoryAddress, KyberHistoryABI, provider);
 
-  KyberStakingAddress = config.contracts.mainnet.KyberStaking;  
-  KyberStaking = new ethereum.mainnet.eth.Contract(KyberStakingABI, KyberStakingAddress);
+  DaoHistoryAddress = config.contracts.mainnet.DaoHistory;
+  DaoHistory = new ethers.Contract(DaoHistoryAddress, KyberHistoryABI, provider);
 
-  KyberDaoAddress = config.contracts.mainnet.KyberDao;  
-  KyberDao = new ethereum.mainnet.eth.Contract(KyberDaoABI, KyberDaoAddress);
+  MatchingEngineHistoryAddress = config.contracts.mainnet.MatchingEngineHistory;
+  MatchingEngineHistory = new ethers.Contract(MatchingEngineHistoryAddress, KyberHistoryABI, provider);
 
-  RateHelperAddress = config.contracts.mainnet.RateHelper;  
-  RateHelper = new ethereum.mainnet.eth.Contract(RateHelperABI, RateHelperAddress);
+  KyberFeeHandlerAddress = config.contracts.mainnet.KyberFeeHandler;
+  KyberFeeHandler = new ethers.Contract(KyberFeeHandlerAddress, KyberFeeHandlerABI, provider);
+
+  KyberStakingAddress = config.contracts.mainnet.KyberStaking;
+  KyberStaking = new ethers.Contract(KyberStakingAddress, KyberStakingABI, provider);
+
+  KyberDaoAddress = config.contracts.mainnet.KyberDao;
+  KyberDao = new ethers.Contract(KyberDaoAddress, KyberDaoABI, provider);
+
+  RateHelperAddress = config.contracts.mainnet.RateHelper;
+  RateHelper = new ethers.Contract(RateHelperAddress, RateHelperABI, provider);
 
   FeeBurnerAddress = config.contracts.mainnet.FeeBurner;
-  FeeBurner = new ethereum.mainnet.eth.Contract(FeeBurnerABI, FeeBurnerAddress);
+  FeeBurner = new ethers.Contract(FeeBurnerAddress, FeeBurnerABI, provider);
 
   WrapFeeBurnerAddress = config.contracts.mainnet.WrapFeeBurner;
-  WrapFeeBurner = new ethereum.mainnet.eth.Contract(WrapFeeBurnerABI, WrapFeeBurnerAddress);
+  WrapFeeBurner = new ethers.Contract(WrapFeeBurnerAddress, WrapFeeBurnerABI, provider);
 
   MedianizerAddress = config.contracts.mainnet.Medianizer;
-  Medianizer = new ethereum.mainnet.eth.Contract(MedianizerABI, MedianizerAddress);
+  Medianizer = new ethers.Contract(MedianizerAddress, MedianizerABI, provider);
 
   const mainnet = {
     'KyberNetworkProxy': KyberNetworkProxy,
     'KyberNetwork': KyberNetwork,
     'KyberMatchingEngine': KyberMatchingEngine,
     'KyberStorage': KyberStorage,
-    'KyberHistory': KyberHistory,
+    'NetworkHistory': NetworkHistory,
+    'FeeHandlerHistory': FeeHandlerHistory,
+    'DaoHistory': DaoHistory,
+    'MatchingEngineHistory': MatchingEngineHistory,
     'KyberFeeHandler': KyberFeeHandler,
     'KyberStaking': KyberStaking,
     'KyberDao': KyberDao,
@@ -94,95 +117,161 @@ module.exports = app => {
   };
 
   KyberNetworkProxyAddress = config.contracts.staging.KyberNetworkProxy;  
-  KyberNetworkProxy = new ethereum.mainnet.eth.Contract(KyberNetworkProxyABI, KyberNetworkProxyAddress);
+  KyberNetworkProxy = new ethers.Contract(KyberNetworkProxyAddress, KyberNetworkProxyABI, provider);
   
   KyberNetworkAddress = config.contracts.staging.KyberNetwork;  
-  KyberNetwork = new ethereum.mainnet.eth.Contract(KyberNetworkABI, KyberNetworkAddress);
+  KyberNetwork = new ethers.Contract(KyberNetworkAddress, KyberNetworkABI, provider);
 
   KyberMatchingEngineAddress = config.contracts.staging.KyberMatchingEngine;  
-  KyberMatchingEngine = new ethereum.mainnet.eth.Contract(KyberMatchingEngineABI, KyberMatchingEngineAddress);
+  KyberMatchingEngine = new ethers.Contract(KyberMatchingEngineAddress, KyberMatchingEngineABI, provider);
 
   KyberStorageAddress = config.contracts.staging.KyberStorage;  
-  KyberStorage = new ethereum.mainnet.eth.Contract(KyberStorageABI, KyberStorageAddress);
+  KyberStorage = new ethers.Contract(KyberStorageAddress, KyberStorageABI, provider);
 
-  KyberHistoryAddress = config.contracts.staging.KyberHistory;  
-  KyberHistory = new ethereum.mainnet.eth.Contract(KyberHistoryABI, KyberHistoryAddress);
+  NetworkHistoryAddress = config.contracts.staging.NetworkHistory;
+  NetworkHistory = new ethers.Contract(NetworkHistoryAddress, KyberHistoryABI, provider);
+
+  FeeHandlerHistoryAddress = config.contracts.staging.FeeHandlerHistory;
+  FeeHandlerHistory = new ethers.Contract(FeeHandlerHistoryAddress, KyberHistoryABI, provider);
+
+  DaoHistoryAddress = config.contracts.staging.DaoHistory;
+  DaoHistory = new ethers.Contract(DaoHistoryAddress, KyberHistoryABI, provider);
+
+  MatchingEngineHistoryAddress = config.contracts.staging.MatchingEngineHistory;
+  MatchingEngineHistory = new ethers.Contract(MatchingEngineHistoryAddress, KyberHistoryABI, provider);
 
   KyberFeeHandlerAddress = config.contracts.staging.KyberFeeHandler;  
-  KyberFeeHandler = new ethereum.mainnet.eth.Contract(KyberFeeHandlerABI, KyberFeeHandlerAddress);
+  KyberFeeHandler = new ethers.Contract(KyberFeeHandlerAddress, KyberFeeHandlerABI, provider);
 
   KyberStakingAddress = config.contracts.staging.KyberStaking;  
-  KyberStaking = new ethereum.mainnet.eth.Contract(KyberStakingABI, KyberStakingAddress);
+  KyberStaking = new ethers.Contract(KyberStakingAddress, KyberStakingABI, provider);
 
   KyberDaoAddress = config.contracts.staging.KyberDao;  
-  KyberDao = new ethereum.mainnet.eth.Contract(KyberDaoABI, KyberDaoAddress);
+  KyberDao = new ethers.Contract(KyberDaoAddress, KyberDaoABI, provider);
 
   RateHelperAddress = config.contracts.staging.RateHelper;  
-  RateHelper = new ethereum.mainnet.eth.Contract(RateHelperABI, RateHelperAddress);
+  RateHelper = new ethers.Contract(RateHelperAddress, RateHelperABI, provider);
 
   const staging = {
     'KyberNetworkProxy': KyberNetworkProxy,
     'KyberNetwork': KyberNetwork,
     'KyberMatchingEngine': KyberMatchingEngine,
     'KyberStorage': KyberStorage,
-    'KyberHistory': KyberHistory,
+    'NetworkHistory': NetworkHistory,
+    'FeeHandlerHistory': FeeHandlerHistory,
+    'DaoHistory': DaoHistory,
+    'MatchingEngineHistory': MatchingEngineHistory,
     'KyberFeeHandler': KyberFeeHandler,
     'KyberStaking': KyberStaking,
     'KyberDao': KyberDao,
     'RateHelper': RateHelper,
   };
 
+  provider = ethereum.ropsten.provider;
+
   KyberNetworkProxyAddress = config.contracts.ropsten.KyberNetworkProxy;  
-  KyberNetworkProxy = new ethereum.ropsten.eth.Contract(KyberNetworkProxyABI, KyberNetworkProxyAddress);
+  KyberNetworkProxy = new ethers.Contract(KyberNetworkProxyAddress, KyberNetworkProxyABI, provider);
   
   KyberNetworkAddress = config.contracts.ropsten.KyberNetwork;  
-  KyberNetwork = new ethereum.ropsten.eth.Contract(KyberNetworkABI, KyberNetworkAddress);
+  KyberNetwork = new ethers.Contract(KyberNetworkAddress, KyberNetworkABI, provider);
 
   KyberMatchingEngineAddress = config.contracts.ropsten.KyberMatchingEngine;  
-  KyberMatchingEngine = new ethereum.ropsten.eth.Contract(KyberMatchingEngineABI, KyberMatchingEngineAddress);
+  KyberMatchingEngine = new ethers.Contract(KyberMatchingEngineAddress, KyberMatchingEngineABI, provider);
 
   KyberStorageAddress = config.contracts.ropsten.KyberStorage;  
-  KyberStorage = new ethereum.ropsten.eth.Contract(KyberStorageABI, KyberStorageAddress);
+  KyberStorage = new ethers.Contract(KyberStorageAddress, KyberStorageABI, provider);
 
-  KyberHistoryAddress = config.contracts.ropsten.KyberHistory;  
-  KyberHistory = new ethereum.ropsten.eth.Contract(KyberHistoryABI, KyberHistoryAddress);
+  NetworkHistoryAddress = config.contracts.ropsten.NetworkHistory;
+  NetworkHistory = new ethers.Contract(NetworkHistoryAddress, KyberHistoryABI, provider);
+
+  FeeHandlerHistoryAddress = config.contracts.ropsten.FeeHandlerHistory;
+  FeeHandlerHistory = new ethers.Contract(FeeHandlerHistoryAddress, KyberHistoryABI, provider);
+
+  DaoHistoryAddress = config.contracts.ropsten.DaoHistory;
+  DaoHistory = new ethers.Contract(DaoHistoryAddress, KyberHistoryABI, provider);
+
+  MatchingEngineHistoryAddress = config.contracts.ropsten.MatchingEngineHistory;
+  MatchingEngineHistory = new ethers.Contract(MatchingEngineHistoryAddress, KyberHistoryABI, provider);
 
   KyberFeeHandlerAddress = config.contracts.ropsten.KyberFeeHandler;  
-  KyberFeeHandler = new ethereum.ropsten.eth.Contract(KyberFeeHandlerABI, KyberFeeHandlerAddress);
+  KyberFeeHandler = new ethers.Contract(KyberFeeHandlerAddress, KyberFeeHandlerABI, provider);
 
   KyberStakingAddress = config.contracts.ropsten.KyberStaking;  
-  KyberStaking = new ethereum.ropsten.eth.Contract(KyberStakingABI, KyberStakingAddress);
+  KyberStaking = new ethers.Contract(KyberStakingAddress, KyberStakingABI, provider);
 
   KyberDaoAddress = config.contracts.ropsten.KyberDao;  
-  KyberDao = new ethereum.ropsten.eth.Contract(KyberDaoABI, KyberDaoAddress);
+  KyberDao = new ethers.Contract(KyberDaoAddress, KyberDaoABI, provider);
 
   const ropsten = {
     'KyberNetworkProxy': KyberNetworkProxy,
     'KyberNetwork': KyberNetwork,
     'KyberMatchingEngine': KyberMatchingEngine,
     'KyberStorage': KyberStorage,
-    'KyberHistory': KyberHistory,
+    'NetworkHistory': NetworkHistory,
+    'FeeHandlerHistory': FeeHandlerHistory,
+    'DaoHistory': DaoHistory,
+    'MatchingEngineHistory': MatchingEngineHistory,
     'KyberFeeHandler': KyberFeeHandler,
     'KyberStaking': KyberStaking,
     'KyberDao': KyberDao,
   };
 
+  provider = ethereum.rinkeby.provider;
+
   KyberNetworkProxyAddress = config.contracts.rinkeby.KyberNetworkProxy;
-  KyberNetworkProxy = new ethereum.rinkeby.eth.Contract(KyberNetworkProxyABI, KyberNetworkProxyAddress);
+  KyberNetworkProxy = new ethers.Contract(KyberNetworkProxyAddress, KyberNetworkProxyABI, provider);
 
   KyberNetworkAddress = config.contracts.rinkeby.KyberNetwork;
-  KyberNetwork = new ethereum.rinkeby.eth.Contract(KyberNetworkABI, KyberNetworkAddress);
+  KyberNetwork = new ethers.Contract(KyberNetworkAddress, KyberNetworkABI, provider);
+
+  KyberMatchingEngineAddress = config.contracts.rinkeby.KyberMatchingEngine;  
+  KyberMatchingEngine = new ethers.Contract(KyberMatchingEngineAddress, KyberMatchingEngineABI, provider);
+
+  KyberStorageAddress = config.contracts.rinkeby.KyberStorage;  
+  KyberStorage = new ethers.Contract(KyberStorageAddress, KyberStorageABI, provider);
+
+  NetworkHistoryAddress = config.contracts.rinkeby.NetworkHistory;
+  NetworkHistory = new ethers.Contract(NetworkHistoryAddress, KyberHistoryABI, provider);
+
+  FeeHandlerHistoryAddress = config.contracts.rinkeby.FeeHandlerHistory;
+  FeeHandlerHistory = new ethers.Contract(FeeHandlerHistoryAddress, KyberHistoryABI, provider);
+
+  DaoHistoryAddress = config.contracts.rinkeby.DaoHistory;
+  DaoHistory = new ethers.Contract(DaoHistoryAddress, KyberHistoryABI, provider);
+
+  MatchingEngineHistoryAddress = config.contracts.rinkeby.MatchingEngineHistory;
+  MatchingEngineHistory = new ethers.Contract(MatchingEngineHistoryAddress, KyberHistoryABI, provider);
+
+  KyberFeeHandlerAddress = config.contracts.rinkeby.KyberFeeHandler;  
+  KyberFeeHandler = new ethers.Contract(KyberFeeHandlerAddress, KyberFeeHandlerABI, provider);
+
+  KyberStakingAddress = config.contracts.rinkeby.KyberStaking;  
+  KyberStaking = new ethers.Contract(KyberStakingAddress, KyberStakingABI, provider);
+
+  KyberDaoAddress = config.contracts.rinkeby.KyberDao;  
+  KyberDao = new ethers.Contract(KyberDaoAddress, KyberDaoABI, provider);
 
   const rinkeby = {
     'KyberNetworkProxy': KyberNetworkProxy,
     'KyberNetwork': KyberNetwork,
+    'KyberMatchingEngine': KyberMatchingEngine,
+    'KyberStorage': KyberStorage,
+    'NetworkHistory': NetworkHistory,
+    'FeeHandlerHistory': FeeHandlerHistory,
+    'DaoHistory': DaoHistory,
+    'MatchingEngineHistory': MatchingEngineHistory,
+    'KyberFeeHandler': KyberFeeHandler,
+    'KyberStaking': KyberStaking,
+    'KyberDao': KyberDao,
   };
 
+  provider = ethereum.kovan.provider;
+
   KyberNetworkProxyAddress = config.contracts.kovan.KyberNetworkProxy;
-  KyberNetworkProxy = new ethereum.kovan.eth.Contract(KyberNetworkProxyABI, KyberNetworkProxyAddress);
+  KyberNetworkProxy = new ethers.Contract(KyberNetworkProxyAddress, KyberNetworkProxyABI);
 
   KyberNetworkAddress = config.contracts.kovan.KyberNetwork;
-  KyberNetwork = new ethereum.kovan.eth.Contract(KyberNetworkABI, KyberNetworkAddress);
+  KyberNetwork = new ethers.Contract(KyberNetworkAddress, KyberNetworkABI);
 
   const kovan = {
     'KyberNetworkProxy': KyberNetworkProxy,
@@ -194,7 +283,7 @@ module.exports = app => {
     staging,
     ropsten,
     rinkeby,
-    kovan,
+    kovan
   };
 
   logger.info('Initialized contracts');

@@ -20,17 +20,16 @@ module.exports = () => {
     }
 
     const network = (args[1]) ? args[1].toLowerCase() : 'mainnet';
-    const web3 = helpers.getWeb3(network);
     const staker = args[0];
     const getLatestStakerData = helpers.getStakingFunction(network, 'getLatestStakerData');
 
     try {
-      const result = await getLatestStakerData(staker).call();
+      const result = await getLatestStakerData(staker);
 
       let msg = '';
       msg = msg.concat(
-        `Stake: \`${web3.utils.fromWei(result.stake)} KNC\`\n`,
-        `Delegated Stake: \`${result.delegatedStake} KNC\`\n`,
+        `Stake: \`${helpers.getReadableWei(result.stake)} KNC\`\n`,
+        `Delegated Stake: \`${helpers.getReadableWei(result.delegatedStake)} KNC\`\n`,
         `Representative: \`${result.representative}\``,
       );
 

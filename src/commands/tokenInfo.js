@@ -22,13 +22,13 @@ module.exports = () => {
     }
 
     const network = args[1] ? args[1].toLowerCase() : 'mainnet';
-    const web3 = helpers.getWeb3(network);
-    const currencies = (await kyber.get('/currencies')).data.data;
+    const {ethers: ethers, provider: provider} = helpers.getEthLib(network);
+    const currencies = (await kyber(network).get('/currencies')).data.data;
 
     let token = args[0];
     if (
       !token.startsWith('0x') &&
-      (network.toLowerCase() == 'mainnet' || network.toLowerCase() == 'staging')
+      (['mainnet', 'staging', 'ropsten'].indexOf(network) !== -1)
     ) {
       token = currencies.find(o => o.symbol === token.toUpperCase());
     } else if (
@@ -48,19 +48,19 @@ module.exports = () => {
     const tokenABI = JSON.parse(
       fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8')
     );
-    const tokenInstance = new web3.eth.Contract(tokenABI, token.address);
+    const tokenInstance = new ethers.Contract(token.address, tokenABI, provider);
 
-    const symbol = await tokenInstance.methods.symbol().call();
-    const name = await tokenInstance.methods.name().call();
-    const decimals = await tokenInstance.methods.decimals().call();
-    const totalSupply = await tokenInstance.methods.totalSupply().call() / (10 ** decimals);
+    const symbol = await tokenInstance.symbol();
+    const name = await tokenInstance.name();
+    const decimals = await tokenInstance.decimals();
+    const totalSupply = helpers.getReadableNumber(await tokenInstance.totalSupply() / (10 ** decimals));
 
     let msg ='';
     msg = msg.concat(
       `symbol: \`${symbol}\`\n`,
       `name: \`${name}\`\n`,
       `decimals: \`${decimals}\`\n`,
-      `totalSupply: \`${totalSupply.toLocaleString(undefined, { maximumFractionDigits: 16 })}\``,
+      `totalSupply: \`${totalSupply}\``,
     );
 
     replyWithMarkdown(msg, inReplyTo(message.message_id));

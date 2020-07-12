@@ -3,8 +3,8 @@ const fs = require('fs');
 
 const config = JSON.parse(fs.readFileSync('src/config/default.json', 'utf8'));
 
-const kyber = Axios.create({
-  baseURL: config.axios.kyber.baseURL,
+const kyber = (network) => Axios.create({
+  baseURL: (['mainnet', 'staging'].indexOf(network) !== -1) ? config.axios.kyber.mainnetURL : config.axios.kyber.ropstenURL,
   timeout: config.axios.kyber.timeout,
 });
 const ethgasstation = Axios.create({

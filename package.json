@@ -5,7 +5,7 @@
   "main": "src",
   "contributors": [
     "ayobuenavista",
-    "AnyhowClick"
+    "Anyhowclick"
   ],
   "bugs": {
     "url": "https://github.com/KyberNetwork/telegram-query-bot/issues"
@@ -24,9 +24,9 @@
     "axios": "^0.19.2",
     "bn.js": "^5.1.1",
     "dotenv": "^8.2.0",
+    "ethers": "^5.0.5",
     "shelljs": "^0.8.3",
     "telegraf": "^3.36.0",
-    "web3": "^1.2.6",
     "winston": "^3.2.1"
   },
   "devDependencies": {

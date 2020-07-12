@@ -12,8 +12,8 @@ module.exports = () => {
     }
 
     const network = (args[0]) ? args[0].toLowerCase() : 'mainnet';
-    const web3 = helpers.getWeb3(network);
-    const blockNumber = (await web3.eth.getBlock('latest')).number;
+    const {provider: provider} = helpers.getEthLib(network);
+    const blockNumber = await provider.getBlockNumber();
 
     replyWithMarkdown(`${blockNumber}`, inReplyTo(message.message_id));
   };

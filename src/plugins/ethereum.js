@@ -1,18 +1,26 @@
-const fs = require('fs');
-const Web3 = require('web3');
-
-const config = JSON.parse(fs.readFileSync('src/config/default.json', 'utf8'));
-
-const mainnet = new Web3(new Web3.providers.HttpProvider(`${config.web3.mainnet}/${process.env.NODE_KEY}`));
-const ropsten = new Web3(new Web3.providers.HttpProvider(`${config.web3.ropsten}/${process.env.NODE_KEY}`));
-const rinkeby = new Web3(new Web3.providers.HttpProvider(`${config.web3.rinkeby}/${process.env.NODE_KEY}`));
-const kovan = new Web3(new Web3.providers.HttpProvider(`${config.web3.kovan}/${process.env.NODE_KEY}`));
+const ethers = require('ethers');
+const mainnet = {
+  ethers: ethers,
+  provider: new ethers.providers.getDefaultProvider('mainnet', {quorum: 1, infura: process.env.INFURA_KEY, alchemy: process.env.ALCHEMY_KEY})
+};
+const ropsten = {
+  ethers: ethers,
+  provider: new ethers.providers.getDefaultProvider('ropsten', {quorum: 1, infura: process.env.INFURA_KEY, alchemy: process.env.ALCHEMY_KEY})
+};
+const rinkeby = {
+  ethers: ethers,
+  provider: new ethers.providers.getDefaultProvider('rinkeby', {quorum: 1, infura: process.env.INFURA_KEY, alchemy: process.env.ALCHEMY_KEY})
+};
+const kovan = {
+  ethers: ethers,
+  provider: new ethers.providers.getDefaultProvider('kovan', {quorum: 1, infura: process.env.INFURA_KEY, alchemy: process.env.ALCHEMY_KEY})
+};
 
 const ethereum = {
   mainnet,
   ropsten,
   rinkeby,
-  kovan,
+  kovan
 };
 
 module.exports = ethereum;

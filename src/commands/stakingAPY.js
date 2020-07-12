@@ -21,41 +21,43 @@ module.exports = () => {
     }
 
     const network = (args[1]) ? args[1].toLowerCase() : 'mainnet';
-    const web3 = helpers.getWeb3(network);
+    const {ethers: ethers, provider: provider} = helpers.getEthLib(network);
     const { KyberStaking } = contracts[network];
-    const kncAmount = args[0];
+    const kncAmount = ethers.utils.parseEther(args[0]);
     const kncToken = helpers.getStakingFunction(network, 'kncToken');
     const tokenABI = JSON.parse(fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8'));
-    const KNC = new web3.eth.Contract(tokenABI, await kncToken().call());
+    const KNC = new ethers.Contract(await kncToken(), tokenABI, provider);
     const epochPeriodInSeconds = helpers.getDaoFunction(network, 'epochPeriodInSeconds');
     const getCurrentEpochNumber = helpers.getStakingFunction(network, 'getCurrentEpochNumber');
     const rewardsPerEpoch = helpers.getFeeHandlerFunction(network, 'rewardsPerEpoch');
     const getExpectedRate = helpers.getProxyFunction(network, 'getExpectedRate');
     
-    const currentEpoch = await getCurrentEpochNumber().call();
-    const epoch = (currentEpoch === '0') ? 0 : currentEpoch - 1; // get previous epoch number
-    const epochPeriod = (await epochPeriodInSeconds().call()) / 60 / 60 / 24; // convert seconds to days
+    const currentEpoch = await getCurrentEpochNumber();
+    const epoch = (currentEpoch.eq(ethers.constants.Zero)) ? 0 : currentEpoch - 1; // get previous epoch number
+    const epochPeriod = (await epochPeriodInSeconds()).toNumber() / 60 / 60 / 24; // convert seconds to days
 
     // Calculate rewards in last epoch
-    const totalKNCStaked = await KNC.methods.balanceOf(KyberStaking._address).call();
-    const totalRewards = await rewardsPerEpoch(epoch).call(); // total rewards in last epoch
-    const rewardsLastEpoch = kncAmount / web3.utils.fromWei(totalKNCStaked) * web3.utils.fromWei(totalRewards);
+    const totalKNCStaked = await KNC.balanceOf(KyberStaking.address);
+    const totalRewards = await rewardsPerEpoch(epoch); // total rewards in last epoch
+    const stakerRewards = kncAmount.mul(totalRewards).div(totalKNCStaked.add(kncAmount));
 
     // Calculate APY
-    const kncRate = await getExpectedRate(
-      KNC._address,
+    let kncRate = (await getExpectedRate(
+      KNC.address,
       '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-      web3.utils.toWei('1'),
-    ).call();
-    const stakingAPY = (rewardsLastEpoch / epochPeriod * 365) / (kncAmount * web3.utils.fromWei(kncRate.expectedRate)) * 100;
+      ethers.constants.WeiPerEther,
+    )).expectedRate;
+
+    let currentEthAmount = kncAmount.mul(kncRate).div(ethers.constants.WeiPerEther);
+    const stakingAPY = ((Number(stakerRewards) / epochPeriod * 365) / Number(currentEthAmount) * 100).toFixed(3);
 
     let msg = '';
     msg = msg.concat(
       `*Estimated APY using epoch ${epoch}*\n`,
-      `Total KNC staked: \`${web3.utils.fromWei(totalKNCStaked)} KNC\`\n`,
-      `Total rewards at epoch ${epoch}: \`${web3.utils.fromWei(totalRewards)} ETH\`\n`,
-      `Rewards per epoch: \`${rewardsLastEpoch / epochPeriod * 30} ETH\`\n`,
-      `Rewards per year: \`${rewardsLastEpoch / epochPeriod * 365} ETH\`\n`,
+      `Total KNC staked: \`${helpers.getReadableWei(totalKNCStaked)} KNC\`\n`,
+      `Total rewards at epoch ${epoch}: \`${helpers.getReadableWei(totalRewards)} ETH\`\n`,
+      `Rewards per month: \`${helpers.getReadableWei(stakerRewards / epochPeriod * 30)} ETH\`\n`,
+      `Rewards per year: \`${helpers.getReadableWei(stakerRewards / epochPeriod * 365)} ETH\`\n`,
       `APY: \`${stakingAPY}%\``,
     );
     

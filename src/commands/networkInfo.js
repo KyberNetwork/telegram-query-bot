@@ -15,13 +15,13 @@ module.exports = () => {
     const enabled = helpers.getProxyFunction(network, 'enabled');
     const maxGasPrice = helpers.getProxyFunction(network, 'maxGasPrice');
     const getNetworkData = helpers.getNetworkFunction(network, 'getNetworkData');
-    const networkData = await getNetworkData().call();
+    const networkData = await getNetworkData();
 
     let msg ='';
     msg = msg.concat(
-      `enabled: \`${await enabled().call()}\`\n`,
+      `enabled: \`${await enabled()}\`\n`,
       `negligibleDiffBps: \`${networkData.negligibleDiffBps}\`\n`,
-      `maxGasPrice: \`${await maxGasPrice().call()}\``,
+      `maxGasPrice: \`${await maxGasPrice()}\``,
       `networkFeeBps: \`${networkData.networkFeeBps}\`\n`,
       `expiryTimestamp: \`${helpers.formatTime(networkData.expiryTimestamp)}\`\n`,
     );

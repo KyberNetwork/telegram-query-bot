@@ -13,13 +13,13 @@ module.exports = () => {
     }
 
     const network = (args[0]) ? args[0].toLowerCase() : 'mainnet';
-    const web3 = helpers.getWeb3(network);
+    const {ethers: ethers, provider: provider} = helpers.getEthLib(network);
     const { KyberStaking } = contracts[network];
     const kncToken = helpers.getStakingFunction(network, 'kncToken');
     const tokenABI = JSON.parse(fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8'));
-    const KNC = new web3.eth.Contract(tokenABI, await kncToken().call());
-    const result = web3.utils.fromWei(await KNC.methods.balanceOf(KyberStaking._address).call());
-    
-    replyWithMarkdown(`Total staked: \`${result} KNC\``, inReplyTo(message.message_id));
+    const KNC = new ethers.Contract(await kncToken(), tokenABI, provider);
+    let result = ethers.utils.formatEther(await KNC.balanceOf(KyberStaking.address));
+    result = helpers.getReadableNumber(result);
+    replyWithMarkdown(`${result} KNC`, inReplyTo(message.message_id));
   };
 };

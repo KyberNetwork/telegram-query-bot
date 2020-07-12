@@ -12,16 +12,15 @@ module.exports = () => {
     }
 
     const network = (args[0]) ? args[0].toLowerCase() : 'mainnet';
-    const web3 = helpers.getWeb3(network);
     const burnBlockInterval = helpers.getFeeHandlerFunction(network, 'burnBlockInterval');
     const lastBurnBlock = helpers.getFeeHandlerFunction(network, 'lastBurnBlock');
     const weiToBurn = helpers.getFeeHandlerFunction(network, 'weiToBurn');
 
     let msg = '';
     msg = msg.concat(
-      `Burn Block Interval: \`${await burnBlockInterval().call()}\`\n`,
-      `Last Burn Block: \`${await lastBurnBlock().call()}\`\n`,
-      `ETH to Burn: \`${web3.utils.fromWei(await weiToBurn().call())} ETH\``,
+      `Burn Block Interval: \`${await burnBlockInterval()}\`\n`,
+      `Last Burn Block: \`${await lastBurnBlock()}\`\n`,
+      `ETH to Burn: \`${helpers.getReadableWei(await weiToBurn())} ETH\``,
     );
     
     replyWithMarkdown(msg, inReplyTo(message.message_id));

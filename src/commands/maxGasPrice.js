@@ -15,11 +15,12 @@ module.exports = () => {
     }
 
     const network = (args[0]) ? args[0].toLowerCase() : 'mainnet';
+    const {ethers: ethers} = helpers.getEthLib(network);
     const maxGasPrice = helpers.getProxyFunction(network, 'maxGasPrice');
 
     let msg ='';
     msg = msg.concat(
-      `maxGasPrice: \`${await maxGasPrice().call()}\``,
+      `maxGasPrice: \`${ethers.utils.formatUnits(await maxGasPrice(), 'gwei')} gwei\``,
     );
     
     replyWithMarkdown(msg, inReplyTo(message.message_id));

@@ -22,8 +22,8 @@ module.exports = () => {
     const network = (args[1]) ? args[1].toLowerCase() : 'mainnet';
     const epoch = args[0];
     const getTotalEpochPoints = helpers.getDaoFunction(network, 'getTotalEpochPoints');
-    const result = await getTotalEpochPoints(epoch).call();
+    const result = await getTotalEpochPoints(epoch);
     
-    replyWithMarkdown(`Total points at epoch ${epoch}: \`${result} points\``, inReplyTo(message.message_id));
+    replyWithMarkdown(`Epoch ${epoch}: \`${result} total pts\``, inReplyTo(message.message_id));
   };
 };

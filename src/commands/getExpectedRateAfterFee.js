@@ -13,28 +13,41 @@ module.exports = () => {
       return;
     }
 
-    if (args.length < 5) {
+    if (args.length < 4) {
       reply(
-        `ERROR: Invalid number of arguments. ${args.length} of required 5 provided.`,
+        `ERROR: Invalid number of arguments. ${args.length} of required 4 provided.`,
         inReplyTo(message.message_id),
       );
       return;
     }
 
-    const network = (args[5]) ? args[5].toLowerCase() : 'mainnet';
-    const web3 = helpers.getWeb3(network);
-    const currencies = (await kyber.get('/currencies')).data.data;
     let srcToken = args[0];
     let destToken = args[1];
     let srcQty = args[2];
     let platformFeeBps = args[3];
-    let hint = args[4];
+    let hint = '0x';
+    let network;
+
+    if (args[4]) {
+      if (['mainnet', 'staging', 'ropsten', 'kovan', 'rinkeby'].includes(args[4])) {
+        network = args[4];
+      } else {
+        hint = args[4];
+        network = (args[5]) ? args[5].toLowerCase() : 'mainnet';
+      }
+    } else {
+      network = 'mainnet';
+    }
+
+    const {ethers: ethers, provider: provider} = helpers.getEthLib(network);
+    const currencies = (await kyber(network).get('/currencies')).data.data;
+    
 
     if (srcToken.toUpperCase() === 'ETH') {
       srcToken = { address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' };
     } else if (
       !srcToken.startsWith('0x') &&
-      (network.toLowerCase() == 'mainnet' || network.toLowerCase() == 'staging')
+      (['mainnet', 'staging', 'ropsten'].indexOf(network) !== -1)
     ) {
       srcToken = currencies.find(o => o.symbol === srcToken.toUpperCase());
     } else if (
@@ -50,7 +63,7 @@ module.exports = () => {
       destToken = { address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' };
     } else if (
       !destToken.startsWith('0x') &&
-      (network.toLowerCase() == 'mainnet' || network.toLowerCase() == 'staging')
+      (['mainnet', 'staging', 'ropsten'].indexOf(network) !== -1)
     ) {
       destToken = currencies.find(o => o.symbol === destToken.toUpperCase());
     } else if (
@@ -68,11 +81,11 @@ module.exports = () => {
     }
 
     if (srcToken.symbol === 'ETH' || srcToken.address.toLowerCase() === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
-      srcQty = web3.utils.toWei(srcQty);
+      srcQty = ethers.utils.parseEther(srcQty);
     } else {
       const tokenABI = JSON.parse(fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8'));
-      const srcTokenInstance = new web3.eth.Contract(tokenABI, srcToken.address);
-      const decimals = srcToken.decimals || await srcTokenInstance.methods.decimals().call();
+      const srcTokenInstance = new ethers.Contract(srcToken.address, tokenABI, provider);
+      const decimals = srcToken.decimals || await srcTokenInstance.decimals();
       srcQty = Math.round(srcQty * (10 ** decimals)).toLocaleString('fullwide', {useGrouping:false});
     }
 
@@ -80,13 +93,13 @@ module.exports = () => {
     const result = await getExpectedRateAfterFee(
       srcToken.address,
       destToken.address,
-      srcQty.toString(),
-      platformFeeBps.toString(),
+      srcQty,
+      platformFeeBps,
       hint,
-    ).call();
+    );
 
-    const expectedRate = web3.utils.fromWei(result.toString());
+    const expectedRate = Number(ethers.utils.formatEther(result)).toFixed(5);
 
-    replyWithMarkdown(`Expected Rate: \`${expectedRate}\``, inReplyTo(message.message_id));
+    replyWithMarkdown(`Expected Rate: \`${expectedRate} (${result})\``, inReplyTo(message.message_id));
   };
 };

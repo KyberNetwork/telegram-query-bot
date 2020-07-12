@@ -22,7 +22,7 @@ module.exports = () => {
     const network = (args[1]) ? args[1].toLowerCase() : 'mainnet';
     const reserve = args[0].toLowerCase();
     const getReserves = helpers.getStorageFunction(network, 'getReserves');
-    const reserves = await getReserves().call();
+    const reserves = await getReserves();
     const result = reserves.findIndex(r => reserve.toLowerCase() === r.toLowerCase());
 
     if (result !== -1) {

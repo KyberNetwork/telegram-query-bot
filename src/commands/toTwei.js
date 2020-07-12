@@ -22,17 +22,17 @@ module.exports = () => {
     }
 
     const network = args[2] ? args[2].toLowerCase() : 'mainnet';
-    const web3 = helpers.getWeb3(network);
+    const {ethers: ethers, provider: provider} = helpers.getEthLib(network);
     const tokenABI = JSON.parse(
       fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8')
     );
-    const currencies = (await kyber.get('/currencies')).data.data;
+    const currencies = (await kyber(network).get('/currencies')).data.data;
     const qty = args[0];
 
     let token = args[1];
     if (
       !token.startsWith('0x') &&
-      (network.toLowerCase() == 'mainnet' || network.toLowerCase() == 'staging')
+      (['mainnet', 'staging', 'ropsten'].indexOf(network) !== -1)
     ) {
       token = currencies.find(o => o.symbol === token.toUpperCase());
     } else if (
@@ -49,9 +49,9 @@ module.exports = () => {
       return;
     }
 
-    const tokenInstance = new web3.eth.Contract(tokenABI, token.address);
+    const tokenInstance = new ethers.Contract(token.address, tokenABI, provider);
     const decimals =
-      token.decimals || (await tokenInstance.methods.decimals().call());
+      token.decimals || (await tokenInstance.decimals());
     const result = Math.round(qty * 10 ** decimals).toLocaleString(
       'fullwide',
       { useGrouping: false }

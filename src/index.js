@@ -2,9 +2,11 @@ const Extra = require('telegraf/extra');
 const logger = require('./logger');
 const app = require('./app');
 
-process.on('unhandledRejection', (reason, p) =>
-  logger.error('Unhandled Rejection at: Promise ', p, reason)
-);
+process.on('unhandledRejection', (reason, p) => {
+  logger.error('Unhandled Rejection at: Promise ', p, reason);
+  // console.log(p);
+  // console.log(reason);
+});
 
 app.catch(err => {
   logger.error(err);

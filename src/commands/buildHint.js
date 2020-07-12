@@ -5,7 +5,7 @@ function validateToken(token, network, currencies) {
     return { address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' };
   } else if (
     !token.startsWith('0x') &&
-    (network == 'mainnet' || network == 'staging')
+    (['mainnet', 'staging', 'ropsten'].indexOf(network) !== -1)
   ) {
     return currencies.find(o => o.symbol === token.toUpperCase());
   } else if (
@@ -90,7 +90,7 @@ module.exports = () => {
     }
 
     const network = (args[required]) ? args[required].toLowerCase() : 'mainnet';
-    const currencies = (await kyber.get('/currencies')).data.data;
+    const currencies = (await kyber(network).get('/currencies')).data.data;
     const buildHint = helpers.getMatchingEngineFunction(network, func);
 
     let buildHintArgs = [];
@@ -173,7 +173,7 @@ module.exports = () => {
     }
 
     try {
-      const result = await buildHint(...buildHintArgs).call();
+      const result = await buildHint(...buildHintArgs);
 
       let msg ='';
       msg = msg.concat(

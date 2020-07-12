@@ -12,7 +12,7 @@ module.exports = () => {
       return;
     }
 
-    if (args.length !== 1) {
+    if (args.length < 1) {
       reply(
         `ERROR: Invalid number of arguments. ${args.length} of 1 provided.`,
         inReplyTo(message.message_id),
@@ -20,7 +20,8 @@ module.exports = () => {
       return;
     }
 
-    const currencies = (await kyber.get('/currencies')).data.data;
+    const network = (args[1]) ? args[1].toLowerCase() : 'mainnet';
+    const currencies = (await kyber(network).get('/currencies')).data.data;
     let token = args[0].toUpperCase();
     
     token = currencies.find(o => o.symbol === token);

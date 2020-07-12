@@ -22,11 +22,11 @@ module.exports = () => {
     }
 
     const network = (args[1]) ? args[1].toLowerCase() : 'mainnet';
-    const web3 = helpers.getWeb3(network);
-    const currencies = (await kyber.get('/currencies')).data.data;
+    const {ethers: ethers, provider: provider} = helpers.getEthLib(network);
+    const currencies = (await kyber(network).get('/currencies')).data.data;
     const reserve = args[0];
     const reserveABI = JSON.parse(fs.readFileSync('src/contracts/abi/KyberReserve.abi', 'utf8'));
-    const reserveInstance = new web3.eth.Contract(reserveABI, reserve);
+    const reserveInstance = new ethers.Contract(reserve, reserveABI, provider);
     const tokenABI = JSON.parse(fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8'));
     const tokens = [];
     let result = [];
@@ -50,21 +50,21 @@ module.exports = () => {
       return;
     }
 
-    result.push(`ETH: \`${web3.utils.fromWei(await web3.eth.getBalance(reserve))}\``);
+    result.push(`ETH: \`${helpers.getReadableWei(await provider.getBalance(reserve))}\``);
 
     for (let index in tokens) {
-      let tokenInstance = new web3.eth.Contract(tokenABI, tokens[index].address);
+      let tokenInstance = new ethers.Contract(tokens[index].address, tokenABI, provider);
       let tokenWallet;
       let tokenBalance;
 
       try {
-        tokenWallet = await reserveInstance.methods.tokenWallet(tokens[index].address).call();
-        tokenBalance = (await tokenInstance.methods.balanceOf(tokenWallet).call()) / (10 ** tokens[index].decimals);
+        tokenWallet = await reserveInstance.tokenWallet(tokens[index].address);
+        tokenBalance = (await tokenInstance.balanceOf(tokenWallet)) / (10 ** tokens[index].decimals);
       } catch (e) {
-        tokenBalance = (await tokenInstance.methods.balanceOf(reserve).call()) / (10 ** tokens[index].decimals);
+        tokenBalance = (await tokenInstance.balanceOf(reserve)) / (10 ** tokens[index].decimals);
       }
 
-      result.push(`${tokens[index].symbol}: \`${tokenBalance}\``);
+      result.push(`${tokens[index].symbol}: \`${helpers.getReadableNumber(tokenBalance)}\``);
     }
 
     replyWithMarkdown(result.sort().join('\n'), inReplyTo(message.message_id));

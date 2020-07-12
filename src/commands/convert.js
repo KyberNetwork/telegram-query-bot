@@ -22,8 +22,8 @@ module.exports = () => {
     }
 
     const network = (args[3]) ? args[3].toLowerCase() : 'mainnet';
-    const web3 = helpers.getWeb3(network);
-    const currencies = (await kyber.get('/currencies')).data.data;
+    const {ethers: ethers, provider: provider} = helpers.getEthLib(network);
+    const currencies = (await kyber(network).get('/currencies')).data.data;
     const tokenABI = JSON.parse(fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8'));
     let qty = args[0];
     let srcToken = args[1];
@@ -36,7 +36,7 @@ module.exports = () => {
       };
     } else if (
       !srcToken.startsWith('0x') &&
-      (network.toLowerCase() == 'mainnet' || network.toLowerCase() == 'staging')
+      (['mainnet', 'staging', 'ropsten'].indexOf(network) !== -1)
     ) {
       srcToken = currencies.find(o => o.symbol === srcToken.toUpperCase());
     } else if (
@@ -55,7 +55,7 @@ module.exports = () => {
       };
     } else if (
       !destToken.startsWith('0x') &&
-      (network.toLowerCase() == 'mainnet' || network.toLowerCase() == 'staging')
+      (['mainnet', 'staging', 'ropsten'].indexOf(network) !== -1)
     ) {
       destToken = currencies.find(o => o.symbol === destToken.toUpperCase());
     } else if (
@@ -76,32 +76,32 @@ module.exports = () => {
     let result;
 
     if (srcToken.symbol === 'ETH') {
-      srcQty = web3.utils.toWei(qty);
+      srcQty = ethers.utils.parseEther(qty);
     } else {
-      const srcTokenInstance = new web3.eth.Contract(tokenABI, srcToken.address);
-      const decimals = srcToken.decimals || await srcTokenInstance.methods.decimals().call();
-      srcToken.symbol = srcToken.symbol || await srcTokenInstance.methods.symbol().call();
+      const srcTokenInstance = new ethers.Contract(srcToken.address, tokenABI, provider);
+      const decimals = srcToken.decimals || await srcTokenInstance.decimals();
+      srcToken.symbol = srcToken.symbol || await srcTokenInstance.symbol();
       srcQty = Math.round(qty * (10 ** decimals)).toLocaleString('fullwide', {useGrouping:false});
     }
 
     if (destToken.symbol !== 'ETH') {
-      const destTokenInstance = new web3.eth.Contract(tokenABI, destToken.address);
-      destToken.symbol = destToken.symbol || await destTokenInstance.methods.symbol().call();
+      const destTokenInstance = new ethers.Contract(destToken.address, tokenABI, provider);
+      destToken.symbol = destToken.symbol || await destTokenInstance.symbol();
     }
 
     const getExpectedRate = helpers.getProxyFunction(network, 'getExpectedRate');
     result = await getExpectedRate(
       srcToken.address,
       destToken.address,
-      srcQty.toString(),
-    ).call();
+      srcQty
+    );
 
     if (result.expectedRate === '0') {
       reply('Conversion for the pair is unavailable.');
       return;
     }
 
-    result = web3.utils.fromWei(result.expectedRate.toString()) * qty;
+    result = Number(ethers.utils.formatEther(result.expectedRate) * qty).toFixed(5);
 
     replyWithMarkdown(`\`${qty}\` ${srcToken.symbol} => \`${result}\` ${destToken.symbol}`, inReplyTo(message.message_id));
   };

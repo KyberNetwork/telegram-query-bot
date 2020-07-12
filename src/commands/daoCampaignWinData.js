@@ -22,7 +22,7 @@ module.exports = () => {
     const network = (args[1]) ? args[1].toLowerCase() : 'mainnet';
     const campaignId = args[0];
     const getCampaignWinData = helpers.getDaoFunction(network, 'getCampaignWinningOptionAndValue');
-    const result = await getCampaignWinData(campaignId).call();
+    const result = await getCampaignWinData(campaignId);
 
     let msg = '';
     msg = msg.concat(
