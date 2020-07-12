@@ -136,6 +136,8 @@ module.exports = () => {
           '/prrFees <optional: network>\n\n',
           '`Returns the rewards and rewards paid per epoch`\n',
           '/rewards <epoch> <optional: network>\n\n',
+          '`Get reserve rebates claimable`\n',
+          '/reserveRebates <reserveId/address/rebateWallet><optional: network>\n\n',
         );
         break;
       case 'reserves':

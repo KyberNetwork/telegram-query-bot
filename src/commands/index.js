@@ -43,6 +43,7 @@ const reserveAddresses = require('./reserveAddresses');
 const reserveId = require('./reserveId');
 const reserveIdToAscii = require('./reserveIdToAscii');
 const reserveIndex = require('./reserveIndex');
+const reserveRebates = require('./reserveRebates');
 const reserves = require('./reserves');
 const reservesOfToken = require('./reservesOfToken');
 const reservesPerToken = require('./reservesPerToken');
@@ -148,6 +149,8 @@ module.exports = app => {
   app.command('reserveId', reserveId());
   app.command('reserveindex', reserveIndex());
   app.command('reserveIndex', reserveIndex());
+  app.command('reserverebates', reserveRebates());
+  app.command('reserveRebates', reserveRebates());
   app.command('reserves', reserves());
   app.command('reservesoftoken', reservesOfToken());
   app.command('reservesOfToken', reservesOfToken());
