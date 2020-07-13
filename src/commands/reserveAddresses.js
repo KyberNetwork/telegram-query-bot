@@ -29,6 +29,7 @@ module.exports = () => {
       network,
       'getReserveAddressesByReserveId'
     );
+    reserveId = helpers.appendZeroesToReserveId(reserveId);
     const reserveAddresses = await getReserveAddresses(reserveId);
 
     replyWithMarkdown(

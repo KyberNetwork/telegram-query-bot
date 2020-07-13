@@ -241,6 +241,13 @@ module.exports = (app) => {
     return toHumanNum(number / ethereum.mainnet.ethers.constants.WeiPerEther);
   };
 
+  const appendZeroesToReserveId = (reserveId) => {
+    while (reserveId.length != 66) {
+      reserveId = reserveId + '0';
+    }
+    return reserveId;
+  };
+
   const reserveIdToAscii = (reserveId) => {
     let hex = reserveId
       .toString()
@@ -276,6 +283,7 @@ module.exports = (app) => {
   };
 
   app.context.helpers = {
+    appendZeroesToReserveId,
     getProxyFunction,
     getNetworkFunction,
     getMatchingEngineFunction,

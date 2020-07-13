@@ -30,6 +30,7 @@ const latestBlock = require('./latestBlock');
 const latestStakerData = require('./latestStakerData');
 const liquidityParams = require('./liquidityParams');
 const liquidityRate = require('./liquidityRate');
+const lp = require('./lp');
 const maxGasPrice = require('./maxGasPrice');
 const networkContracts = require('./networkContracts');
 const networkInfo = require('./networkInfo');
@@ -122,6 +123,7 @@ module.exports = (app) => {
   app.command('liquidityParams', liquidityParams());
   app.command('liquidityrate', liquidityRate());
   app.command('liquidityRate', liquidityRate());
+  app.command('lp', lp());
   app.command('maxgasprice', maxGasPrice());
   app.command('maxGasPrice', maxGasPrice());
   app.command('networkcontracts', networkContracts());

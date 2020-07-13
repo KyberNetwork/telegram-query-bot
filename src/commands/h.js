@@ -159,6 +159,8 @@ module.exports = () => {
           '/liquidityParams <json>\n\n',
           '`Computes and returns the liquidity rate based on the ETH and pMin input`\n',
           '/liquidityRate <eth> <pmin>\n\n',
+          '`Computes liquidity params based on the simpler JSON input`\n',
+          '/lp <json>\n\n',
           '`Returns all the token balances of a reserve`\n',
           '/reserveBalances <reserve> <optional: network>\n\n',
           '`Returns the network, conversionRates, and sanityRates contract addresses of a reserve`\n',
