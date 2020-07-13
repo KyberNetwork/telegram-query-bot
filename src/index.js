@@ -42,7 +42,7 @@ const daoCmds = [
   'daoInfo',
   'daoLatestStakerPercentage',
   'daoShouldBurnReward',
-  'daoStakerPercentage',
+  'daoStakerRewardPercentage',
   'daoTotalEpochPoints',
   'daoCampaignDetails',
   'daoCampaignVoteCount',
@@ -50,8 +50,7 @@ const daoCmds = [
 ];
 const storageCmds = [
   'newReserveId',
-  'reserveAddresses',
-  'reserveId',
+  'reserveInfo',
   'reserveIdToAscii',
   'reserves',
   'reservesPerToken',
@@ -67,15 +66,17 @@ const feehandlerCmds = [
 const reservesCmds = [
   'checkAPRRate',
   'collectedFeesInTwei',
+  'debugReserve',
   'getConversionRate',
   'isReserveListed',
   'liquidityParams',
   'liquidityRate',
+  'lp',
   'reserveBalances',
   'reserveContracts',
   'reserveFeesInBps',
   'reserveIndex',
-  'reserveKNCWallet',
+  'reserveRebates',
   'tokensOfReserve',
 ];
 const miscCmds = [

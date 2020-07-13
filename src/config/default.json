@@ -14,6 +14,13 @@
       "timeout": 20000
     }
   },
+  "nodes": {
+    "ALCHEMY_WEIGHT": 20,
+    "ETHERSCAN_WEIGHT": 1,
+    "INFURA_WEIGHT": 5,
+    "MAINNET_QUORUM": 2,
+    "DEFAULT_QUORUM": 1
+  },
   "contracts": {
     "mainnet": {
       "KyberNetworkProxy": "0x9AAb3f75489902f3a48495025729a0AF77d4b11e",

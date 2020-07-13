@@ -58,6 +58,14 @@ module.exports = (app) => {
     // RateHelper: RateHelperMainnet,
   } = contracts.kovan;
 
+  const emojis = (emoji) => {
+    let emojiDict = {
+      checkMark: '\u{2705}',
+      crossMark: '\u{274C}',
+    };
+    return emojiDict[emoji];
+  };
+
   const getProxyFunction = (network, func) => {
     switch (network.toLowerCase()) {
       case 'staging':
@@ -226,12 +234,19 @@ module.exports = (app) => {
     );
   };
 
+  const to32Bytes = (reserveId) => {
+    while (reserveId.length != 66) {
+      reserveId += '0';
+    }
+    return reserveId;
+  };
+
   const toHumanNum = (number) => {
     number = Number(number);
     if (number > 1000000) {
-      return (number / 1000000).toFixed(3) + 'M (' + number.toFixed(3) + ')';
+      return `${(number / 1000000).toFixed(3)}M`;
     } else if (number > 1000) {
-      return (number / 1000).toFixed(3) + 'K (' + number.toFixed(3) + ')';
+      return `${(number / 1000).toFixed(3)}K`;
     } else {
       return number.toFixed(3);
     }
@@ -275,7 +290,21 @@ module.exports = (app) => {
     return [result, reserveType];
   };
 
+  const reserveTypes = (resType) => {
+    const resTypes = [
+      'NONE',
+      'FPR',
+      'APR',
+      'BRIDGE',
+      'UTILITY',
+      'CUSTOM',
+      'ORDERBOOK',
+    ];
+    return resTypes[resType];
+  };
+
   app.context.helpers = {
+    emojis,
     getProxyFunction,
     getNetworkFunction,
     getMatchingEngineFunction,
@@ -287,9 +316,11 @@ module.exports = (app) => {
     getRateFunction,
     getEthLib,
     formatTime,
+    to32Bytes,
     toHumanNum,
     toHumanWei,
     reserveIdToAscii,
+    reserveTypes,
   };
 
   logger.info('Initialized helpers');
