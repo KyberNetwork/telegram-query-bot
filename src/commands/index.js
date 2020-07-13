@@ -17,7 +17,6 @@ const daoCampaignWinData = require('./daoCampaignWinData');
 const debugReserve = require('./debugReserve');
 const feeLatestSanityRate = require('./feeLatestSanityRate');
 const feeSanityRates = require('./feeSanityRates');
-const prrFees = require('./prrFees');
 const fromTwei = require('./fromTwei');
 const fromWei = require('./fromWei');
 const gasPrice = require('./gasPrice');
@@ -37,6 +36,7 @@ const networkInfo = require('./networkInfo');
 const newReserveId = require('./newReserveId');
 const parseHint = require('./parseHint');
 const permissions = require('./permissions');
+const prrFees = require('./prrFees');
 const reserveBalances = require('./reserveBalances');
 const reserveContracts = require('./reserveContracts');
 const reserveAddresses = require('./reserveAddresses');
@@ -45,7 +45,6 @@ const reserveIdToAscii = require('./reserveIdToAscii');
 const reserveIndex = require('./reserveIndex');
 const reserveRebates = require('./reserveRebates');
 const reserves = require('./reserves');
-const reservesOfToken = require('./reservesOfToken');
 const reservesPerToken = require('./reservesPerToken');
 const rewards = require('./rewards');
 const sentiment = require('./sentiment');
@@ -60,7 +59,7 @@ const toTwei = require('./toTwei');
 const toWei = require('./toWei');
 const update = require('./update');
 
-module.exports = app => {
+module.exports = (app) => {
   app.command('brr', brr());
   app.command('buildhint', buildHint());
   app.command('buildHint', buildHint());
@@ -152,8 +151,6 @@ module.exports = app => {
   app.command('reserverebates', reserveRebates());
   app.command('reserveRebates', reserveRebates());
   app.command('reserves', reserves());
-  app.command('reservesoftoken', reservesOfToken());
-  app.command('reservesOfToken', reservesOfToken());
   app.command('reservespertoken', reservesPerToken());
   app.command('reservesPerToken', reservesPerToken());
   app.command('rewards', rewards());

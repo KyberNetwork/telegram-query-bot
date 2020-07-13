@@ -61,7 +61,7 @@ const feehandlerCmds = [
   'burnInfo',
   'feeLatestSanityRate',
   'feeSanityRates',
-  'feesCollected',
+  'prrFees',
   'rewards',
 ];
 const reservesCmds = [
@@ -76,7 +76,6 @@ const reservesCmds = [
   'reserveFeesInBps',
   'reserveIndex',
   'reserveKNCWallet',
-  'reservesOfToken',
   'tokensOfReserve',
 ];
 const miscCmds = [

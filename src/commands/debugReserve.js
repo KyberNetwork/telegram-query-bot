@@ -2,25 +2,62 @@ const Extra = require('telegraf/extra');
 const fs = require('fs');
 
 const ETH_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
-const tokenABI = JSON.parse(fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8'));
-
+const tokenABI = JSON.parse(
+  fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8')
+);
 
 function isZero(rate) {
-  return (rate == 0);
+  return rate == 0;
 }
 
-async function debugReserve(ethAddress, tokenAddress, buyQty, sellQty, reserve, pricing, ethers, provider) {
-  let finalMessage = ``;
-  let buyMessage = await checkRate(true, ethAddress, tokenAddress, buyQty, reserve, pricing, ethers, provider);
+async function debugReserve(
+  ethAddress,
+  tokenAddress,
+  buyQty,
+  sellQty,
+  reserve,
+  pricing,
+  ethers,
+  provider
+) {
+  let finalMessage = '';
+  let buyMessage = await checkRate(
+    true,
+    ethAddress,
+    tokenAddress,
+    buyQty,
+    reserve,
+    pricing,
+    ethers,
+    provider
+  );
   finalMessage += buyMessage;
 
-  let sellMessage = await checkRate(false, tokenAddress, ethAddress, sellQty, reserve, pricing, ethers, provider);
+  let sellMessage = await checkRate(
+    false,
+    tokenAddress,
+    ethAddress,
+    sellQty,
+    reserve,
+    pricing,
+    ethers,
+    provider
+  );
   finalMessage += sellMessage;
 
   return finalMessage;
 }
 
-async function checkRate(isBuy, srcAddress, destAddress, qty, reserve, pricing, ethers, provider) {
+async function checkRate(
+  isBuy,
+  srcAddress,
+  destAddress,
+  qty,
+  reserve,
+  pricing,
+  ethers,
+  provider
+) {
   let tokenAddress;
   let isBuyText;
   if (isBuy) {
@@ -35,27 +72,39 @@ async function checkRate(isBuy, srcAddress, destAddress, qty, reserve, pricing, 
     srcAddress,
     destAddress,
     qty.toString(),
-    0);
+    0
+  );
 
   if (isZero(rate)) {
-    rate = await pricing.getRate(
-      tokenAddress,
-      0,
-      isBuy,
-      qty.toString()
-    );
+    rate = await pricing.getRate(tokenAddress, 0, isBuy, qty.toString());
 
     if (isZero(rate)) {
       return `*Pricing contract returns zero ${isBuyText} rate.\n*`;
     } else {
-      return await verifyDestLimits(srcAddress, destAddress, qty, rate, reserve, ethers, provider);
+      return await verifyDestLimits(
+        srcAddress,
+        destAddress,
+        qty,
+        rate,
+        reserve,
+        ethers,
+        provider
+      );
     }
   } else {
     return `${isBuyText} rate: ${rate}\n`;
   }
 }
 
-async function verifyDestLimits(srcAddress, destAddress, qty, rate, reserve, ethers, provider) {
+async function verifyDestLimits(
+  srcAddress,
+  destAddress,
+  qty,
+  rate,
+  reserve,
+  ethers,
+  provider
+) {
   let destQty = await reserve.getDestQty(
     srcAddress,
     destAddress,
@@ -84,50 +133,60 @@ async function verifyDestLimits(srcAddress, destAddress, qty, rate, reserve, eth
     return `*Dest amount greater than balance.*\nBalance: ${balance}\nDest Qty: ${destQty}`;
   }
 
-  return `*Rate exceeds sanity rates*`;
+  return '*Rate exceeds sanity rates*';
 }
 
 module.exports = () => {
-  return async ctx => {
+  return async (ctx) => {
     const { axios, helpers, message, reply, replyWithMarkdown, state } = ctx;
     const { kyber } = axios;
     const { inReplyTo } = Extra;
     const { args } = state.command;
 
     if (args.length < 2) {
-      reply(`ERROR: Invalid number of arguments. ${args.length} of 2 provided.`);
+      reply(
+        `ERROR: Invalid number of arguments. ${args.length} of 2 provided.`
+      );
       return;
     }
 
     let srcToken = args[0];
     let reserveAddress = args[1];
-    let network = (args[2]) ? args[2].toLowerCase() : 'mainnet';
-    
-    const {ethers: ethers, provider: provider} = helpers.getEthLib(network);
+    let network = args[2] ? args[2].toLowerCase() : 'mainnet';
+
+    const { ethers, provider } = helpers.getEthLib(network);
     const currencies = (await kyber(network).get('/currencies')).data.data;
-    const reserveABI = JSON.parse(fs.readFileSync('src/contracts/abi/KyberReserve.abi', 'utf8'));
-    const convRateABI = JSON.parse(fs.readFileSync('src/contracts/abi/ConversionRatesInterface.abi', 'utf8'));
+    const reserveABI = JSON.parse(
+      fs.readFileSync('src/contracts/abi/KyberReserve.abi', 'utf8')
+    );
+    const convRateABI = JSON.parse(
+      fs.readFileSync('src/contracts/abi/ConversionRatesInterface.abi', 'utf8')
+    );
 
     if (
       !srcToken.startsWith('0x') &&
-      (['mainnet', 'staging', 'ropsten'].indexOf(network) !== -1)
+      ['mainnet', 'staging', 'ropsten'].indexOf(network) !== -1
     ) {
-      srcToken = currencies.find(o => o.symbol === srcToken.toUpperCase());
-    } else if (
-      srcToken.length === 42 &&
-      srcToken.startsWith('0x')
-    ) {
+      srcToken = currencies.find((o) => o.symbol === srcToken.toUpperCase());
+    } else if (srcToken.length === 42 && srcToken.startsWith('0x')) {
       srcToken = { address: srcToken };
     } else {
       srcToken = undefined;
     }
 
     if (!srcToken) {
-      reply('Invalid source token symbol or address.', inReplyTo(message.message_id));
+      reply(
+        'Invalid source token symbol or address.',
+        inReplyTo(message.message_id)
+      );
       return;
     }
 
-    const reserveInstance = new ethers.Contract(reserveAddress, reserveABI, provider);
+    const reserveInstance = new ethers.Contract(
+      reserveAddress,
+      reserveABI,
+      provider
+    );
     const pricingInstance = new ethers.Contract(
       await reserveInstance.conversionRatesContract(),
       convRateABI,
@@ -146,7 +205,8 @@ module.exports = () => {
     let result = await debugReserve(
       ETH_ADDRESS,
       srcToken.address,
-      BUY_QTY, SELL_QTY,
+      BUY_QTY,
+      SELL_QTY,
       reserveInstance,
       pricingInstance,
       ethers,

@@ -5,13 +5,10 @@ function validateToken(token, network, currencies) {
     return { address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' };
   } else if (
     !token.startsWith('0x') &&
-    (['mainnet', 'staging', 'ropsten'].indexOf(network) !== -1)
+    ['mainnet', 'staging', 'ropsten'].indexOf(network) !== -1
   ) {
-    return currencies.find(o => o.symbol === token.toUpperCase());
-  } else if (
-    token.length === 42 &&
-    token.startsWith('0x')
-  ) {
+    return currencies.find((o) => o.symbol === token.toUpperCase());
+  } else if (token.length === 42 && token.startsWith('0x')) {
     return { address: token };
   } else {
     return;
@@ -34,7 +31,7 @@ function validateTradeType(tradeType) {
 }
 
 module.exports = () => {
-  return async ctx => {
+  return async (ctx) => {
     const { axios, helpers, message, reply, replyWithMarkdown, state } = ctx;
     const { kyber } = axios;
     const { inReplyTo } = Extra;
@@ -42,8 +39,9 @@ module.exports = () => {
 
     if (!state.allowed) {
       reply(
-        'You are not whitelisted to use this bot', inReplyTo(message.message_id),
+        'You are not whitelisted to use this bot',
         inReplyTo(message.message_id),
+        inReplyTo(message.message_id)
       );
       return;
     }
@@ -51,7 +49,7 @@ module.exports = () => {
     if (args.length == 0) {
       reply(
         'ERROR: Invalid number of arguments.',
-        inReplyTo(message.message_id),
+        inReplyTo(message.message_id)
       );
       return;
     }
@@ -76,7 +74,7 @@ module.exports = () => {
       default:
         reply(
           'ERROR: Invalid trade path. Must be t2e, e2t, or t2t.',
-          inReplyTo(message.message_id),
+          inReplyTo(message.message_id)
         );
         return;
     }
@@ -84,12 +82,12 @@ module.exports = () => {
     if (args.length < required) {
       reply(
         `ERROR: Invalid number of arguments. ${args.length} of required ${required} provided.`,
-        inReplyTo(message.message_id),
+        inReplyTo(message.message_id)
       );
       return;
     }
 
-    const network = (args[required]) ? args[required].toLowerCase() : 'mainnet';
+    const network = args[required] ? args[required].toLowerCase() : 'mainnet';
     const currencies = (await kyber(network).get('/currencies')).data.data;
     const parseHint = helpers.getMatchingEngineFunction(network, func);
 
@@ -101,15 +99,12 @@ module.exports = () => {
       if (!token) {
         reply(
           'ERROR: Invalid token symbol or address.',
-          inReplyTo(message.message_id),
+          inReplyTo(message.message_id)
         );
         return;
       }
 
-      parseHintArgs = [
-        token.address,
-        hint,
-      ];
+      parseHintArgs = [token.address, hint];
     } else {
       const t2eTokenSrc = validateToken(args[1], network, currencies);
       const e2tTokenDest = validateToken(args[2], network, currencies);
@@ -118,46 +113,58 @@ module.exports = () => {
       if (!t2eTokenSrc || !e2tTokenDest) {
         reply(
           'ERROR: Invalid token symbol or address.',
-          inReplyTo(message.message_id),
+          inReplyTo(message.message_id)
         );
         return;
       }
 
-      parseHintArgs = [
-        t2eTokenSrc.address,
-        e2tTokenDest.address,
-        hint,
-      ];
+      parseHintArgs = [t2eTokenSrc.address, e2tTokenDest.address, hint];
     }
 
     try {
       const result = await parseHint(...parseHintArgs);
-      
-      let msg ='';
+
+      let msg = '';
       if (tradePath === 't2e') {
         msg = msg.concat(
           `tokenToEthType: \`${validateTradeType(result.tokenToEthType)}\`\n`,
-          `tokenToEthReserveIds: \`${result.tokenToEthReserveIds.join('`, `')}\`\n`,
-          `tokenToEthAddresses: \`${result.tokenToEthAddresses.join('`, `')}\`\n`,
-          `tokenToEthSplits: \`${result.tokenToEthSplits.join('`, `')}\`\n`,
+          `tokenToEthReserveIds: \`${result.tokenToEthReserveIds.join(
+            '`, `'
+          )}\`\n`,
+          `tokenToEthAddresses: \`${result.tokenToEthAddresses.join(
+            '`, `'
+          )}\`\n`,
+          `tokenToEthSplits: \`${result.tokenToEthSplits.join('`, `')}\`\n`
         );
       } else if (tradePath === 'e2t') {
         msg = msg.concat(
           `ethToTokenType: \`${validateTradeType(result.ethToTokenType)}\`\n`,
-          `ethToTokenReserveIds: \`${result.ethToTokenReserveIds.join('`, `')}\`\n`,
-          `ethToTokenAddresses: \`${result.ethToTokenAddresses.join('`, `')}\`\n`,
-          `ethToTokenSplits: \`${result.ethToTokenSplits.join('`, `')}\`\n`,
+          `ethToTokenReserveIds: \`${result.ethToTokenReserveIds.join(
+            '`, `'
+          )}\`\n`,
+          `ethToTokenAddresses: \`${result.ethToTokenAddresses.join(
+            '`, `'
+          )}\`\n`,
+          `ethToTokenSplits: \`${result.ethToTokenSplits.join('`, `')}\`\n`
         );
       } else if (tradePath === 't2t') {
         msg = msg.concat(
           `tokenToEthType: \`${validateTradeType(result.tokenToEthType)}\`\n`,
-          `tokenToEthReserveIds: \`${result.tokenToEthReserveIds.join('`, `')}\`\n`,
-          `tokenToEthAddresses: \`${result.tokenToEthAddresses.join('`, `')}\`\n`,
+          `tokenToEthReserveIds: \`${result.tokenToEthReserveIds.join(
+            '`, `'
+          )}\`\n`,
+          `tokenToEthAddresses: \`${result.tokenToEthAddresses.join(
+            '`, `'
+          )}\`\n`,
           `tokenToEthSplits: \`${result.tokenToEthSplits.join('`, `')}\`\n`,
           `ethToTokenType: \`${validateTradeType(result.ethToTokenType)}\`\n`,
-          `ethToTokenReserveIds: \`${result.ethToTokenReserveIds.join('`, `')}\`\n`,
-          `ethToTokenAddresses: \`${result.ethToTokenAddresses.join('`, `')}\`\n`,
-          `ethToTokenSplits: \`${result.ethToTokenSplits.join('`, `')}\`\n`,
+          `ethToTokenReserveIds: \`${result.ethToTokenReserveIds.join(
+            '`, `'
+          )}\`\n`,
+          `ethToTokenAddresses: \`${result.ethToTokenAddresses.join(
+            '`, `'
+          )}\`\n`,
+          `ethToTokenSplits: \`${result.ethToTokenSplits.join('`, `')}\`\n`
         );
       }
 

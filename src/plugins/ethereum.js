@@ -1,26 +1,43 @@
 const ethers = require('ethers');
+
 const mainnet = {
-  ethers: ethers,
-  provider: new ethers.providers.getDefaultProvider('mainnet', {quorum: 1, infura: process.env.INFURA_KEY, alchemy: process.env.ALCHEMY_KEY})
+  ethers,
+  provider: new ethers.providers.getDefaultProvider('mainnet', {
+    quorum: 1,
+    infura: process.env.INFURA_KEY,
+    alchemy: process.env.ALCHEMY_KEY,
+  }),
 };
 const ropsten = {
-  ethers: ethers,
-  provider: new ethers.providers.getDefaultProvider('ropsten', {quorum: 1, infura: process.env.INFURA_KEY, alchemy: process.env.ALCHEMY_KEY})
+  ethers,
+  provider: new ethers.providers.getDefaultProvider('ropsten', {
+    quorum: 1,
+    infura: process.env.INFURA_KEY,
+    alchemy: process.env.ALCHEMY_KEY,
+  }),
 };
 const rinkeby = {
-  ethers: ethers,
-  provider: new ethers.providers.getDefaultProvider('rinkeby', {quorum: 1, infura: process.env.INFURA_KEY, alchemy: process.env.ALCHEMY_KEY})
+  ethers,
+  provider: new ethers.providers.getDefaultProvider('rinkeby', {
+    quorum: 1,
+    infura: process.env.INFURA_KEY,
+    alchemy: process.env.ALCHEMY_KEY,
+  }),
 };
 const kovan = {
-  ethers: ethers,
-  provider: new ethers.providers.getDefaultProvider('kovan', {quorum: 1, infura: process.env.INFURA_KEY, alchemy: process.env.ALCHEMY_KEY})
+  ethers,
+  provider: new ethers.providers.getDefaultProvider('kovan', {
+    quorum: 1,
+    infura: process.env.INFURA_KEY,
+    alchemy: process.env.ALCHEMY_KEY,
+  }),
 };
 
 const ethereum = {
   mainnet,
   ropsten,
   rinkeby,
-  kovan
+  kovan,
 };
 
 module.exports = ethereum;

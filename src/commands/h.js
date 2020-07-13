@@ -1,20 +1,23 @@
 const Extra = require('telegraf/extra');
 
 module.exports = () => {
-  return async ctx => {
+  return async (ctx) => {
     const { message, reply, replyWithMarkdown, state } = ctx;
     const { inReplyTo } = Extra;
     const { args } = state.command;
 
     if (!state.allowed) {
-      reply('You are not whitelisted to use this bot', inReplyTo(message.message_id));
+      reply(
+        'You are not whitelisted to use this bot',
+        inReplyTo(message.message_id)
+      );
       return;
     }
 
     if (args.length < 1) {
       reply(
         `ERROR: Invalid number of arguments. ${args.length} of required 1 provided.`,
-        inReplyTo(message.message_id),
+        inReplyTo(message.message_id)
       );
       return;
     }
@@ -47,7 +50,7 @@ module.exports = () => {
           '`Alias for /getReservesRates`\n',
           '/rates <token> <qty> <optional: network>\n\n',
           '`Returns the reserve rates of a particular token using the token as the quote`\n',
-          '/tRates <token> <qty> <optional: network>\n\n',
+          '/tRates <token> <qty> <optional: network>\n\n'
         );
         break;
       case 'hinthandler':
@@ -57,7 +60,7 @@ module.exports = () => {
           '`Builds the T2E, E2T, or T2T hint`\n',
           '/buildHint <tradePath> <tokenSrc> <tradeType> <reserveIds> <splits> [<tokenSrc> <tradeType> <reserveIds> <splits>] <optional: network>\n\n',
           '`Parses the T2E, E2T, or T2T hint`\n',
-          '/parseHint <hint> <optional: network>\n\n',
+          '/parseHint <hint> <optional: network>\n\n'
         );
         break;
       case 'staking':
@@ -73,7 +76,7 @@ module.exports = () => {
           '`Returns the latest staking annual percentage yield.`\n',
           '/stakingAPY <kncAmount> <optional: network>\n\n',
           '`Returns the total staked KNC in the network.`\n',
-          '/totalStaked <optional: network>\n\n',
+          '/totalStaked <optional: network>\n\n'
         );
         break;
       case 'dao':
@@ -97,9 +100,9 @@ module.exports = () => {
           '`Check whether an epoch has rewards but no one can claim, and thus must be burned`\n',
           '/daoShouldBurnReward <epoch> <optional: network>\n\n',
           '`Returns staker reward percentage in precision`\n',
-          '/daoStakerReward <staker> <epoch> <optional: network>\n\n',
+          '/daoStakerRewardPercentage <staker> <epoch> <optional: network>\n\n',
           '`Returns the total points of an epoch`\n',
-          '/daoTotalEpochPoints <epoch> <optional: network>\n\n',
+          '/daoTotalEpochPoints <epoch> <optional: network>\n\n'
         );
         break;
       case 'storage':
@@ -119,7 +122,7 @@ module.exports = () => {
           '`Returns the reserve IDs per token source and dest`\n',
           '/reservesPerToken <token> <optional: network>\n\n',
           '`Returns the source and dest tokens per reserve ID`\n',
-          '/tokensPerReserve <reserveId> <optional: network>\n\n',
+          '/tokensPerReserve <reserveId> <optional: network>\n\n'
         );
         break;
       case 'feehandler':
@@ -137,7 +140,7 @@ module.exports = () => {
           '`Returns the rewards and rewards paid per epoch`\n',
           '/rewards <epoch> <optional: network>\n\n',
           '`Get reserve rebates claimable`\n',
-          '/reserveRebates <reserveId/address/rebateWallet><optional: network>\n\n',
+          '/reserveRebates <reserveId/address/rebateWallet><optional: network>\n\n'
         );
         break;
       case 'reserves':
@@ -164,12 +167,10 @@ module.exports = () => {
           '/reserveFeesInBps <reserve> <optional: network>\n\n',
           '`Returns the index of the reserve in the network`\n',
           '/reserveIndex <reserve> <optional: network>\n\n',
-          '`Returns the reserves that support the token specified via Kyber API`\n',
-          '/reservesOfToken <token>\n\n',
           '`Returns the reserves that support the token specified directly from SC`\n',
           '/reservesPerToken <token>\n\n',
           '`Returns the tokens supported by a reserve`\n',
-          '/tokensOfReserve <reserve>\n\n',
+          '/tokensOfReserve <reserve>\n\n'
         );
         break;
       case 'misc':
@@ -195,7 +196,7 @@ module.exports = () => {
           '`Converts the human readable format input to token wei`\n',
           '/toTwei <qty> <token> <optional: network>\n\n',
           '`Converts the human readable format input to wei`\n',
-          '/toWei <qty>',
+          '/toWei <qty>'
         );
         break;
       default:

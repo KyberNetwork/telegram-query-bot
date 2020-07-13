@@ -17,8 +17,8 @@ $ npm install
 
 e.g.
 ```
-INFURA_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ALCHEMY_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+INFURA_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 TELEGRAM_TOKEN=xxxxxxxxx:xxxxxxxxxxxxxxxxxxxx-xxxxxxxxxxxxxx
 ```
 

@@ -2,41 +2,46 @@ const Extra = require('telegraf/extra');
 const fs = require('fs');
 
 module.exports = () => {
-  return async ctx => {
+  return async (ctx) => {
     const { helpers, message, reply, replyWithMarkdown, state } = ctx;
     const { inReplyTo } = Extra;
     const { args } = state.command;
 
     if (!state.allowed) {
-      reply('You are not whitelisted to use this bot', inReplyTo(message.message_id));
+      reply(
+        'You are not whitelisted to use this bot',
+        inReplyTo(message.message_id)
+      );
       return;
     }
 
     if (args.length < 1) {
       reply(
         `ERROR: Invalid number of arguments. ${args.length} of required 1 provided.`,
-        inReplyTo(message.message_id),
+        inReplyTo(message.message_id)
       );
       return;
     }
 
-    const network = (args[1]) ? args[1].toLowerCase() : 'mainnet';
-    const {ethers: ethers, provider: provider} = helpers.getEthLib(network);
+    const network = args[1] ? args[1].toLowerCase() : 'mainnet';
+    const { ethers, provider } = helpers.getEthLib(network);
     const reserve = args[0];
-    const reserveABI = JSON.parse(fs.readFileSync('src/contracts/abi/KyberReserve.abi', 'utf8'));
+    const reserveABI = JSON.parse(
+      fs.readFileSync('src/contracts/abi/KyberReserve.abi', 'utf8')
+    );
     const reserveInstance = new ethers.Contract(reserve, reserveABI, provider);
 
     const kyberNetwork = await reserveInstance.kyberNetwork();
     const conversionRates = await reserveInstance.conversionRatesContract();
     const sanityRates = await reserveInstance.sanityRatesContract();
 
-    let msg ='';
+    let msg = '';
     msg = msg.concat(
       `kyberNetwork: \`${kyberNetwork}\`\n`,
       `conversionRatesContract: \`${conversionRates}\`\n`,
-      `sanityRatesContract: \`${sanityRates}\``,
+      `sanityRatesContract: \`${sanityRates}\``
     );
-    
+
     replyWithMarkdown(msg, inReplyTo(message.message_id));
   };
 };

@@ -7,23 +7,29 @@ module.exports = () => {
     const { args } = state.command;
 
     if (!state.allowed) {
-      reply('You are not whitelisted to use this bot', inReplyTo(message.message_id));
+      reply(
+        'You are not whitelisted to use this bot',
+        inReplyTo(message.message_id)
+      );
       return;
     }
 
     if (args.length !== 1) {
       reply(
         `ERROR: Invalid number of arguments. ${args.length} of 1 provided.`,
-        inReplyTo(message.message_id),
+        inReplyTo(message.message_id)
       );
       return;
     }
 
-    const {ethers: ethers} = helpers.getEthLib('mainnet');
+    const { ethers } = helpers.getEthLib('mainnet');
     const qty = args[0];
 
     try {
-      replyWithMarkdown(ethers.utils.formatEther(qty), inReplyTo(message.message_id));
+      replyWithMarkdown(
+        ethers.utils.formatEther(qty),
+        inReplyTo(message.message_id)
+      );
     } catch (e) {
       replyWithMarkdown(e.toString(), inReplyTo(message.message_id));
     }

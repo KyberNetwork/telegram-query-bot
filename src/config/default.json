@@ -88,8 +88,5 @@
       "MatchingEngineHistory": "0x7EB9C4C20E1ff590505567b158C91a9578Fe9165",
       "RateHelper": "0xf2756ed51434a23Ff019b3d58FA72B7faf041558"
     }
-  },
-  "whois": {
-    "file": "/home/ubuntu/addresses.json"
   }
 }

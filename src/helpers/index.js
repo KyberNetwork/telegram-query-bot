@@ -1,6 +1,6 @@
 const logger = require('../logger');
 
-module.exports = app => {
+module.exports = (app) => {
   const { contracts, ethereum } = app.context;
   const {
     KyberNetworkProxy: KyberNetworkProxyMainnet,
@@ -57,7 +57,7 @@ module.exports = app => {
     KyberDao: KyberDaoKovan,
     // RateHelper: RateHelperMainnet,
   } = contracts.kovan;
-  
+
   const getProxyFunction = (network, func) => {
     switch (network.toLowerCase()) {
       case 'staging':
@@ -65,11 +65,11 @@ module.exports = app => {
       case 'ropsten':
         return KyberNetworkProxyRopsten[func];
       case 'rinkeby':
-        return KyberNetworkProxyRinkeby[func]; 
+        return KyberNetworkProxyRinkeby[func];
       case 'kovan':
         return KyberNetworkProxyKovan[func];
       default:
-        return KyberNetworkProxyMainnet[func]; 
+        return KyberNetworkProxyMainnet[func];
     }
   };
 
@@ -80,11 +80,11 @@ module.exports = app => {
       case 'ropsten':
         return KyberNetworkRopsten[func];
       case 'rinkeby':
-        return KyberNetworkRinkeby[func]; 
+        return KyberNetworkRinkeby[func];
       case 'kovan':
         return KyberNetworkKovan[func];
       default:
-        return KyberNetworkMainnet[func]; 
+        return KyberNetworkMainnet[func];
     }
   };
 
@@ -95,11 +95,11 @@ module.exports = app => {
       case 'ropsten':
         return KyberMatchingEngineRopsten[func];
       case 'rinkeby':
-        return KyberMatchingEngineRinkeby[func]; 
+        return KyberMatchingEngineRinkeby[func];
       case 'kovan':
         return KyberMatchingEngineKovan[func];
       default:
-        return KyberMatchingEngineMainnet[func]; 
+        return KyberMatchingEngineMainnet[func];
     }
   };
 
@@ -110,11 +110,11 @@ module.exports = app => {
       case 'ropsten':
         return KyberStorageRopsten[func];
       case 'rinkeby':
-        return KyberStorageRinkeby[func]; 
+        return KyberStorageRinkeby[func];
       case 'kovan':
         return KyberStorageKovan[func];
       default:
-        return KyberStorageMainnet[func]; 
+        return KyberStorageMainnet[func];
     }
   };
 
@@ -125,11 +125,11 @@ module.exports = app => {
       case 'ropsten':
         return KyberHistoryRopsten[func];
       case 'rinkeby':
-        return KyberHistoryRinkeby[func]; 
+        return KyberHistoryRinkeby[func];
       case 'kovan':
         return KyberHistoryKovan[func];
       default:
-        return KyberHistoryMainnet[func]; 
+        return KyberHistoryMainnet[func];
     }
   };
 
@@ -140,11 +140,11 @@ module.exports = app => {
       case 'ropsten':
         return KyberFeeHandlerRopsten[func];
       case 'rinkeby':
-        return KyberFeeHandlerRinkeby[func]; 
+        return KyberFeeHandlerRinkeby[func];
       case 'kovan':
         return KyberFeeHandlerKovan[func];
       default:
-        return KyberFeeHandlerMainnet[func]; 
+        return KyberFeeHandlerMainnet[func];
     }
   };
 
@@ -155,11 +155,11 @@ module.exports = app => {
       case 'ropsten':
         return KyberStakingRopsten[func];
       case 'rinkeby':
-        return KyberStakingRinkeby[func]; 
+        return KyberStakingRinkeby[func];
       case 'kovan':
         return KyberStakingKovan[func];
       default:
-        return KyberStakingMainnet[func]; 
+        return KyberStakingMainnet[func];
     }
   };
 
@@ -170,11 +170,11 @@ module.exports = app => {
       case 'ropsten':
         return KyberDaoRopsten[func];
       case 'rinkeby':
-        return KyberDaoRinkeby[func]; 
+        return KyberDaoRinkeby[func];
       case 'kovan':
         return KyberDaoKovan[func];
       default:
-        return KyberDaoMainnet[func]; 
+        return KyberDaoMainnet[func];
     }
   };
 
@@ -185,15 +185,15 @@ module.exports = app => {
       // case 'ropsten':
       //   return RateHelperRopsten[func];
       // case 'rinkeby':
-      //   return RateHelperRinkeby[func]; 
+      //   return RateHelperRinkeby[func];
       // case 'kovan':
       //   return RateHelperKovan[func];
       default:
-        return RateHelperMainnet[func]; 
+        return RateHelperMainnet[func];
     }
   };
 
-  const getEthLib = network => {
+  const getEthLib = (network) => {
     switch (network) {
       case 'ropsten':
         return ethereum.ropsten;
@@ -206,7 +206,7 @@ module.exports = app => {
     }
   };
 
-  const formatTime = seconds => {
+  const formatTime = (seconds) => {
     let dt = new Date(0);
     let formattedDate = '';
     dt.setUTCSeconds(seconds);
@@ -222,27 +222,30 @@ module.exports = app => {
       dt.getUTCMinutes().toString().padStart(2, '0'),
       ':',
       dt.getUTCSeconds().toString().padStart(2, '0'),
-      ' UTC',
+      ' UTC'
     );
   };
 
-  const getReadableNumber = number => {
+  const toHumanNum = (number) => {
     number = Number(number);
     if (number > 1000000) {
       return (number / 1000000).toFixed(3) + 'M (' + number.toFixed(3) + ')';
     } else if (number > 1000) {
-      return (number / 1000).toFixed(3)  + 'K (' + number.toFixed(3) + ')';
+      return (number / 1000).toFixed(3) + 'K (' + number.toFixed(3) + ')';
     } else {
       return number.toFixed(3);
     }
   };
 
-  const getReadableWei = (number) => {
-    return getReadableNumber(number / ethereum.mainnet.ethers.constants.WeiPerEther);
+  const toHumanWei = (number) => {
+    return toHumanNum(number / ethereum.mainnet.ethers.constants.WeiPerEther);
   };
 
-  const reserveIdToAscii = reserveId => {
-    let hex = reserveId.toString().substr(2, reserveId.length).replace(/0+$/, '');
+  const reserveIdToAscii = (reserveId) => {
+    let hex = reserveId
+      .toString()
+      .substr(2, reserveId.length)
+      .replace(/0+$/, '');
     let reserveType = hex.substr(0, 2);
 
     switch (hex.substr(0, 2)) {
@@ -262,7 +265,7 @@ module.exports = app => {
         reserveType = 'NONE';
         break;
     }
-  
+
     hex = hex.substr(2, reserveId.length);
     let result = '';
     for (var i = 0; i < hex.length; i += 2) {
@@ -284,8 +287,8 @@ module.exports = app => {
     getRateFunction,
     getEthLib,
     formatTime,
-    getReadableNumber,
-    getReadableWei,
+    toHumanNum,
+    toHumanWei,
     reserveIdToAscii,
   };
 
