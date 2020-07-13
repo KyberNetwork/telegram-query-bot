@@ -5,7 +5,7 @@ function validateToken(token, network, currencies) {
     return { address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' };
   } else if (
     !token.startsWith('0x') &&
-    (network == 'mainnet' || network == 'staging')
+    (['mainnet', 'staging', 'ropsten'].indexOf(network) !== -1)
   ) {
     return currencies.find(o => o.symbol === token.toUpperCase());
   } else if (
@@ -90,7 +90,7 @@ module.exports = () => {
     }
 
     const network = (args[required]) ? args[required].toLowerCase() : 'mainnet';
-    const currencies = (await kyber.get('/currencies')).data.data;
+    const currencies = (await kyber(network).get('/currencies')).data.data;
     const parseHint = helpers.getMatchingEngineFunction(network, func);
 
     let parseHintArgs = [];
@@ -131,7 +131,7 @@ module.exports = () => {
     }
 
     try {
-      const result = await parseHint(...parseHintArgs).call();
+      const result = await parseHint(...parseHintArgs);
       
       let msg ='';
       if (tradePath === 't2e') {

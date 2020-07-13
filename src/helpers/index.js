@@ -61,139 +61,139 @@ module.exports = app => {
   const getProxyFunction = (network, func) => {
     switch (network.toLowerCase()) {
       case 'staging':
-        return KyberNetworkProxyStaging.methods[func];
+        return KyberNetworkProxyStaging[func];
       case 'ropsten':
-        return KyberNetworkProxyRopsten.methods[func];
+        return KyberNetworkProxyRopsten[func];
       case 'rinkeby':
-        return KyberNetworkProxyRinkeby.methods[func]; 
+        return KyberNetworkProxyRinkeby[func]; 
       case 'kovan':
-        return KyberNetworkProxyKovan.methods[func];
+        return KyberNetworkProxyKovan[func];
       default:
-        return KyberNetworkProxyMainnet.methods[func]; 
+        return KyberNetworkProxyMainnet[func]; 
     }
   };
 
   const getNetworkFunction = (network, func) => {
     switch (network.toLowerCase()) {
       case 'staging':
-        return KyberNetworkStaging.methods[func];
+        return KyberNetworkStaging[func];
       case 'ropsten':
-        return KyberNetworkRopsten.methods[func];
+        return KyberNetworkRopsten[func];
       case 'rinkeby':
-        return KyberNetworkRinkeby.methods[func]; 
+        return KyberNetworkRinkeby[func]; 
       case 'kovan':
-        return KyberNetworkKovan.methods[func];
+        return KyberNetworkKovan[func];
       default:
-        return KyberNetworkMainnet.methods[func]; 
+        return KyberNetworkMainnet[func]; 
     }
   };
 
   const getMatchingEngineFunction = (network, func) => {
     switch (network.toLowerCase()) {
       case 'staging':
-        return KyberMatchingEngineStaging.methods[func];
+        return KyberMatchingEngineStaging[func];
       case 'ropsten':
-        return KyberMatchingEngineRopsten.methods[func];
+        return KyberMatchingEngineRopsten[func];
       case 'rinkeby':
-        return KyberMatchingEngineRinkeby.methods[func]; 
+        return KyberMatchingEngineRinkeby[func]; 
       case 'kovan':
-        return KyberMatchingEngineKovan.methods[func];
+        return KyberMatchingEngineKovan[func];
       default:
-        return KyberMatchingEngineMainnet.methods[func]; 
+        return KyberMatchingEngineMainnet[func]; 
     }
   };
 
   const getStorageFunction = (network, func) => {
     switch (network.toLowerCase()) {
       case 'staging':
-        return KyberStorageStaging.methods[func];
+        return KyberStorageStaging[func];
       case 'ropsten':
-        return KyberStorageRopsten.methods[func];
+        return KyberStorageRopsten[func];
       case 'rinkeby':
-        return KyberStorageRinkeby.methods[func]; 
+        return KyberStorageRinkeby[func]; 
       case 'kovan':
-        return KyberStorageKovan.methods[func];
+        return KyberStorageKovan[func];
       default:
-        return KyberStorageMainnet.methods[func]; 
+        return KyberStorageMainnet[func]; 
     }
   };
 
   const getHistoryFunction = (network, func) => {
     switch (network.toLowerCase()) {
       case 'staging':
-        return KyberHistoryStaging.methods[func];
+        return KyberHistoryStaging[func];
       case 'ropsten':
-        return KyberHistoryRopsten.methods[func];
+        return KyberHistoryRopsten[func];
       case 'rinkeby':
-        return KyberHistoryRinkeby.methods[func]; 
+        return KyberHistoryRinkeby[func]; 
       case 'kovan':
-        return KyberHistoryKovan.methods[func];
+        return KyberHistoryKovan[func];
       default:
-        return KyberHistoryMainnet.methods[func]; 
+        return KyberHistoryMainnet[func]; 
     }
   };
 
   const getFeeHandlerFunction = (network, func) => {
     switch (network.toLowerCase()) {
       case 'staging':
-        return KyberFeeHandlerStaging.methods[func];
+        return KyberFeeHandlerStaging[func];
       case 'ropsten':
-        return KyberFeeHandlerRopsten.methods[func];
+        return KyberFeeHandlerRopsten[func];
       case 'rinkeby':
-        return KyberFeeHandlerRinkeby.methods[func]; 
+        return KyberFeeHandlerRinkeby[func]; 
       case 'kovan':
-        return KyberFeeHandlerKovan.methods[func];
+        return KyberFeeHandlerKovan[func];
       default:
-        return KyberFeeHandlerMainnet.methods[func]; 
+        return KyberFeeHandlerMainnet[func]; 
     }
   };
 
   const getStakingFunction = (network, func) => {
     switch (network.toLowerCase()) {
       case 'staging':
-        return KyberStakingStaging.methods[func];
+        return KyberStakingStaging[func];
       case 'ropsten':
-        return KyberStakingRopsten.methods[func];
+        return KyberStakingRopsten[func];
       case 'rinkeby':
-        return KyberStakingRinkeby.methods[func]; 
+        return KyberStakingRinkeby[func]; 
       case 'kovan':
-        return KyberStakingKovan.methods[func];
+        return KyberStakingKovan[func];
       default:
-        return KyberStakingMainnet.methods[func]; 
+        return KyberStakingMainnet[func]; 
     }
   };
 
   const getDaoFunction = (network, func) => {
     switch (network.toLowerCase()) {
       case 'staging':
-        return KyberDaoStaging.methods[func];
+        return KyberDaoStaging[func];
       case 'ropsten':
-        return KyberDaoRopsten.methods[func];
+        return KyberDaoRopsten[func];
       case 'rinkeby':
-        return KyberDaoRinkeby.methods[func]; 
+        return KyberDaoRinkeby[func]; 
       case 'kovan':
-        return KyberDaoKovan.methods[func];
+        return KyberDaoKovan[func];
       default:
-        return KyberDaoMainnet.methods[func]; 
+        return KyberDaoMainnet[func]; 
     }
   };
 
   const getRateFunction = (network, func) => {
     switch (network.toLowerCase()) {
       case 'staging':
-        return RateHelperStaging.methods[func];
+        return RateHelperStaging[func];
       // case 'ropsten':
-      //   return RateHelperRopsten.methods[func];
+      //   return RateHelperRopsten[func];
       // case 'rinkeby':
-      //   return RateHelperRinkeby.methods[func]; 
+      //   return RateHelperRinkeby[func]; 
       // case 'kovan':
-      //   return RateHelperKovan.methods[func];
+      //   return RateHelperKovan[func];
       default:
-        return RateHelperMainnet.methods[func]; 
+        return RateHelperMainnet[func]; 
     }
   };
 
-  const getWeb3 = network => {
+  const getEthLib = network => {
     switch (network) {
       case 'ropsten':
         return ethereum.ropsten;
@@ -224,6 +224,21 @@ module.exports = app => {
       dt.getUTCSeconds().toString().padStart(2, '0'),
       ' UTC',
     );
+  };
+
+  const getReadableNumber = number => {
+    number = Number(number);
+    if (number > 1000000) {
+      return (number / 1000000).toFixed(3) + 'M (' + number.toFixed(3) + ')';
+    } else if (number > 1000) {
+      return (number / 1000).toFixed(3)  + 'K (' + number.toFixed(3) + ')';
+    } else {
+      return number.toFixed(3);
+    }
+  };
+
+  const getReadableWei = (number) => {
+    return getReadableNumber(number / ethereum.mainnet.ethers.constants.WeiPerEther);
   };
 
   const reserveIdToAscii = reserveId => {
@@ -267,8 +282,10 @@ module.exports = app => {
     getStakingFunction,
     getDaoFunction,
     getRateFunction,
-    getWeb3,
+    getEthLib,
     formatTime,
+    getReadableNumber,
+    getReadableWei,
     reserveIdToAscii,
   };
 

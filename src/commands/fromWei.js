@@ -19,12 +19,11 @@ module.exports = () => {
       return;
     }
 
-    const web3 = helpers.getWeb3('mainnet');
+    const {ethers: ethers} = helpers.getEthLib('mainnet');
     const qty = args[0];
 
     try {
-      const result = web3.utils.fromWei(qty);
-      replyWithMarkdown(result, inReplyTo(message.message_id));
+      replyWithMarkdown(ethers.utils.formatEther(qty), inReplyTo(message.message_id));
     } catch (e) {
       replyWithMarkdown(e.toString(), inReplyTo(message.message_id));
     }

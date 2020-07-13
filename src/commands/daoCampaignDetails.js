@@ -33,17 +33,17 @@ module.exports = () => {
     }
 
     const network = (args[1]) ? args[1].toLowerCase() : 'mainnet';
-    const web3 = helpers.getWeb3(network);
+    const {ethers: ethers} = helpers.getEthLib(network);
     const campaignId = args[0];
     const getCampaignDetails = helpers.getDaoFunction(network, 'getCampaignDetails');
-    const result = await getCampaignDetails(campaignId).call();
+    const result = await getCampaignDetails(campaignId);
 
     let msg = '';
     msg = msg.concat(
       `Campaign Type: \`${validateCampaignType(result.campaignType)}\`\n`,
       `Start TimeStamp: \`${helpers.formatTime(result.startTimeStamp)}\`\n`,
       `End TimeStamp: \`${helpers.formatTime(result.endTimeStamp)}\`\n`,
-      `Total KNC Supply: \`${web3.utils.fromWei(result.totalKNCSupply)}\`\n`,
+      `Total KNC Supply: \`${ethers.utils.formatEther(result.totalKNCSupply)}\`\n`,
       `Min Percentage: \`${result.minPercentageInPrecision}\`\n`,
       `C: \`${result.cInPrecision}\`\n`,
       `T: \`${result.tInPrecision}\`\n`,

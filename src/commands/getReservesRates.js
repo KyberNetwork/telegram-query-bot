@@ -22,39 +22,41 @@ function formatLabel(type, symbol) {
   return label;
 }
 
-async function formatValue(web3, type, rate, isBuy, medianizer) {
+async function formatValue(utils, type, rate, isBuy, medianizer) {
   let value;
   let usd;
 
   switch (type) {
     case 'eth':
       if (isBuy) {
-        value = rate > 0 ? 1 / web3.utils.fromWei(rate.toString()) : 0;
+        value = rate > 0 ? 1 / utils.formatUnits(rate, 'ether') : 0;
       } else {
-        value = web3.utils.fromWei(rate.toString());
+        value = utils.formatEther(rate.toString());
       }
+      value = Number(value).toFixed(7);
       break;
     case 'token':
       if (isBuy) {
-        value = web3.utils.fromWei(rate.toString());
+        value = utils.formatUnits(rate, 'ether');
       } else {
-        value = rate > 0 ? 1 / web3.utils.fromWei(rate.toString()) : 0;
+        value = rate > 0 ? 1 / utils.formatUnits(rate, 'ether') : 0;
       }
+      value = Number(value).toFixed(7);
       break;
     case 'usd':
-      usd = web3.utils.toBN(await medianizer.methods.read().call());
+      usd = await medianizer.read();
       if (isBuy) {
-        value = rate > 0 ? 1 / web3.utils.fromWei(rate.toString()) : 0;
-        value *= web3.utils.fromWei(usd);
-        value = `$${value}`;
+        value = rate > 0 ? 1 / utils.formatUnits(rate, 'ether') : 0;    
       } else {
-        value = web3.utils.fromWei(rate.toString());
-        value *= web3.utils.fromWei(usd);
-        value = `$${value}`;
+        value = utils.formatUnits(rate, 'ether');
       }
+      value *= utils.formatUnits(usd, 'ether');
+      value = Number(value).toFixed(5);
+      value = `$${value}`;
       break;
     default:
-      value = web3.utils.fromWei(rate.toString());
+      value = utils.formatUnits(rate, 'ether');
+      value = Number(value).toFixed(7);
       break;
   }
 
@@ -82,11 +84,12 @@ module.exports = (type) => {
     }
 
     const network = args[2] ? args[2].toLowerCase() : 'mainnet';
-    const web3 = helpers.getWeb3(network);
+    const {ethers: ethers, provider: provider} = helpers.getEthLib(network);
+    const utils = ethers.utils;
     const tokenABI = JSON.parse(
       fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8')
     );
-    const currencies = (await kyber.get('/currencies')).data.data;
+    const currencies = (await kyber(network).get('/currencies')).data.data;
     const qty = args[1];
 
     let token = args[0];
@@ -106,16 +109,16 @@ module.exports = (type) => {
       return;
     }
 
-    const tokenInstance = new web3.eth.Contract(tokenABI, token.address);
+    const tokenInstance = new ethers.Contract(token.address, tokenABI, provider);
     const decimals =
-      token.decimals || (await tokenInstance.methods.decimals().call());
+      token.decimals || (await tokenInstance.decimals());
     const symbol =
-      token.symbol || (await tokenInstance.methods.symbol().call());
+      token.symbol || (await tokenInstance.symbol());
     const qtyToken = Math.round(qty * 10 ** decimals).toLocaleString(
       'fullwide',
       { useGrouping: false }
     );
-    const qtyETH = web3.utils.toWei(qty);
+    const qtyETH = utils.parseEther(qty);
 
     const getReservesRates = helpers.getRateFunction(
       network,
@@ -126,13 +129,13 @@ module.exports = (type) => {
     try {
       resultETH = await getReservesRates(
         token.address,
-        qtyETH.toString()
-      ).call();
+        qtyETH
+      );
 
       resultToken = await getReservesRates(
         token.address,
-        qtyToken.toString()
-      ).call();
+        qtyToken
+      );
 
       let msg = `*BUY${formatLabel(type, symbol)}*\n`;
       let msgValue = '';
@@ -141,7 +144,7 @@ module.exports = (type) => {
       for (let index in resultETH.buyReserves) {
         [reserveAscii, reserveType] = helpers.reserveIdToAscii(resultETH.buyReserves[index]);
         msgValue = await formatValue(
-          web3,
+          utils,
           type,
           resultETH.buyRates[index],
           true,
@@ -157,7 +160,7 @@ module.exports = (type) => {
       for (let index in resultToken.sellReserves) {
         [reserveAscii, reserveType] = helpers.reserveIdToAscii(resultETH.sellReserves[index]);
         msgValue = await formatValue(
-          web3,
+          utils,
           type,
           resultToken.sellRates[index],
           false,

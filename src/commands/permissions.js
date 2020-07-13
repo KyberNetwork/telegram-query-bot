@@ -21,15 +21,15 @@ module.exports = () => {
     }
 
     const network = (args[1]) ? args[1].toLowerCase() : 'mainnet';
-    const web3 = helpers.getWeb3(network);
+    const {ethers: ethers, provider: provider} = helpers.getEthLib(network);
     const contract = args[0];
     const permissionsABI = JSON.parse(fs.readFileSync('src/contracts/abi/PermissionGroups.abi', 'utf8'));
-    const contractInstance = new web3.eth.Contract(permissionsABI, contract);
+    const contractInstance = new ethers.Contract(contract, permissionsABI, provider);
 
-    const admin = await contractInstance.methods.admin().call();
-    const pendingAdmin = await contractInstance.methods.pendingAdmin().call();
-    const alerters = await contractInstance.methods.getAlerters().call();
-    const operators = await contractInstance.methods.getOperators().call();
+    const admin = await contractInstance.admin();
+    const pendingAdmin = await contractInstance.pendingAdmin();
+    const alerters = await contractInstance.getAlerters();
+    const operators = await contractInstance.getOperators();
 
     let msg ='';
     msg = msg.concat(

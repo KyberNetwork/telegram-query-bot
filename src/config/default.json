@@ -1,7 +1,8 @@
 {
   "axios": {
     "kyber": {
-      "baseURL": "https://api.kyber.network",
+      "mainnetURL": "https://api.kyber.network",
+      "ropstenURL": "https://ropsten-api.kyber.network",
       "timeout": 2000
     },
     "ethgasstation": {
@@ -12,12 +13,6 @@
       "baseURL": "https://api.alternative.me",
       "timeout": 20000
     }
-  },
-  "web3": {
-    "mainnet": "https://eth-mainnet.alchemyapi.io/jsonrpc",
-    "ropsten": "https://eth-ropsten.alchemyapi.io/jsonrpc",
-    "rinkeby": "https://eth-rinkeby.alchemyapi.io/jsonrpc",
-    "kovan": "https://eth-kovan.alchemyapi.io/jsonrpc"
   },
   "contracts": {
     "mainnet": {
@@ -66,17 +61,17 @@
       "RateHelper": "0xf2756ed51434a23Ff019b3d58FA72B7faf041558"
     },
     "rinkeby": {
-      "KyberNetworkProxy": "0xd719c34261e099Fdb33030ac8909d5788D3039C4",
-      "KyberNetwork": "0x920B322D4B8BAB34fb6233646F5c87F87e79952b",
-      "KyberStorage": "0x688bf5EeC43E0799c5B9c1612F625F7b93FE5434",
-      "KyberFeeHandler": "0xfF456D9A8cbB5352eF77dEc2337bAC8dEC63bEAC",
-      "KyberStaking": "0x9A73c6217cd595bc449bA6fEF6efF53f29014f42",
-      "KyberMatchingEngine": "0x63f773c026093eEf988e803BdD5772DD235a8E71",
-      "KyberDao": "0x2Be7dC494362e4FCa2c228522047663B17aE17F9",
-      "NetworkHistory": "0xCaEcf8B41247F188C174c06170c0fA13c66fF6D9",
-      "FeeHandlerHistory": "0x89e35C62e71955288bC5Ed785A5C15E11DEd152F",
-      "DaoHistory": "0x701f73CE836e9E57e3F8641EB1ce3479C631e4d8",
-      "MatchingEngineHistory": "0x7EB9C4C20E1ff590505567b158C91a9578Fe9165",
+      "KyberNetworkProxy": "0x0d5371e5EE23dec7DF251A8957279629aa79E9C5",
+      "KyberNetwork": "0x72910183AfFe53C3f57a7D010C730C2F90AB3bFA",
+      "KyberStorage": "0xcE81c833DCc8f2Bf975159e04b8Ca496441D2188",
+      "KyberFeeHandler": "0xFAbB5d5D56B6f076C04834de6C382Fa55a602CA0",
+      "KyberStaking": "0x88b0cdE836b4DE5E274014EBE119f6B2782dDfa0",
+      "KyberMatchingEngine": "0xe923dbC3211A441778c38C8709cc8E83a943d1CB",
+      "KyberDao": "0x62f199439E74c4F51154829D8eE92E3ADFd559c8",
+      "NetworkHistory": "0x480bb0f59018cd426a5d58a1d09fd413261cef60",
+      "FeeHandlerHistory": "0x1f8f28cdec7711877481a6f5b7c49843d97d5f94",
+      "DaoHistory": "0xd70871c046f87ef3dcfb593104460b8f3058a7f2",
+      "MatchingEngineHistory": "0x896d181be3c9bb2b2e53d2f65ac2dd8540250329",
       "RateHelper": "0xf2756ed51434a23Ff019b3d58FA72B7faf041558"
     },
     "kovan": {

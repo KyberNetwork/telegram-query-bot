@@ -20,15 +20,14 @@ module.exports = () => {
     }
 
     const network = (args[1]) ? args[1].toLowerCase() : 'mainnet';
-    const web3 = helpers.getWeb3(network);
     const epoch = args[0];
     const rewardsPerEpoch = helpers.getFeeHandlerFunction(network, 'rewardsPerEpoch');
     const rewardsPaidPerEpoch = helpers.getFeeHandlerFunction(network, 'rewardsPaidPerEpoch');
 
     let msg = '';
     msg = msg.concat(
-      `Rewards for Epoch ${epoch}: \`${web3.utils.fromWei(await rewardsPerEpoch(epoch).call())} ETH\`\n`,
-      `Rewards Paid for Epoch ${epoch}: \`${web3.utils.fromWei(await rewardsPaidPerEpoch(epoch).call())} ETH\``,
+      `Rewards for Epoch ${epoch}: \`${helpers.getReadableWei(await rewardsPerEpoch(epoch))} ETH\`\n`,
+      `Rewards Paid for Epoch ${epoch}: \`${helpers.getReadableWei(await rewardsPaidPerEpoch(epoch))} ETH\``,
     );
     
     replyWithMarkdown(msg, inReplyTo(message.message_id));

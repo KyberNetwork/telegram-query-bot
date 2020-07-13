@@ -22,7 +22,7 @@ module.exports = () => {
     const network = (args[1]) ? args[1].toLowerCase() : 'mainnet';
     const epoch = args[0];
     const getListCampaignIDs = helpers.getDaoFunction(network, 'getListCampaignIDs');
-    const result = await getListCampaignIDs(epoch).call();
+    const result = await getListCampaignIDs(epoch);
     
     replyWithMarkdown(`Campaign IDs at epoch ${epoch}: \`${(result.length > 0) ? result.join('`, `') : 'None'}\``, inReplyTo(message.message_id));
   };

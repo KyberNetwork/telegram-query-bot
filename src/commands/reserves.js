@@ -14,7 +14,7 @@ module.exports = () => {
     const network = (args[0]) ? args[0].toLowerCase() : 'mainnet';
 
     const getReserves = helpers.getStorageFunction(network, 'getReserves');
-    const result = await getReserves().call(); 
+    const result = await getReserves(); 
 
     replyWithMarkdown(`\`${result.join('`, `')}\``, inReplyTo(message.message_id));
   };

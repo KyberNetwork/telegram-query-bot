@@ -22,7 +22,7 @@ module.exports = () => {
     const network = (args[1]) ? args[1].toLowerCase() : 'mainnet';
     const staker = args[0];
     const daoLatestStakerPercentage = helpers.getDaoFunction(network, 'getCurrentEpochRewardPercentageInPrecision');
-    const result = await daoLatestStakerPercentage(staker).call();
+    const result = await daoLatestStakerPercentage(staker);
     
     replyWithMarkdown(result, inReplyTo(message.message_id));
   };

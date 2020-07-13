@@ -23,7 +23,7 @@ module.exports = () => {
     const reserve = args[0];
 
     const getReserves = helpers.getStorageFunction(network, 'getReserves');
-    const reserves = await getReserves().call();
+    const reserves = await getReserves();
 
     const result = reserves.findIndex(r => reserve.toLowerCase() === r.toLowerCase());
 

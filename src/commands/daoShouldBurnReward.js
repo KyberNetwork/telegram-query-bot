@@ -22,7 +22,7 @@ module.exports = () => {
     const network = (args[1]) ? args[1].toLowerCase() : 'mainnet';
     const epoch = args[0];
     const shouldBurnReward = helpers.getDaoFunction(network, 'shouldBurnRewardForEpoch');
-    const result = await shouldBurnReward(epoch).call();
+    const result = await shouldBurnReward(epoch);
     
     replyWithMarkdown(result, inReplyTo(message.message_id));
   };

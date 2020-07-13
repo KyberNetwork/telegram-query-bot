@@ -12,11 +12,11 @@ module.exports = () => {
     }
 
     const network = (args[0]) ? args[0].toLowerCase() : 'mainnet';
-    const web3 = helpers.getWeb3(network);
+    const {ethers: ethers} = helpers.getEthLib(network);
     const totalPayoutBalance = helpers.getFeeHandlerFunction(network, 'totalPayoutBalance');
 
-    const result = web3.utils.fromWei(await totalPayoutBalance().call());
+    const result = Number(ethers.utils.formatEther(await totalPayoutBalance())).toFixed(5);
     
-    replyWithMarkdown(`Current collected fees: \`${result} ETH\``, inReplyTo(message.message_id));
+    replyWithMarkdown(`PRR fees: \`${result} ETH\``, inReplyTo(message.message_id));
   };
 };

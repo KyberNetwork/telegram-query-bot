@@ -21,14 +21,14 @@ module.exports = () => {
     }
 
     const network = (args[1]) ? args[1].toLowerCase() : 'mainnet';
-    const currencies = (await kyber.get('/currencies')).data.data;
+    const currencies = (await kyber(network).get('/currencies')).data.data;
     let token = args[0];
 
     if (token.toUpperCase() === 'ETH') {
       token = { address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' };
     } else if (
       !token.startsWith('0x') &&
-      (network.toLowerCase() == 'mainnet' || network.toLowerCase() == 'staging')
+      (['mainnet', 'staging', 'ropsten'].indexOf(network) !== -1)
     ) {
       token = currencies.find(o => o.symbol === token.toUpperCase());
     } else if (
@@ -47,8 +47,8 @@ module.exports = () => {
 
     const reservesPerTokenSrc = helpers.getStorageFunction(network, 'getReserveIdsPerTokenSrc');
     const reservesPerTokenDest = helpers.getStorageFunction(network, 'getReserveIdsPerTokenDest');
-    const srcReserveIds = await reservesPerTokenSrc(token.address).call();
-    const destReserveIds = await reservesPerTokenDest(token.address).call();
+    const srcReserveIds = await reservesPerTokenSrc(token.address);
+    const destReserveIds = await reservesPerTokenDest(token.address);
 
     let result = srcReserveIds.concat(destReserveIds);
     result = result.filter((element, index) => result.indexOf(element) === index);

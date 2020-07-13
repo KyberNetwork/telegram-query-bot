@@ -22,8 +22,8 @@ module.exports = () => {
     }
 
     const network = (args[3]) ? args[3].toLowerCase() : 'mainnet';
-    const web3 = helpers.getWeb3(network);
-    const currencies = (await kyber.get('/currencies')).data.data;
+    const {ethers: ethers, provider: provider} = helpers.getEthLib(network);
+    const currencies = (await kyber(network).get('/currencies')).data.data;
     let srcToken = args[0];
     let destToken = args[1];
     let srcQty = args[2];
@@ -32,7 +32,7 @@ module.exports = () => {
       srcToken = { address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' };
     } else if (
       !srcToken.startsWith('0x') &&
-      (network.toLowerCase() == 'mainnet' || network.toLowerCase() == 'staging')
+      (['mainnet', 'staging', 'ropsten'].indexOf(network) !== -1)
     ) {
       srcToken = currencies.find(o => o.symbol === srcToken.toUpperCase());
     } else if (
@@ -48,7 +48,7 @@ module.exports = () => {
       destToken = { address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' };
     } else if (
       !destToken.startsWith('0x') &&
-      (network.toLowerCase() == 'mainnet' || network.toLowerCase() == 'staging')
+      (['mainnet', 'staging', 'ropsten'].indexOf(network) !== -1)
     ) {
       destToken = currencies.find(o => o.symbol === destToken.toUpperCase());
     } else if (
@@ -66,11 +66,11 @@ module.exports = () => {
     }
 
     if (srcToken.symbol === 'ETH' || srcToken.address.toLowerCase() === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
-      srcQty = web3.utils.toWei(srcQty);
+      srcQty = ethers.utils.parseEther(srcQty);
     } else {
       const tokenABI = JSON.parse(fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8'));
-      const srcTokenInstance = new web3.eth.Contract(tokenABI, srcToken.address);
-      const decimals = srcToken.decimals || await srcTokenInstance.methods.decimals().call();
+      const srcTokenInstance = new ethers.Contract(srcToken.address, tokenABI, provider);
+      const decimals = srcToken.decimals || await srcTokenInstance.decimals();
       srcQty = Math.round(srcQty * (10 ** decimals)).toLocaleString('fullwide', {useGrouping:false});
     }
 
@@ -78,12 +78,15 @@ module.exports = () => {
     const result = await getExpectedRate(
       srcToken.address,
       destToken.address,
-      srcQty.toString(),
-    ).call();
+      srcQty
+    );
 
-    const expectedRate = web3.utils.fromWei(result.expectedRate.toString());
-    const slippageRate = web3.utils.fromWei(result.worstRate.toString());
+    const expectedRate = Number(ethers.utils.formatEther(result.expectedRate)).toFixed(5);
+    const slippageRate = Number(ethers.utils.formatEther(result.worstRate)).toFixed(5);
 
-    replyWithMarkdown(`Expected Rate: \`${expectedRate}\`\nSlippage Rate: \`${slippageRate}\``, inReplyTo(message.message_id));
+    replyWithMarkdown(
+      `Expected Rate: \`${expectedRate} (${result.expectedRate})\`\n` + 
+      `Slippage Rate: \`${slippageRate} (${result.worstRate})\``,
+      inReplyTo(message.message_id));
   };
 };

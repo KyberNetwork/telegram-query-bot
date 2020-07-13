@@ -13,7 +13,7 @@ module.exports = () => {
 
     const network = (args[0]) ? args[0].toLowerCase() : 'mainnet';
     const getLatestBRRData = helpers.getDaoFunction(network, 'getLatestBRRData');
-    const result = await getLatestBRRData().call();
+    const result = await getLatestBRRData();
     
     let msg = '';
     msg = msg.concat(

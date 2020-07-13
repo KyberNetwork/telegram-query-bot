@@ -19,15 +19,15 @@ module.exports = () => {
     const kyberHintHandler = helpers.getProxyFunction(network, 'kyberHintHandler');
     const getContracts = helpers.getNetworkFunction(network, 'getContracts');
     const staking = helpers.getDaoFunction(network, 'staking');
-    const result = await getContracts().call();
+    const result = await getContracts();
 
     let msg ='';
     msg = msg.concat(
       `KyberNetworkProxies: \`${result[5].join('`, `')}\`\n`,
-      `kyberNetwork: \`${await kyberNetwork().call()}\`\n`,
-      `kyberHintHandler: \`${await kyberHintHandler().call()}\`\n`,
+      `kyberNetwork: \`${await kyberNetwork()}\`\n`,
+      `kyberHintHandler: \`${await kyberHintHandler()}\`\n`,
       `KyberFeeHandler: \`${result[0]}\`\n`,
-      `KyberStaking: \`${await staking().call()}\`\n`,
+      `KyberStaking: \`${await staking()}\`\n`,
       `KyberDao: \`${result[1]}\`\n`,
       `KyberMatchingEngine: \`${result[2]}\`\n`,
       `KyberStorage: \`${result[3]}\`\n`,

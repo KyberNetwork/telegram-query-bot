@@ -1,4 +1,3 @@
-const BN = require('bn.js');
 const Extra = require('telegraf/extra');
 const fs = require('fs');
 
@@ -22,11 +21,11 @@ module.exports = () => {
     }
 
     const network = (args[1]) ? args[1].toLowerCase() : 'mainnet';
-    const web3 = helpers.getWeb3(network);
+    const {ethers: ethers, provider: provider} = helpers.getEthLib(network);
     const reserve = args[0].toLowerCase();
     const reserveABI = JSON.parse(fs.readFileSync('src/contracts/abi/KyberReserve.abi', 'utf8'));
-    const reserveInstance = new web3.eth.Contract(reserveABI, reserve);
-    const conversionRates = await reserveInstance.methods.conversionRatesContract().call();
+    const reserveInstance = new ethers.Contract(reserve, reserveABI, provider);
+    const conversionRates = await reserveInstance.conversionRatesContract();
 
     if (!conversionRates) {
       reply('Invalid reserve address.', inReplyTo(message.message_id));
@@ -34,19 +33,15 @@ module.exports = () => {
     }
     
     const conversionRatesABI = JSON.parse(fs.readFileSync('src/contracts/abi/LiquidityConversionRates.abi', 'utf8'));
-    const conversionRatesInstance = new web3.eth.Contract(conversionRatesABI, conversionRates);
-    const token = await conversionRatesInstance.methods.token().call();
+    const conversionRatesInstance = new ethers.Contract(conversionRates, conversionRatesABI, provider);
+    const token = await conversionRatesInstance.token();
     const tokenABI = JSON.parse(fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8'));
-    const tokenInstance = new web3.eth.Contract(tokenABI, token);
+    const tokenInstance = new ethers.Contract(token, tokenABI, provider);
 
-    const result = await conversionRatesInstance.methods.collectedFeesInTwei().call();
-
+    let result = await conversionRatesInstance.collectedFeesInTwei();
+    result = result.div(ethers.BigNumber.from(10).pow(await tokenInstance.decimals()));
     replyWithMarkdown(
-      `${
-        new BN(result.toString()) / new BN(
-          String(10 ** await tokenInstance.methods.decimals().call())
-        )
-      } ${await tokenInstance.methods.symbol().call()}`,
+      `${result} ${await tokenInstance.symbol()}`,
       inReplyTo(message.message_id)
     );
   };
