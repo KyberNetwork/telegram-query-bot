@@ -234,6 +234,15 @@ module.exports = (app) => {
     );
   };
 
+  const hexToAscii = (hex) => {
+    let result = '';
+    for (var i = 0; i < hex.length; i += 2) {
+      result += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    }
+
+    return result;
+  };
+
   const to32Bytes = (reserveId) => {
     while (reserveId.length != 66) {
       reserveId += '0';
@@ -282,12 +291,8 @@ module.exports = (app) => {
     }
 
     hex = hex.substr(2, reserveId.length);
-    let result = '';
-    for (var i = 0; i < hex.length; i += 2) {
-      result += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-    }
 
-    return [result, reserveType];
+    return [hexToAscii(hex), reserveType];
   };
 
   const reserveTypes = (resType) => {
@@ -316,6 +321,7 @@ module.exports = (app) => {
     getRateFunction,
     getEthLib,
     formatTime,
+    hexToAscii,
     to32Bytes,
     toHumanNum,
     toHumanWei,
