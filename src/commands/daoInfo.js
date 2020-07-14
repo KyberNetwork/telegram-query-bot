@@ -32,16 +32,28 @@ module.exports = () => {
       'minCampaignDurationInSeconds'
     );
     const latestCampaignID = helpers.getDaoFunction(network, 'numberCampaigns');
-    const stakingContract = helpers.getDaoFunction(network, 'staking');
+    const getCurrentEpoch = helpers.getDaoFunction(
+      network,
+      'getCurrentEpochNumber'
+    );
+    const firstEpochStart = helpers.getDaoFunction(
+      network,
+      'firstEpochStartTimestamp'
+    );
+
+    const epochPeriod = await epochPeriodInSeconds();
+    const currentEpoch = await getCurrentEpoch();
+    let nextEpochTimestamp = (await firstEpochStart()).add(
+      epochPeriod.mul(currentEpoch)
+    );
+    nextEpochTimestamp = helpers.formatTime(nextEpochTimestamp);
 
     let msg = '';
     msg = msg.concat(
-      `Epoch Period: \`${(
-        (await epochPeriodInSeconds()) /
-        60 /
-        60 /
-        24
-      ).toFixed(5)} days\`\n`, // convert seconds to days
+      `Current Epoch: \`${currentEpoch}\`\n`,
+      `Latest Campaign ID: \`${await latestCampaignID()}\`\n`,
+      `Next Epoch: \`${nextEpochTimestamp}\`\n`,
+      `Epoch Period: \`${(epochPeriod / 60 / 60 / 24).toFixed(3)} days\`\n`, // convert seconds to days
       `Max Epoch Campaigns: \`${await maxEpochCampaigns()}\`\n`,
       `Max Campaign Options: \`${await maxCampaignOptions()}\`\n`,
       `Min Campaign Duration: \`${(
@@ -49,9 +61,7 @@ module.exports = () => {
         60 /
         60 /
         24
-      ).toFixed(5)} days\`\n`,
-      `Latest Campaign ID: \`${await latestCampaignID()}\`\n`,
-      `Staking Contract: \`${await stakingContract()}\``
+      ).toFixed(3)} days\`\n`
     );
 
     replyWithMarkdown(msg, inReplyTo(message.message_id));
