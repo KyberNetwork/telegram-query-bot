@@ -15,6 +15,7 @@ module.exports = () => {
     }
 
     const network = args[0] ? args[0].toLowerCase() : 'mainnet';
+    const { ethers } = helpers.getEthLib(network);
     const epochPeriodInSeconds = helpers.getDaoFunction(
       network,
       'epochPeriodInSeconds'
@@ -32,16 +33,28 @@ module.exports = () => {
       'minCampaignDurationInSeconds'
     );
     const latestCampaignID = helpers.getDaoFunction(network, 'numberCampaigns');
-    const stakingContract = helpers.getDaoFunction(network, 'staking');
+    const getCurrentEpoch = helpers.getDaoFunction(network, 'getCurrentEpochNumber');
+    const firstEpochStart = helpers.getDaoFunction(network, 'firstEpochStartTimestamp');
+    let epochPeriod = await epochPeriodInSeconds();
+    let currentEpoch = await getCurrentEpoch();
+    let nextEpochTimestamp = (await firstEpochStart()).add(
+      epochPeriod.mul(
+        currentEpoch
+      )
+    );
+    nextEpochTimestamp = helpers.formatTime(nextEpochTimestamp);
 
     let msg = '';
     msg = msg.concat(
+      `Current Epoch: \`${currentEpoch}\`\n`,
+      `Latest Campaign ID: \`${await latestCampaignID()}\`\n`,
+      `Next Epoch: \`${nextEpochTimestamp}\`\n`,
       `Epoch Period: \`${(
-        (await epochPeriodInSeconds()) /
+        (epochPeriod) /
         60 /
         60 /
         24
-      ).toFixed(5)} days\`\n`, // convert seconds to days
+      ).toFixed(3)} days\`\n`, // convert seconds to days
       `Max Epoch Campaigns: \`${await maxEpochCampaigns()}\`\n`,
       `Max Campaign Options: \`${await maxCampaignOptions()}\`\n`,
       `Min Campaign Duration: \`${(
@@ -49,9 +62,7 @@ module.exports = () => {
         60 /
         60 /
         24
-      ).toFixed(5)} days\`\n`,
-      `Latest Campaign ID: \`${await latestCampaignID()}\`\n`,
-      `Staking Contract: \`${await stakingContract()}\``
+      ).toFixed(3)} days\`\n`
     );
 
     replyWithMarkdown(msg, inReplyTo(message.message_id));
