@@ -282,8 +282,22 @@ module.exports = (app) => {
     return [result, reserveType];
   };
 
+  const reserveTypes = (resType) => {
+    const resTypes = ['NONE', 'FPR', 'APR', 'BRIDGE', 'UTILITY', 'CUSTOM', 'ORDERBOOK'];
+    return resTypes[resType];
+  };
+
+  const emojis = (emoji) => {
+    let emojiDict = {
+      'checkMark': '\u{2705}',
+      'crossMark': '\u{274C}'
+    };
+    return emojiDict[emoji];
+  };
+
   app.context.helpers = {
     appendZeroesToReserveId,
+    emojis,
     getProxyFunction,
     getNetworkFunction,
     getMatchingEngineFunction,
@@ -298,6 +312,7 @@ module.exports = (app) => {
     toHumanNum,
     toHumanWei,
     reserveIdToAscii,
+    reserveTypes
   };
 
   logger.info('Initialized helpers');

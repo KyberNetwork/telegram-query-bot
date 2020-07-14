@@ -36,6 +36,8 @@ module.exports = () => {
       );
       result = await getReserveDetailsByAddress(reserveId);
       reserveId = result.reserveId;
+    } else {
+      reserveId = helpers.appendZeroesToReserveId(reserveId);
     }
 
     const getListedTokensByReserveId = helpers.getStorageFunction(
