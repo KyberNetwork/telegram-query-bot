@@ -5,7 +5,6 @@ const config = JSON.parse(fs.readFileSync('src/config/default.json', 'utf8'));
 const ALCHEMY_WEIGHT = config.nodes.ALCHEMY_WEIGHT;
 const ETHERSCAN_WEIGHT = config.nodes.ETHERSCAN_WEIGHT;
 const INFURA_WEIGHT = config.nodes.INFURA_WEIGHT;
-const MAINNET_QUORUM = config.nodes.MAINNET_QUORUM;
 const DEFAULT_QUORUM = config.nodes.DEFAULT_QUORUM;
 
 function genAlchemyProvider(network) {
@@ -60,7 +59,7 @@ const mainnet = {
   ethers,
   provider: new ethers.providers.FallbackProvider(
     [mainnetInfuraProvider, mainnetAlchemyProvider, mainnetEtherscanProvider],
-    MAINNET_QUORUM
+    DEFAULT_QUORUM
   ),
 };
 

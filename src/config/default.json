@@ -15,10 +15,9 @@
     }
   },
   "nodes": {
-    "ALCHEMY_WEIGHT": 90,
+    "ALCHEMY_WEIGHT": 94,
     "ETHERSCAN_WEIGHT": 1,
     "INFURA_WEIGHT": 5,
-    "MAINNET_QUORUM": 2,
     "DEFAULT_QUORUM": 1
   },
   "contracts": {
