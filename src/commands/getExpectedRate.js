@@ -105,7 +105,7 @@ module.exports = () => {
 
     replyWithMarkdown(
       `Expected Rate: \`${expectedRate} (${result.expectedRate})\`\n` +
-        `Slippage Rate: \`${slippageRate} (${result.worstRate})\``,
+        `Worst Rate: \`${slippageRate} (${result.worstRate})\``,
       inReplyTo(message.message_id)
     );
   };

@@ -60,7 +60,7 @@ module.exports = () => {
           '`Builds the T2E, E2T, or T2T hint`\n',
           '/buildHint <tradePath> <tokenSrc> <tradeType> <reserveIds> <splits> [<tokenSrc> <tradeType> <reserveIds> <splits>] <optional: network>\n\n',
           '`Parses the T2E, E2T, or T2T hint`\n',
-          '/parseHint <hint> <optional: network>\n\n'
+          '/parseHint <tradePath> [<token> <hint> | <tokenSrc> <tokenDest> <hint>] <optional: network>\n\n'
         );
         break;
       case 'staking':

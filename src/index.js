@@ -83,7 +83,6 @@ const miscCmds = [
   'fromTwei',
   'fromWei',
   'gas',
-  'isFeeSharingWallet',
   'latestBlock',
   'permissions',
   'sentiment',

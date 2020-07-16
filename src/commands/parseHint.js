@@ -16,14 +16,14 @@ function validateToken(token, network, currencies) {
 }
 
 function validateTradeType(tradeType) {
-  switch (tradeType.toLowerCase()) {
-    case '0':
+  switch (tradeType) {
+    case 0:
       return 'BestOfAll';
-    case '1':
+    case 1:
       return 'MaskIn';
-    case '2':
+    case 2:
       return 'MaskOut';
-    case '3':
+    case 3:
       return 'Split';
     default:
       return;
