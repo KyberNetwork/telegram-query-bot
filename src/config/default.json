@@ -15,7 +15,7 @@
     }
   },
   "nodes": {
-    "ALCHEMY_WEIGHT": 20,
+    "ALCHEMY_WEIGHT": 90,
     "ETHERSCAN_WEIGHT": 1,
     "INFURA_WEIGHT": 5,
     "MAINNET_QUORUM": 2,
