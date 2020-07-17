@@ -114,16 +114,18 @@ function getParams(args) {
   result.push('\n');
 
   result.push('*COMPUTED INPUTS*');
-  result.push(`liquidity\\_rate: \`${args['liquidity_rate']}\``);
-  result.push(`initial\\_ether\\_amount: \`${args['initial_ether_amount']}\``);
-  result.push(`initial\\_token\\_amount: \`${args['initial_token_amount']}\``);
-  result.push(`initial\\_price: \`${args['initial_price']}\``);
-  result.push(`min\\_supported\\_price\\_factor: \`${args['min_supported_price_factor']}\``);
-  result.push(`max\\_supported\\_price\\_factor: \`${args['max_supported_price_factor']}\``);
-  result.push(`max\\_tx\\_buy\\_amount\\_eth: \`${args['max_tx_buy_amount_eth']}\``);
-  result.push(`max\\_tx\\_sell\\_amount\\_eth: \`${args['max_tx_sell_amount_eth']}\``);
-  result.push(`fees\\_percent: \`${args['fee_percent']}\``);
-  result.push(`formula\\_precision\\_bits: \`${args['formula_precision_bits']}\``);
+  result.push('{');
+  result.push(`  "liquidity\\_rate": \`${args['liquidity_rate']}\`,`);
+  result.push(`  "initial\\_ether\\_amount": \`${args['initial_ether_amount']}\`,`);
+  result.push(`  "initial\\_token\\_amount": \`${args['initial_token_amount']}\`,`);
+  result.push(`  "initial\\_price": \`${args['initial_price']}\`,`);
+  result.push(`  "min\\_supported\\_price\\_factor": \`${args['min_supported_price_factor']}\`,`);
+  result.push(`  "max\\_supported\\_price\\_factor": \`${args['max_supported_price_factor']}\`,`);
+  result.push(`  "max\\_tx\\_buy\\_amount\\_eth": \`${args['max_tx_buy_amount_eth']}\`,`);
+  result.push(`  "max\\_tx\\_sell\\_amount\\_eth": \`${args['max_tx_sell_amount_eth']}\`,`);
+  result.push(`  "fee\\_percent": \`${args['fee_percent']}\`,`);
+  result.push(`  "formula\\_precision\\_bits": \`${args['formula_precision_bits']}\``);
+  result.push('}');
 
   return result;
 }
@@ -133,11 +135,6 @@ module.exports = () => {
     const { helpers, message, reply, replyWithMarkdown, state } = ctx;
     const { inReplyTo } = Extra;
     const { args } = state.command;
-
-    // let a = [];
-    // a.push(`liquidity\\_rate: ${'__1__'}`);
-    // replyWithMarkdown(`${a.join(' ')}`, inReplyTo(message.message_id));
-    // return;
 
     if (!state.allowed) {
       reply('You are not whitelisted to use this bot', inReplyTo(message.message_id));
