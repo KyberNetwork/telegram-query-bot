@@ -4,7 +4,6 @@ const fs = require('fs');
 module.exports = () => {
   return async (ctx) => {
     const {
-      contracts,
       helpers,
       message,
       reply,
@@ -30,18 +29,38 @@ module.exports = () => {
       return;
     }
 
-    const network = args[1] ? args[1].toLowerCase() : 'mainnet';
-    const { ethers, provider } = helpers.getEthLib(network);
-    const { KyberStaking } = contracts[network];
+    let numEpochs = 1;
+    let network;
+    if (args[1]) {
+      if (
+        ['mainnet', 'staging', 'ropsten', 'kovan', 'rinkeby'].includes(args[1].toLowerCase())
+      ) {
+        network = args[1].toLowerCase();
+      } else {
+        numEpochs = args[1];
+        network = args[2] ? args[2].toLowerCase() : 'mainnet';
+      }
+    } else {
+      network = 'mainnet';
+    }
+    const { ethers } = helpers.getEthLib(network);
+    const BN = ethers.BigNumber;
+    const PRECISION = ethers.constants.WeiPerEther;
     const kncAmount = ethers.utils.parseEther(args[0]);
     const kncToken = helpers.getStakingFunction(network, 'kncToken');
-    const tokenABI = JSON.parse(
-      fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8')
-    );
-    const KNC = new ethers.Contract(await kncToken(), tokenABI, provider);
+    const kncAddress = await kncToken();
+
     const epochPeriodInSeconds = helpers.getDaoFunction(
       network,
       'epochPeriodInSeconds'
+    );
+    const getListCampaignIds = helpers.getDaoFunction(
+      network,
+      'getListCampaignIDs'
+    );
+    const getTotalPts = helpers.getDaoFunction(
+      network,
+      'getTotalEpochPoints'
     );
     const getCurrentEpochNumber = helpers.getStakingFunction(
       network,
@@ -56,22 +75,49 @@ module.exports = () => {
       'getExpectedRate'
     );
 
-    const currentEpoch = await getCurrentEpochNumber();
-    const epoch = currentEpoch.eq(ethers.constants.Zero) ? 0 : currentEpoch - 1; // get previous epoch number
+    const currentEpoch = (await getCurrentEpochNumber()).toNumber();
+    // convert seconds to days
     const epochPeriod =
-      (await epochPeriodInSeconds()).toNumber() / 60 / 60 / 24; // convert seconds to days
+      (await epochPeriodInSeconds()).toNumber() / 60 / 60 / 24;
 
-    // Calculate rewards in last epoch
-    const totalKNCStaked = await KNC.balanceOf(KyberStaking.address);
-    const totalRewards = await rewardsPerEpoch(epoch); // total rewards in last epoch
-    const stakerRewards = kncAmount
-      .mul(totalRewards)
-      .div(totalKNCStaked.add(kncAmount));
+    let totalRewards = ethers.constants.Zero;
+    // get average reward amt for numEpochs (excludes current epoch)
+    for (let i = 1; i <= numEpochs; i++) {
+      let epoch = Math.max(currentEpoch - i, 0);
+      let epochRewards = await rewardsPerEpoch(epoch);
+      epochRewards = (epoch == 0)
+        ? epochRewards.mul(ethers.constants.Two)
+        : epochRewards;
+      totalRewards = totalRewards.add(epochRewards);
+    }
+    let averageRewards = totalRewards.div(BN.from(numEpochs));
 
-    // Calculate APY
+    // Get number of campaigns and votes from Dao for current epoch
+    const numCampaigns = BN.from((await getListCampaignIds(currentEpoch)).length);
+    const totalPts = await getTotalPts(currentEpoch);
+
+    // Calculate reward percentage, assuming user has voted for all campaigns
+    let stakerRewardPercentPrecision = numCampaigns
+      .mul(kncAmount)
+      .mul(PRECISION)
+      .div(totalPts);
+
+    if (stakerRewardPercentPrecision.gt(PRECISION)) {
+      reply(
+        `KNC amount too high. Should be smaller than ${helpers.toHumanWei(totalPts)}`,
+        inReplyTo(message.message_id)
+      );
+      return;
+    }
+
+    let stakerRewards = stakerRewardPercentPrecision
+      .mul(averageRewards)
+      .div(PRECISION);
+
+    // Fetch rate, calculate ETH equivalent
     const kncRate = (
       await getExpectedRate(
-        KNC.address,
+        kncAddress,
         '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
         ethers.constants.WeiPerEther
       )
@@ -80,6 +126,8 @@ module.exports = () => {
     const currentEthAmount = kncAmount
       .mul(kncRate)
       .div(ethers.constants.WeiPerEther);
+    
+    // Finally, calculate stakingAPY
     const stakingAPY = (
       (((Number(stakerRewards) / epochPeriod) * 365) /
         Number(currentEthAmount)) *
@@ -88,10 +136,13 @@ module.exports = () => {
 
     let msg = '';
     msg = msg.concat(
-      `*Estimated APY using epoch ${epoch}*\n`,
-      `Total KNC staked: \`${helpers.toHumanWei(totalKNCStaked)} KNC\`\n`,
-      `Total rewards at epoch ${epoch}: \`${helpers.toHumanWei(
-        totalRewards
+      `*Estimated APY*\n`,
+      `Current epoch pts: \`${helpers.toHumanWei(totalPts)}\`\n`,
+      `Current epoch reward: \`${helpers.toHumanWei(
+        await rewardsPerEpoch(currentEpoch)
+      )} ETH\`\n`,
+      `Average reward amt: \`${helpers.toHumanWei(
+        averageRewards
       )} ETH\`\n`,
       `Rewards per month: \`${helpers.toHumanWei(
         (stakerRewards / epochPeriod) * 30
