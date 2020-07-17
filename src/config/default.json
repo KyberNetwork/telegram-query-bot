@@ -14,6 +14,7 @@
       "timeout": 20000
     }
   },
+  "networks": ["mainnet", "staging", "ropsten", "kovan", "rinkeby"],
   "nodes": {
     "ALCHEMY_WEIGHT": 94,
     "ETHERSCAN_WEIGHT": 1,

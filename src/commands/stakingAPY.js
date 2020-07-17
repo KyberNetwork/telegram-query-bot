@@ -1,15 +1,8 @@
 const Extra = require('telegraf/extra');
-const fs = require('fs');
 
 module.exports = () => {
   return async (ctx) => {
-    const {
-      helpers,
-      message,
-      reply,
-      replyWithMarkdown,
-      state,
-    } = ctx;
+    const { helpers, message, reply, replyWithMarkdown, state } = ctx;
     const { inReplyTo } = Extra;
     const { args } = state.command;
 
@@ -32,9 +25,7 @@ module.exports = () => {
     let numEpochs = 1;
     let network;
     if (args[1]) {
-      if (
-        ['mainnet', 'staging', 'ropsten', 'kovan', 'rinkeby'].includes(args[1].toLowerCase())
-      ) {
+      if (helpers.networks.includes(args[1].toLowerCase())) {
         network = args[1].toLowerCase();
       } else {
         numEpochs = args[1];
@@ -43,6 +34,7 @@ module.exports = () => {
     } else {
       network = 'mainnet';
     }
+
     const { ethers } = helpers.getEthLib(network);
     const BN = ethers.BigNumber;
     const PRECISION = ethers.constants.WeiPerEther;
@@ -58,10 +50,7 @@ module.exports = () => {
       network,
       'getListCampaignIDs'
     );
-    const getTotalPts = helpers.getDaoFunction(
-      network,
-      'getTotalEpochPoints'
-    );
+    const getTotalPts = helpers.getDaoFunction(network, 'getTotalEpochPoints');
     const getCurrentEpochNumber = helpers.getStakingFunction(
       network,
       'getCurrentEpochNumber'
@@ -76,7 +65,7 @@ module.exports = () => {
     );
 
     const currentEpoch = (await getCurrentEpochNumber()).toNumber();
-    // convert seconds to days
+    // Convert seconds to days
     const epochPeriod =
       (await epochPeriodInSeconds()).toNumber() / 60 / 60 / 24;
 
@@ -85,15 +74,16 @@ module.exports = () => {
     for (let i = 1; i <= numEpochs; i++) {
       let epoch = Math.max(currentEpoch - i, 0);
       let epochRewards = await rewardsPerEpoch(epoch);
-      epochRewards = (epoch == 0)
-        ? epochRewards.mul(ethers.constants.Two)
-        : epochRewards;
+      epochRewards =
+        epoch == 0 ? epochRewards.mul(ethers.constants.Two) : epochRewards;
       totalRewards = totalRewards.add(epochRewards);
     }
     let averageRewards = totalRewards.div(BN.from(numEpochs));
 
     // Get number of campaigns and votes from Dao for current epoch
-    const numCampaigns = BN.from((await getListCampaignIds(currentEpoch)).length);
+    const numCampaigns = BN.from(
+      (await getListCampaignIds(currentEpoch)).length
+    );
     const totalPts = await getTotalPts(currentEpoch);
 
     // Calculate reward percentage, assuming user has voted for all campaigns
@@ -104,7 +94,9 @@ module.exports = () => {
 
     if (stakerRewardPercentPrecision.gt(PRECISION)) {
       reply(
-        `KNC amount too high. Should be smaller than ${helpers.toHumanWei(totalPts)}`,
+        `KNC amount too high. Should be smaller than ${helpers.toHumanWei(
+          totalPts
+        )}`,
         inReplyTo(message.message_id)
       );
       return;
@@ -126,7 +118,7 @@ module.exports = () => {
     const currentEthAmount = kncAmount
       .mul(kncRate)
       .div(ethers.constants.WeiPerEther);
-    
+
     // Finally, calculate stakingAPY
     const stakingAPY = (
       (((Number(stakerRewards) / epochPeriod) * 365) /
@@ -136,14 +128,12 @@ module.exports = () => {
 
     let msg = '';
     msg = msg.concat(
-      `*Estimated APY*\n`,
-      `Current epoch pts: \`${helpers.toHumanWei(totalPts)}\`\n`,
+      '*Estimated APY*\n',
+      `Current epoch points: \`${helpers.toHumanWei(totalPts)}\`\n`,
       `Current epoch reward: \`${helpers.toHumanWei(
         await rewardsPerEpoch(currentEpoch)
       )} ETH\`\n`,
-      `Average reward amt: \`${helpers.toHumanWei(
-        averageRewards
-      )} ETH\`\n`,
+      `Average reward amount: \`${helpers.toHumanWei(averageRewards)} ETH\`\n`,
       `Rewards per month: \`${helpers.toHumanWei(
         (stakerRewards / epochPeriod) * 30
       )} ETH\`\n`,

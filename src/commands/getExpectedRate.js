@@ -35,7 +35,7 @@ module.exports = () => {
       srcToken = { address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' };
     } else if (
       !srcToken.startsWith('0x') &&
-      ['mainnet', 'staging', 'ropsten'].indexOf(network) !== -1
+      helpers.networks.indexOf(network) !== -1
     ) {
       srcToken = currencies.find((o) => o.symbol === srcToken.toUpperCase());
     } else if (srcToken.length === 42 && srcToken.startsWith('0x')) {
@@ -48,7 +48,7 @@ module.exports = () => {
       destToken = { address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' };
     } else if (
       !destToken.startsWith('0x') &&
-      ['mainnet', 'staging', 'ropsten'].indexOf(network) !== -1
+      helpers.networks.indexOf(network) !== -1
     ) {
       destToken = currencies.find((o) => o.symbol === destToken.toUpperCase());
     } else if (destToken.length === 42 && destToken.startsWith('0x')) {

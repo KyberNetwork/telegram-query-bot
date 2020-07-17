@@ -1,7 +1,13 @@
+const fs = require('fs');
 const logger = require('../logger');
+
 
 module.exports = (app) => {
   const { contracts, ethereum } = app.context;
+  const config = JSON.parse(fs.readFileSync('src/config/default.json', 'utf8'));
+
+  const networks = config.networks;
+
   const {
     KyberNetworkProxy: KyberNetworkProxyMainnet,
     KyberNetwork: KyberNetworkMainnet,
@@ -322,6 +328,7 @@ module.exports = (app) => {
     getEthLib,
     formatTime,
     hexToAscii,
+    networks,
     to32Bytes,
     toHumanNum,
     toHumanWei,

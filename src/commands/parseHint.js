@@ -1,11 +1,11 @@
 const Extra = require('telegraf/extra');
 
-function validateToken(token, network, currencies) {
+function validateToken(token, network, networks, currencies) {
   if (token.toUpperCase() === 'ETH') {
     return { address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' };
   } else if (
     !token.startsWith('0x') &&
-    ['mainnet', 'staging', 'ropsten'].indexOf(network) !== -1
+    networks.indexOf(network) !== -1
   ) {
     return currencies.find((o) => o.symbol === token.toUpperCase());
   } else if (token.length === 42 && token.startsWith('0x')) {
@@ -93,7 +93,7 @@ module.exports = () => {
 
     let parseHintArgs = [];
     if (tradePath === 't2e' || tradePath === 'e2t') {
-      const token = validateToken(args[1], network, currencies);
+      const token = validateToken(args[1], network, helpers.networks, currencies);
       const hint = args[2];
 
       if (!token) {
@@ -106,8 +106,8 @@ module.exports = () => {
 
       parseHintArgs = [token.address, hint];
     } else {
-      const t2eTokenSrc = validateToken(args[1], network, currencies);
-      const e2tTokenDest = validateToken(args[2], network, currencies);
+      const t2eTokenSrc = validateToken(args[1], network, helpers.networks, currencies);
+      const e2tTokenDest = validateToken(args[2], network, helpers.networks, currencies);
       const hint = args[3];
 
       if (!t2eTokenSrc || !e2tTokenDest) {

@@ -165,7 +165,7 @@ module.exports = () => {
 
     if (
       !srcToken.startsWith('0x') &&
-      ['mainnet', 'staging', 'ropsten'].indexOf(network) !== -1
+      helpers.networks.indexOf(network) !== -1
     ) {
       srcToken = currencies.find((o) => o.symbol === srcToken.toUpperCase());
     } else if (srcToken.length === 42 && srcToken.startsWith('0x')) {
