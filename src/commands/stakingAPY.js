@@ -138,6 +138,9 @@ module.exports = () => {
     msg = msg.concat(
       `*Estimated APY*\n`,
       `Current epoch pts: \`${helpers.toHumanWei(totalPts)}\`\n`,
+      `Current epoch reward: \`${helpers.toHumanWei(
+        await rewardsPerEpoch(currentEpoch)
+      )} ETH\`\n`,
       `Average reward amt: \`${helpers.toHumanWei(
         averageRewards
       )} ETH\`\n`,
