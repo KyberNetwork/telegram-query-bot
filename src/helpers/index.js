@@ -5,6 +5,12 @@ const logger = require('../logger');
 module.exports = (app) => {
   const { contracts, ethereum } = app.context;
   const config = JSON.parse(fs.readFileSync('src/config/default.json', 'utf8'));
+  const reserveABI = JSON.parse(
+    fs.readFileSync('src/contracts/abi/KyberReserve.abi', 'utf8')
+  );
+  const tokenABI = JSON.parse(
+    fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8')
+  );
 
   const networks = config.networks;
 
@@ -207,6 +213,18 @@ module.exports = (app) => {
     }
   };
 
+  const getReserveInstance = (network, address) => {
+    const { ethers, provider } = getEthLib(network);
+
+    return new ethers.Contract(address, reserveABI, provider);
+  };
+
+  const getTokenInstance = (network, address) => {
+    const { ethers, provider } = getEthLib(network);
+
+    return new ethers.Contract(address, tokenABI, provider);
+  };
+
   const getEthLib = (network) => {
     switch (network) {
       case 'ropsten':
@@ -325,6 +343,8 @@ module.exports = (app) => {
     getStakingFunction,
     getDaoFunction,
     getRateFunction,
+    getReserveInstance,
+    getTokenInstance,
     getEthLib,
     formatTime,
     hexToAscii,

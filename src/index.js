@@ -74,7 +74,6 @@ const reservesCmds = [
   'lp',
   'reserveBalances',
   'reserveContracts',
-  'reserveFeesInBps',
   'reserveIndex',
   'reserveRebates',
   'tokensOfReserve',

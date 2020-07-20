@@ -25,11 +25,19 @@ module.exports = () => {
 
     const network = args[1] ? args[1].toLowerCase() : 'mainnet';
     const { ethers, provider } = helpers.getEthLib(network);
-    const reserve = args[0].toLowerCase();
-    const reserveABI = JSON.parse(
-      fs.readFileSync('src/contracts/abi/KyberReserve.abi', 'utf8')
-    );
-    const reserveInstance = new ethers.Contract(reserve, reserveABI, provider);
+    let reserve = args[0]; // either address or ID
+    
+    if (!ethers.utils.isAddress(reserve)) {
+      const getReserveAddresses = helpers.getStorageFunction(
+        network,
+        'getReserveAddressesByReserveId'
+      );
+      const query = await getReserveAddresses(helpers.to32Bytes(reserve));
+
+      reserve = query[0];
+    }
+
+    const reserveInstance = helpers.getReserveInstance(network, reserve);
     const conversionRates = await reserveInstance.conversionRatesContract();
 
     if (!conversionRates) {

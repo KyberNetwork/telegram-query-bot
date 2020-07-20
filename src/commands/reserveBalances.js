@@ -1,5 +1,4 @@
 const Extra = require('telegraf/extra');
-const fs = require('fs');
 
 module.exports = () => {
   return async (ctx) => {
@@ -26,16 +25,19 @@ module.exports = () => {
     const network = args[1] ? args[1].toLowerCase() : 'mainnet';
     const { ethers, provider } = helpers.getEthLib(network);
     const currencies = (await kyber(network).get('/currencies')).data.data;
-    const reserve = args[0];
-    const reserveABI = JSON.parse(
-      fs.readFileSync('src/contracts/abi/KyberReserve.abi', 'utf8')
-    );
-    const reserveInstance = new ethers.Contract(reserve, reserveABI, provider);
-    const tokenABI = JSON.parse(
-      fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8')
-    );
-    const tokens = [];
+    let reserve = args[0]; // either address or ID
     let result = [];
+    let tokens = [];
+
+    if (!ethers.utils.isAddress(reserve)) {
+      const getReserveAddresses = helpers.getStorageFunction(
+        network,
+        'getReserveAddressesByReserveId'
+      );
+      const query = await getReserveAddresses(helpers.to32Bytes(reserve));
+
+      reserve = query[0];
+    }
 
     currencies.find((o) => {
       if (o.reserves_src) {
@@ -49,7 +51,22 @@ module.exports = () => {
           }
         });
       }
+      if (o.reserves_dest) {
+        o.reserves_dest.find((a) => {
+          if (a.toLowerCase() === reserve.toLowerCase()) {
+            tokens.push({
+              symbol: o.symbol,
+              address: o.address,
+              decimals: o.decimals,
+            });
+          }
+        });
+      }
     });
+
+    tokens = tokens.filter(
+      (v, i, a) => a.findIndex((t) => t.symbol === v.symbol) === i
+    );
 
     if (tokens.length === 0) {
       reply('Invalid reserve address.', inReplyTo(message.message_id));
@@ -60,14 +77,12 @@ module.exports = () => {
       `ETH: \`${helpers.toHumanWei(await provider.getBalance(reserve))}\``
     );
 
+    const reserveInstance = helpers.getReserveInstance(network, reserve);
+    let tokenInstance;
+    let tokenWallet;
+    let tokenBalance;
     for (let index in tokens) {
-      let tokenInstance = new ethers.Contract(
-        tokens[index].address,
-        tokenABI,
-        provider
-      );
-      let tokenWallet;
-      let tokenBalance;
+      tokenInstance = helpers.getTokenInstance(network, tokens[index].address);
 
       try {
         tokenWallet = await reserveInstance.tokenWallet(tokens[index].address);

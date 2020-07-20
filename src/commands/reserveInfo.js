@@ -35,8 +35,8 @@ module.exports = () => {
         'getReserveDetailsByAddress'
       );
       query = await getReserveInfo(reserve);
-      result.address = reserve;
       result.reserveId = query.reserveId;
+      result.address = reserve;
     } else {
       reserve = helpers.to32Bytes(reserve);
       getReserveInfo = helpers.getStorageFunction(
@@ -47,6 +47,8 @@ module.exports = () => {
       result.reserveId = reserve;
       result.address = query.reserveAddress;
     }
+
+    const reserveInstance = helpers.getReserveInstance(network, result.address);
 
     result.rebateWallet = query.rebateWallet;
     result.resType = query.resType;
@@ -73,6 +75,10 @@ module.exports = () => {
     query = await getRebateAmount(result.rebateWallet);
     result.rebateAmount = helpers.toHumanWei(query);
 
+    result.enabled = (await reserveInstance.tradeEnabled())
+      ? helpers.emojis('checkMark')
+      : helpers.emojis('crossMark');
+
     let msg = '';
     msg = msg.concat(
       `ID: \`${result.reserveId.replace(/0+$/, '')}\`\n`,
@@ -83,6 +89,7 @@ module.exports = () => {
       `Entitled Rebate: ${result.isEntitledRebate}\n`,
       `Rebate Wallet: \`${result.rebateWallet}\`\n`,
       `Rebate Amount: \`${result.rebateAmount} ETH\`\n`,
+      `Trade Enabled: \`${result.enabled}\`\n`,
       `Historical Addresses: \`${result.addresses.join('`, `')}\``,
     );
 

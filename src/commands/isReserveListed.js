@@ -23,17 +23,30 @@ module.exports = () => {
     }
 
     const network = args[1] ? args[1].toLowerCase() : 'mainnet';
-    const reserve = args[0].toLowerCase();
+    const { ethers } = helpers.getEthLib(network);
     const getReserves = helpers.getStorageFunction(network, 'getReserves');
     const reserves = await getReserves();
+
+    let reserve = args[0]; // either address or ID
+    
+    if (!ethers.utils.isAddress(reserve)) {
+      const getReserveAddresses = helpers.getStorageFunction(
+        network,
+        'getReserveAddressesByReserveId'
+      );
+      const query = await getReserveAddresses(helpers.to32Bytes(reserve));
+
+      reserve = query[0];
+    }
+
     const result = reserves.findIndex(
       (r) => reserve.toLowerCase() === r.toLowerCase()
     );
 
     if (result !== -1) {
-      replyWithMarkdown('Reserve is *listed*', inReplyTo(message.message_id));
+      replyWithMarkdown(helpers.emojis('checkMark'), inReplyTo(message.message_id));
     } else {
-      replyWithMarkdown('Reserve *not found*', inReplyTo(message.message_id));
+      replyWithMarkdown(helpers.emojis('crossMark'), inReplyTo(message.message_id));
     }
   };
 };

@@ -1,5 +1,4 @@
 const Extra = require('telegraf/extra');
-const fs = require('fs');
 
 module.exports = () => {
   return async (ctx) => {
@@ -24,7 +23,6 @@ module.exports = () => {
       return;
     }
 
-    let reserve = args[0];
     let srcToken = args[1];
     let destToken = args[2];
     let srcQty = args[3];
@@ -46,13 +44,19 @@ module.exports = () => {
     network = args[5] ? args[5].toLowerCase() : network;
     const { ethers, provider } = helpers.getEthLib(network);
     const currencies = (await kyber(network).get('/currencies')).data.data;
-    const reserveABI = JSON.parse(
-      fs.readFileSync('src/contracts/abi/KyberReserve.abi', 'utf8')
-    );
-    const reserveInstance = new ethers.Contract(reserve, reserveABI, provider);
-    const tokenABI = JSON.parse(
-      fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8')
-    );
+    let reserve = args[0]; // either address or ID
+
+    if (!ethers.utils.isAddress(reserve)) {
+      const getReserveAddresses = helpers.getStorageFunction(
+        network,
+        'getReserveAddressesByReserveId'
+      );
+      const query = await getReserveAddresses(helpers.to32Bytes(reserve));
+
+      reserve = query[0];
+    }
+
+    const reserveInstance = helpers.getReserveInstance(network, reserve);
 
     if (srcToken.toUpperCase() === 'ETH') {
       srcToken = { address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' };
@@ -95,10 +99,9 @@ module.exports = () => {
     ) {
       srcQty = ethers.utils.parseEther(srcQty);
     } else {
-      const srcTokenInstance = new ethers.Contract(
-        srcToken.address,
-        tokenABI,
-        provider
+      const srcTokenInstance = helpers.getTokenInstance(
+        network,
+        srcToken.address
       );
       const decimals = srcToken.decimals || (await srcTokenInstance.decimals());
       srcQty = Math.round(srcQty * 10 ** decimals).toLocaleString('fullwide', {

@@ -165,8 +165,6 @@ module.exports = () => {
           '/reserveBalances <reserve> <optional: network>\n\n',
           '`Returns the network, conversionRates, and sanityRates contract addresses of a reserve`\n',
           '/reserveContracts <reserve> <optional: network>\n\n',
-          '`Returns the fees set of a reserve in the FeeBurner`\n',
-          '/reserveFeesInBps <reserve> <optional: network>\n\n',
           '`Returns the index of the reserve in the network`\n',
           '/reserveIndex <reserve> <optional: network>\n\n',
           '`Returns the reserves that support the token specified directly from SC`\n',

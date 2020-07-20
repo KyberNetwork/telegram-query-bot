@@ -23,7 +23,18 @@ module.exports = () => {
     }
 
     const network = args[1] ? args[1].toLowerCase() : 'mainnet';
-    const reserve = args[0];
+    const { ethers } = helpers.getEthLib(network);
+    let reserve = args[0]; // either address or ID
+
+    if (!ethers.utils.isAddress(reserve)) {
+      const getReserveAddresses = helpers.getStorageFunction(
+        network,
+        'getReserveAddressesByReserveId'
+      );
+      const query = await getReserveAddresses(helpers.to32Bytes(reserve));
+
+      reserve = query[0];
+    }
 
     const getReserves = helpers.getStorageFunction(network, 'getReserves');
     const reserves = await getReserves();
