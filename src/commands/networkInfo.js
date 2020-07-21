@@ -15,6 +15,7 @@ module.exports = () => {
     }
 
     const network = args[0] ? args[0].toLowerCase() : 'mainnet';
+    const { ethers } = helpers.getEthLib(network);
     const enabled = helpers.getProxyFunction(network, 'enabled');
     const maxGasPrice = helpers.getProxyFunction(network, 'maxGasPrice');
     const getNetworkData = helpers.getNetworkFunction(
@@ -25,9 +26,13 @@ module.exports = () => {
 
     let msg = '';
     msg = msg.concat(
-      `enabled: \`${await enabled()}\`\n`,
+      `enabled: \`${
+        (await enabled())
+          ? helpers.emojis('checkMark')
+          : helpers.emojis('crossMark')
+      }\`\n`,
       `negligibleDiffBps: \`${networkData.negligibleDiffBps}\`\n`,
-      `maxGasPrice: \`${await maxGasPrice()}\``,
+      `maxGasPrice: \`${ethers.utils.formatUnits(await maxGasPrice(), 'gwei')} gwei\`\n`,
       `networkFeeBps: \`${networkData.networkFeeBps}\`\n`,
       `expiryTimestamp: \`${helpers.formatTime(
         networkData.expiryTimestamp
