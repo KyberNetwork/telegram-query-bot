@@ -50,7 +50,11 @@ module.exports = () => {
           '`Alias for /getReservesRates`\n',
           '/rates <token> <qty> <optional: network>\n\n',
           '`Returns the reserve rates of a particular token using the token as the quote`\n',
-          '/tRates <token> <qty> <optional: network>\n\n'
+          '/tRates <token> <qty> <optional: network>\n\n',
+          '`Returns the reserve slippage info for a particular token`\n',
+          '/slippage <token> <amount> <slippageAmount>\n\n',
+          '`Returns the reserve spread info for a particular token`\n',
+          '/spread <token> <amount> <slippageAmount>\n\n',
         );
         break;
       case 'hinthandler':

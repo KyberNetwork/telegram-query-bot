@@ -48,6 +48,8 @@ const reserves = require('./reserves');
 const reservesPerToken = require('./reservesPerToken');
 const rewards = require('./rewards');
 const sentiment = require('./sentiment');
+const slippage = require('./slippage');
+// const spread = require('./spread');
 const stakerData = require('./stakerData');
 const stakerRawData = require('./stakerRawData');
 const stakingAPY = require('./stakingAPY');
@@ -154,6 +156,8 @@ module.exports = (app) => {
   app.command('reservesPerToken', reservesPerToken());
   app.command('rewards', rewards());
   app.command('sentiment', sentiment());
+  app.command('slippage', slippage());
+  // app.command('spread', spread());
   app.command('stakerdata', stakerData());
   app.command('stakerData', stakerData());
   app.command('stakerrawdata', stakerRawData());

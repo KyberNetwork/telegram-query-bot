@@ -24,6 +24,8 @@ const networkCmds = [
   'networkInfo',
   'rates',
   'tRates',
+  'slippage',
+  'spread',
 ];
 const hinthandlerCmds = [
   'buildHint',

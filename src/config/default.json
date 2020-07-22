@@ -34,7 +34,7 @@
       "FeeHandlerHistory": "0x27686499DC0b248641f50774272667726b094e6d",
       "DaoHistory": "0xe233855F0dde2045F3cF204E581869f8e377423C",
       "MatchingEngineHistory": "0x26a9eCBEcA589aA575A9806f0555Df0382940ba3",
-      "RateHelper": "0xf2756ed51434a23Ff019b3d58FA72B7faf041558",
+      "RateHelper": "0x7d1dd73D188BFa8Bff83F0FCDef87Bc4F5c85cE6",
       "FeeBurner": "0x8007aa43792A392b221DC091bdb2191E5fF626d1",
       "WrapFeeBurner": "0x3b32f992D5f98beF76C74ECbc3a16DBF2f308BaA",
       "Medianizer": "0x729D19f657BD0614b4985Cf1D82531c67569197B"
@@ -51,7 +51,7 @@
       "FeeHandlerHistory": "0xe938445B6a3E8C97C86f0a8777254172480B7ffe",
       "DaoHistory": "0xF2bCFcF8892c7279B2743E2FeF1893ac622EB38A",
       "MatchingEngineHistory": "0xB222bC4e4Ffcb39e392C93Af9B480019B59f4CC2",
-      "RateHelper": "0x0b4dC4c4dd510431F861badd5162c8284d912f69"
+      "RateHelper": "0x4aa8a69d141d3315c100516390bdb63c2f3af291"
     },
     "ropsten": {
       "KyberNetworkProxy": "0xd719c34261e099Fdb33030ac8909d5788D3039C4",

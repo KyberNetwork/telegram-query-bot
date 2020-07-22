@@ -22,12 +22,12 @@ module.exports = () => {
       );
       return;
     }
-
+    
+    let network = 'mainnet';
     let srcToken = args[1];
     let destToken = args[2];
     let srcQty = args[3];
     let blockNumber;
-    let network = 'mainnet';
 
     if (args[4]) {
       if (
@@ -45,6 +45,10 @@ module.exports = () => {
     const { ethers, provider } = helpers.getEthLib(network);
     const currencies = (await kyber(network).get('/currencies')).data.data;
     let reserve = args[0]; // either address or ID
+
+    if (blockNumber == 'latest' || blockNumber == undefined) {
+      blockNumber = await provider.getBlockNumber();
+    }
 
     if (!ethers.utils.isAddress(reserve)) {
       const getReserveAddresses = helpers.getStorageFunction(
@@ -109,10 +113,6 @@ module.exports = () => {
       });
     }
 
-    if (blockNumber == 'latest' || blockNumber == undefined) {
-      blockNumber = await provider.getBlockNumber();
-    }
-
     const result = await reserveInstance.getConversionRate(
       srcToken.address,
       destToken.address,
@@ -126,6 +126,6 @@ module.exports = () => {
     }
 
     const rate = Number(ethers.utils.formatEther(result));
-    replyWithMarkdown(`\`${rate} (${result})\``, inReplyTo(message.message_id));
+    replyWithMarkdown(`\`${rate}\``, inReplyTo(message.message_id));
   };
 };
