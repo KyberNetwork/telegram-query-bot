@@ -96,17 +96,15 @@ module.exports = () => {
       srcQty
     );
 
-    const expectedRate = Number(
-      ethers.utils.formatEther(result.expectedRate)
-    ).toFixed(5);
-    const slippageRate = Number(
-      ethers.utils.formatEther(result.worstRate)
-    ).toFixed(5);
+    const expectedRate = Number(ethers.utils.formatEther(result.expectedRate));
+    const slippageRate = Number(ethers.utils.formatEther(result.worstRate));
 
-    replyWithMarkdown(
-      `Expected Rate: \`${expectedRate} (${result.expectedRate})\`\n` +
-        `Worst Rate: \`${slippageRate} (${result.worstRate})\``,
-      inReplyTo(message.message_id)
+    let msg = '';
+    msg = msg.concat(
+      `Expected Rate: \`${expectedRate}\`\n`,
+      `Worst Rate: \`${slippageRate}\``
     );
+
+    replyWithMarkdown(msg, inReplyTo(message.message_id));
   };
 };

@@ -33,7 +33,7 @@ async function formatValue(utils, type, rate, isBuy, medianizer) {
       } else {
         value = utils.formatEther(rate.toString());
       }
-      value = Number(value).toFixed(7);
+      value = Number(value);
       break;
     case 'token':
       if (isBuy) {
@@ -41,7 +41,7 @@ async function formatValue(utils, type, rate, isBuy, medianizer) {
       } else {
         value = rate > 0 ? 1 / utils.formatUnits(rate, 'ether') : 0;
       }
-      value = Number(value).toFixed(7);
+      value = Number(value);
       break;
     case 'usd':
       usd = await medianizer.read();
@@ -51,12 +51,12 @@ async function formatValue(utils, type, rate, isBuy, medianizer) {
         value = utils.formatUnits(rate, 'ether');
       }
       value *= utils.formatUnits(usd, 'ether');
-      value = Number(value).toFixed(5);
+      value = Number(value).toFixed(2);
       value = `$${value}`;
       break;
     default:
       value = utils.formatUnits(rate, 'ether');
-      value = Number(value).toFixed(7);
+      value = Number(value);
       break;
   }
 
@@ -86,22 +86,40 @@ module.exports = (type) => {
       return;
     }
 
-    if (args.length < 2) {
+    if (args.length < 1) {
       reply(
-        `ERROR: Invalid number of arguments. ${args.length} of required 2 provided.`,
+        `ERROR: Invalid number of arguments. ${args.length} of required 1 provided.`,
         inReplyTo(message.message_id)
       );
       return;
     }
 
-    const network = args[2] ? args[2].toLowerCase() : 'mainnet';
+    let network = 'mainnet';
+    let qty;
+
+    if (args[1]) {
+      if (
+        helpers.networks.includes(
+          args[1].toLowerCase()
+        )
+      ) {
+        network = args[1].toLowerCase();
+      } else {
+        qty = args[1];
+      }
+    }
+
+    network = args[2] ? args[2].toLowerCase() : network;
     const { ethers, provider } = helpers.getEthLib(network);
     const utils = ethers.utils;
     const tokenABI = JSON.parse(
       fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8')
     );
     const currencies = (await kyber(network).get('/currencies')).data.data;
-    const qty = args[1];
+
+    if (qty == undefined) {
+      qty = '0';
+    }
 
     let token = args[0];
     if (!token.startsWith('0x')) {

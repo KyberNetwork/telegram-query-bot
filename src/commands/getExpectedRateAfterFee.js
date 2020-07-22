@@ -114,10 +114,10 @@ module.exports = () => {
       hint
     );
 
-    const expectedRate = Number(ethers.utils.formatEther(result)).toFixed(5);
+    const expectedRate = Number(ethers.utils.formatEther(result));
 
     replyWithMarkdown(
-      `Expected Rate: \`${expectedRate} (${result})\``,
+      `Expected Rate: \`${expectedRate}\``,
       inReplyTo(message.message_id)
     );
   };

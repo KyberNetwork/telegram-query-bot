@@ -114,7 +114,7 @@ module.exports = () => {
 
     result = Number(
       ethers.utils.formatEther(result.expectedRate) * qty
-    ).toFixed(5);
+    );
 
     replyWithMarkdown(
       `\`${qty}\` ${srcToken.symbol} => \`${result}\` ${destToken.symbol}`,

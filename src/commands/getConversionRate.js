@@ -125,7 +125,7 @@ module.exports = () => {
       return;
     }
 
-    const rate = Number(ethers.utils.formatEther(result)).toFixed(5);
+    const rate = Number(ethers.utils.formatEther(result));
     replyWithMarkdown(`\`${rate} (${result})\``, inReplyTo(message.message_id));
   };
 };
