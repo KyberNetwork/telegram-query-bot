@@ -116,11 +116,14 @@ module.exports = () => {
       }
 
       try {
+        let reserveIds = JSON.parse(args[3]).map((e) => helpers.to32Bytes(e));
+        let splits = JSON.parse(args[4]).map((e) => helpers.to32Bytes(e));
+
         buildHintArgs = [
-          token.address, // token
-          tradeType, // tradeType
-          JSON.parse(args[3]), // reserveIds
-          JSON.parse(args[4]), // splits
+          token.address,
+          tradeType,
+          reserveIds,
+          splits,
         ];
       } catch (e) {
         reply(
@@ -153,15 +156,20 @@ module.exports = () => {
       }
 
       try {
+        let t2eReserveIds = JSON.parse(args[3]).map((e) => helpers.to32Bytes(e));
+        let t2eSplits = JSON.parse(args[4]).map((e) => helpers.to32Bytes(e));
+        let e2tReserveIds = JSON.parse(args[7]).map((e) => helpers.to32Bytes(e));
+        let e2tSplits = JSON.parse(args[8]).map((e) => helpers.to32Bytes(e));
+
         buildHintArgs = [
-          t2eTokenSrc.address, // t2eTokenSrc
-          t2eTradeType, // t2eTradeType
-          JSON.parse(args[3]), // t2eReserveIds
-          JSON.parse(args[4]), // t2eSplits
-          e2tTokenDest.address, // e2tTokenDest
-          e2tTradeType, // e2tTradeType
-          JSON.parse(args[7]), // e2tReserveIds
-          JSON.parse(args[8]), // e2tSplits
+          t2eTokenSrc.address,
+          t2eTradeType,
+          t2eReserveIds,
+          t2eSplits,
+          e2tTokenDest.address,
+          e2tTradeType,
+          e2tReserveIds,
+          e2tSplits,
         ];
       } catch (e) {
         reply(

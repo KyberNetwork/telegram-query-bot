@@ -62,7 +62,7 @@ module.exports = () => {
           '**HINT HANDLER**\n',
           '=============\n',
           '`Builds the T2E, E2T, or T2T hint`\n',
-          '/buildHint <tradePath> <tokenSrc> <tradeType> <reserveIds> <splits> [<tokenSrc> <tradeType> <reserveIds> <splits>] <optional: network>\n\n',
+          '/buildHint <tradePath> <tokenSrc> <tradeType> <reserveIds> <splits> [[<tokenSrc> <tradeType> <reserveIds> <splits>]] <optional: network>\n\n',
           '`Parses the T2E, E2T, or T2T hint`\n',
           '/parseHint <tradePath> [<token> <hint> | <tokenSrc> <tokenDest> <hint>] <optional: network>\n\n'
         );
