@@ -118,7 +118,7 @@ async function verifyDestLimits(
       return `*Reserve has no ETH.*`;
     }
 
-    let wallet = reserve.tokenWallet(destAddress);
+    let wallet = await reserve.tokenWallet(destAddress);
     let tokenInstance = new ethers.Contract(destAddress, tokenABI, provider);
 
     let balanceOfWallet = await tokenInstance.balanceOf(wallet);
