@@ -1,5 +1,12 @@
 const Extra = require('telegraf/extra');
 
+function extrapolateEpochReward(epochRewards, firstEpochTimestamp, epochPeriod, BN) {
+  let now = Math.floor(Date.now() / 1000);
+  let epochProgress = ((now - firstEpochTimestamp) % epochPeriod) / epochPeriod * 100;
+  epochProgress = BN.from(Math.floor(epochProgress.toFixed(8) * 1e8));
+  return epochRewards.div(BN.from(epochProgress)).mul(BN.from(1e10));
+}
+
 module.exports = () => {
   return async (ctx) => {
     const { helpers, message, reply, replyWithMarkdown, state } = ctx;
@@ -46,6 +53,10 @@ module.exports = () => {
       network,
       'epochPeriodInSeconds'
     );
+    const firstEpochStart = helpers.getDaoFunction(
+      network,
+      'firstEpochStartTimestamp'
+    );
     const getListCampaignIds = helpers.getDaoFunction(
       network,
       'getListCampaignIDs'
@@ -65,17 +76,20 @@ module.exports = () => {
     );
 
     const currentEpoch = (await getCurrentEpochNumber()).toNumber();
-    // Convert seconds to days
-    const epochPeriod =
-      (await epochPeriodInSeconds()).toNumber() / 60 / 60 / 24;
+    const firstEpochTimestamp = (await firstEpochStart()).toNumber();
+
+    const epochPeriodSeconds = (await epochPeriodInSeconds()).toNumber();
+    const epochPeriodDays = epochPeriodSeconds / 60 / 60 / 24;
 
     let totalRewards = ethers.constants.Zero;
-    // get average reward amt for numEpochs (excludes current epoch)
-    for (let i = 1; i <= numEpochs; i++) {
-      let epoch = Math.max(currentEpoch - i, 0);
+    // get average reward amt for numEpochs (extrapolates for current epoch)
+    for (let i = 0; i <= numEpochs - 1; i++) {
+      let epoch = Math.max(currentEpoch - i, 1);
       let epochRewards = await rewardsPerEpoch(epoch);
       epochRewards =
-        epoch == 0 ? epochRewards.mul(ethers.constants.Two) : epochRewards;
+        epoch == currentEpoch
+          ? extrapolateEpochReward(epochRewards, firstEpochTimestamp, epochPeriodSeconds, BN)
+          : epochRewards;
       totalRewards = totalRewards.add(epochRewards);
     }
     let averageRewards = totalRewards.div(BN.from(numEpochs));
@@ -121,7 +135,7 @@ module.exports = () => {
 
     // Finally, calculate stakingAPY
     const stakingAPY = (
-      (((Number(stakerRewards) / epochPeriod) * 365) /
+      (((Number(stakerRewards) / epochPeriodDays) * 365) /
         Number(currentEthAmount)) *
       100
     ).toFixed(3);
@@ -135,10 +149,10 @@ module.exports = () => {
       )} ETH\`\n`,
       `Average reward amount: \`${helpers.toHumanWei(averageRewards)} ETH\`\n`,
       `Rewards per month: \`${helpers.toHumanWei(
-        (stakerRewards / epochPeriod) * 30
+        (stakerRewards / epochPeriodDays) * 30
       )} ETH\`\n`,
       `Rewards per year: \`${helpers.toHumanWei(
-        (stakerRewards / epochPeriod) * 365
+        (stakerRewards / epochPeriodDays) * 365
       )} ETH\`\n`,
       `APY: \`${stakingAPY}%\``
     );
