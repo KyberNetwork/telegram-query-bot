@@ -36,7 +36,7 @@ module.exports = () => {
       );
       const query = await getReserveAddresses(helpers.to32Bytes(reserve));
 
-      reserve = query[0];
+      reserve = query[0] === undefined ? '' : query[0];
     }
 
     const result = reserves.findIndex(
