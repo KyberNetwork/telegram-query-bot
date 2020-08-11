@@ -47,6 +47,8 @@ module.exports = () => {
           '/networkContracts <optional: network>\n\n',
           '`Returns basic information from the Kyber network contract`\n',
           '/networkInfo <optional: network>\n\n',
+          'Optimise a trade by fetching best rate and returning hint\n',
+          '/optimiseTrade <srcToken> <destToken> <optional: qty, network>',
           '`Alias for /getReservesRates`\n',
           '/rates <token> <optional: qty> <optional: network>\n\n',
           '`Returns the reserve rates of a particular token using the token as the quote`\n',

@@ -35,6 +35,7 @@ const maxGasPrice = require('./maxGasPrice');
 const networkContracts = require('./networkContracts');
 const networkInfo = require('./networkInfo');
 const newReserveId = require('./newReserveId');
+const optimiseTrade = require('./optimiseTrade');
 const parseHint = require('./parseHint');
 const permissions = require('./permissions');
 const prrFees = require('./prrFees');
@@ -133,6 +134,8 @@ module.exports = (app) => {
   app.command('networkInfo', networkInfo());
   app.command('newreserveid', newReserveId());
   app.command('newReserveId', newReserveId());
+  app.command('optimisetrade', optimiseTrade());
+  app.command('optimiseTrade', optimiseTrade());
   app.command('parsehint', parseHint());
   app.command('parseHint', parseHint());
   app.command('permissions', permissions());
