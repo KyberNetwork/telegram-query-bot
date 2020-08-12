@@ -431,7 +431,7 @@ module.exports = () => {
       return;
     }
 
-    let reserveAddress = args[0];
+    let reserveID = args[0];
     let token;
     let tempToken;
     let isAPR = false;
@@ -466,6 +466,17 @@ module.exports = () => {
       token.tokenDecimals = await token.decimals();
     } else {
       token = undefined;
+    }
+
+    let reserveAddress;
+    if (!ethers.utils.isAddress(reserveID)) {
+      let getReserveInfo = helpers.getStorageFunction(
+        network,
+        'getReserveDetailsById'
+      );
+      reserveAddress = (await getReserveInfo(helpers.to32Bytes(reserveID))).reserveAddress;
+    } else {
+      reserveAddress = reserveID;
     }
 
     const reserveInstance = new ethers.Contract(
