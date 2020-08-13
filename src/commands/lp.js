@@ -10,11 +10,11 @@ function checkRequiredArgs(args) {
   return required.filter(element => !args.includes(element));
 }
 
-async function fetchParams(args, ethers, provider) {
+async function fetchParams(reserveAddress, args, ethers, provider) {
   const reserveABI = JSON.parse(fs.readFileSync('src/contracts/abi/KyberReserve.abi', 'utf8'));
   const pricingABI = JSON.parse(fs.readFileSync('src/contracts/abi/LiquidityConversionRates.abi', 'utf8'));
   const tokenABI = JSON.parse(fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8'));
-  const reserveInstance = new ethers.Contract(args['reserve'], reserveABI, provider);
+  const reserveInstance = new ethers.Contract(reserveAddress, reserveABI, provider);
   const pricingInstance = new ethers.Contract(await reserveInstance.conversionRatesContract(), pricingABI, provider);
   const tokenAddress = await pricingInstance.token();
   const tokenInstance = new ethers.Contract(tokenAddress, tokenABI, provider);
@@ -31,7 +31,7 @@ async function fetchParams(args, ethers, provider) {
   // get ether balance
   args['initial_ether_amount'] = args['initial_ether_amount'] ?
     args['initial_ether_amount'] :
-    ethers.utils.formatEther(await provider.getBalance(args['reserve']));
+    ethers.utils.formatEther(await provider.getBalance(reserveAddress));
 
   // liquidity rate
   args['liquidity_rate'] = Math.log(1 / args['min_supported_price_factor']) / args['initial_ether_amount'];
@@ -44,7 +44,7 @@ async function fetchParams(args, ethers, provider) {
     const tokenWallet = await reserveInstance.tokenWallet(tokenAddress);
     args['initial_token_amount'] = (await tokenInstance.balanceOf(tokenWallet)) / (10 ** tokenDecimals);
   } catch (e) {
-    args['initial_token_amount'] = (await tokenInstance.balanceOf(args['reserve'])) / (10 ** tokenDecimals);
+    args['initial_token_amount'] = (await tokenInstance.balanceOf(reserveAddress)) / (10 ** tokenDecimals);
   }
 
   return args;
@@ -155,7 +155,18 @@ module.exports = () => {
       return;
     }
 
-    let finalArgs = await fetchParams(args, ethers, provider);
+    let reserveAddress;
+    if (!ethers.utils.isAddress(args['reserve'])) {
+      let getReserveInfo = helpers.getStorageFunction(
+        network,
+        'getReserveDetailsById'
+      );
+      reserveAddress = (await getReserveInfo(helpers.to32Bytes(args['reserve']))).reserveAddress;
+    } else {
+      reserveAddress = args['reserve'];
+    }
+
+    let finalArgs = await fetchParams(reserveAddress, args, ethers, provider);
     const warnings = validateParams(finalArgs);
     const result = getParams(finalArgs);
     const sent = await replyWithMarkdown(result.join('\n'), inReplyTo(message.message_id));

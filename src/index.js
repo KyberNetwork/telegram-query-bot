@@ -22,6 +22,7 @@ const networkCmds = [
   'maxGasPrice',
   'networkContracts',
   'networkInfo',
+  'optimiseTrade',
   'rates',
   'tRates',
   'slippage',
