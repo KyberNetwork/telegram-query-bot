@@ -30,6 +30,9 @@ async function debugReserve(
   let result;
   let finalMessage = '';
 
+  result = await checkReserveAddress(reserve.address, pricing);
+  if (result != '') return result;
+
   result = await fetchCheckRates(
     await provider.getBalance(reserve.address),
     isAPR,
@@ -49,6 +52,13 @@ async function debugReserve(
   }
 
   return finalMessage;
+}
+
+async function checkReserveAddress(reserveAddress, pricing) {
+  let actualReserveAddress = await pricing.reserveContract();
+  return (actualReserveAddress != reserveAddress) ?
+    'Pricing not pointing to correct reserve address. Call setReserveAddress()' :
+    '';
 }
 
 async function fetchCheckRates(
@@ -89,7 +99,7 @@ async function fetchCheckRates(
     }
     return {isValid: false, finalMessage: finalMessage};
   } else {
-    finalMessage = `buy rate in pricing: ${rate}\n`;
+    finalMessage = `pricing buy rate: ${rate}\n`;
   }
 
   let srcQty = new BN.from(
@@ -128,7 +138,7 @@ async function fetchCheckRates(
     }
     return {isValid: false, finalMessage: finalMessage};
   } else {
-    finalMessage += `sell rate in pricing: ${rate}\n`;
+    finalMessage += `pricing sell rate: ${rate}\n`;
     return {isValid: true, finalMessage: finalMessage};
   }
 }
@@ -177,7 +187,7 @@ async function debugAPRRate(
       );
     }
   } else {
-    return 'Rate exceeds MAX_RATE of 1e25';
+    return `rate ${rate} > 1e25`;
   }
 }
 
@@ -296,7 +306,7 @@ async function validateRate(pricing, rateInPrecision, isBuy) {
     'Price floor reached; reset liquidity params.';
   }
 
-  return 'Rate in precision > 10M token per ETH.';
+  return 'Rate in precision > 10M token per ETH';
 }
 
 async function debugFPRRate(
@@ -312,11 +322,11 @@ async function debugFPRRate(
   let validRateDurationInBlocks = await pricing.validRateDurationInBlocks();
   let currentBlockNumber = await provider.getBlockNumber();
   if (currentBlockNumber.gte(rateUpdateBlock.add(validRateDurationInBlocks))) {
-    return 'Rate has expired. Kindly reset rates.';
+    return 'Rate has expired. Kindly reset rates';
   }
   
   let basicRate = await pricing.getBasicRate(token.address, true);
-  if (basicRate.isZero()) return 'No buy rate set.';
+  if (basicRate.isZero()) return 'No buy rate set';
   basicRate = await pricing.getBasicRate(token.address, false);
   if (basicRate.isZero()) return 'No sell rate set';
 
@@ -324,8 +334,8 @@ async function debugFPRRate(
     let stepLength = await pricing.getStepFunctionData(token.address, i, 0);
     if (stepLength.isZero()) {
       let msg = (i >= 6) ?
-        'Rate imbalance step function not set.' :
-        'Rate qty step function not set.';
+        'Rate imbalance step function not set' :
+        'Rate qty step function not set';
       return msg;
     }
   }
@@ -352,7 +362,7 @@ async function checkReserveSettings(
   let balanceEther = await reserve.getBalance(ETH_ADDRESS);
   if (balanceEther.isZero()) return 'Reserve has no ETH.';
 
-  balanceToken = await reserve.getBalance(token.address);
+  let balanceToken = await reserve.getBalance(token.address);
   if (balanceToken.isZero()) {
     let walletBalance = await token.balanceOf(tokenWallet);
     if (walletBalance.isZero()) {
@@ -383,7 +393,7 @@ async function checkReserveSettings(
   }
 
   let sanityRateAddress = await reserve.sanityRatesContract();
-  if (sanityRateAddress != ethers.utils.AddressZero) {
+  if (sanityRateAddress != ethers.constants.AddressZero) {
     let sanityRatesContract = new ethers.Contract(sanityRateAddress, sanityRateABI, provider);
     let sanityRate = await sanityRatesContract.getSanityRate(ETH_ADDRESS, token.address);
     if (rate.gt(sanityRate)) return '*E2T rate exceeds sanity rates*';
@@ -408,13 +418,13 @@ async function checkReserveSettings(
   }
 
   sanityRateAddress = await reserve.sanityRatesContract();
-  if (sanityRateAddress != ethers.utils.AddressZero) {
+  if (sanityRateAddress != ethers.constants.AddressZero) {
     let sanityRatesContract = new ethers.Contract(sanityRateAddress, sanityRateABI, provider);
     let sanityRate = await sanityRatesContract.getSanityRate(token.address, ETH_ADDRESS);
     if (rate.gt(sanityRate)) return '*T2E rate exceeds sanity rates*';
   }
 
-  return '';
+  return '*reserve returns rates*\n';
 }
 
 module.exports = () => {
@@ -524,7 +534,8 @@ module.exports = () => {
       isAPR,
       provider
     );
-    replyWithMarkdown(`${result}`, inReplyTo(message.message_id));
+
+    replyWithMarkdown(result, inReplyTo(message.message_id));
     return;
   };
 };
