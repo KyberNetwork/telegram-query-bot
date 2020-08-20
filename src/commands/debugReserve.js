@@ -56,7 +56,7 @@ async function debugReserve(
 
 async function checkReserveAddress(reserveAddress, pricing) {
   let actualReserveAddress = await pricing.reserveContract();
-  return (actualReserveAddress != reserveAddress) ?
+  return (actualReserveAddress.toLowerCase() != reserveAddress.toLowerCase()) ?
     'Pricing not pointing to correct reserve address. Call setReserveAddress()' :
     '';
 }
