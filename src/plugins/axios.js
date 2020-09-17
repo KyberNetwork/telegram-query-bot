@@ -15,6 +15,10 @@ const ethgasstation = Axios.create({
   baseURL: config.axios.ethgasstation.baseURL,
   timeout: config.axios.ethgasstation.timeout,
 });
+const gasnow = Axios.create({
+  baseURL: config.axios.gasnow.baseURL,
+  timeout: config.axios.gasnow.timeout,
+});
 const feargreedindex = Axios.create({
   baseURL: config.axios.feargreedindex.baseURL,
   timeout: config.axios.feargreedindex.timeout,
@@ -23,6 +27,7 @@ const feargreedindex = Axios.create({
 const axios = {
   kyber,
   ethgasstation,
+  gasnow,
   feargreedindex,
 };
 

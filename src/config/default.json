@@ -9,6 +9,10 @@
       "baseURL": "https://ethgasstation.info",
       "timeout": 20000
     },
+    "gasnow": {
+      "baseURL": "https://gasnow.sparkpool.com",
+      "timeout": 20000
+    },
     "feargreedindex": {
       "baseURL": "https://api.alternative.me",
       "timeout": 20000
