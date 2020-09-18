@@ -150,7 +150,7 @@ module.exports = (type) => {
 
     const getReservesRates = helpers.getRateFunction(
       network,
-      'getReservesRates'
+      'getReservesRatesWithConfigReserves'
     );
     let resultETH;
     let resultToken;
@@ -162,9 +162,9 @@ module.exports = (type) => {
       let msgValue = '';
       let reserveAscii;
       let reserveType;
-      for (let index in resultETH.buyReserves) {
+      for (let index in resultETH.reserves) {
         [reserveAscii, reserveType] = helpers.reserveIdToAscii(
-          resultETH.buyReserves[index]
+          resultETH.reserves[index]
         );
         msgValue = await formatValue(
           utils,
@@ -174,15 +174,15 @@ module.exports = (type) => {
           contracts[network].Medianizer
         );
         msg = msg.concat(
-          `${index}] ${resultETH.buyReserves[index].replace(/0+$/, '')}`,
+          `${index}] ${resultETH.reserves[index].replace(/0+$/, '')}`,
           ` (${reserveAscii.replace(/_/g, '\\_')} [[${reserveType}]]) : `,
           `\`${msgValue}\`\n`
         );
       }
       msg = msg.concat(`\n*SELL${formatLabel(type, symbol)}*\n`);
-      for (let index in resultToken.sellReserves) {
+      for (let index in resultToken.reserves) {
         [reserveAscii, reserveType] = helpers.reserveIdToAscii(
-          resultETH.sellReserves[index]
+          resultETH.reserves[index]
         );
         msgValue = await formatValue(
           utils,
@@ -192,7 +192,7 @@ module.exports = (type) => {
           contracts[network].Medianizer
         );
         msg = msg.concat(
-          `${index}] ${resultETH.sellReserves[index].replace(/0+$/, '')}`,
+          `${index}] ${resultETH.reserves[index].replace(/0+$/, '')}`,
           ` (${reserveAscii.replace(/_/g, '\\_')} [[${reserveType}]]) : `,
           `\`${msgValue}\`\n`
         );

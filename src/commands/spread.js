@@ -1,5 +1,4 @@
 const Extra = require('telegraf/extra');
-const fs = require('fs');
 
 module.exports = () => {
   return async (ctx) => {

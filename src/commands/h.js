@@ -51,12 +51,18 @@ module.exports = () => {
           '/optimiseTrade <srcToken> <destToken> <optional: qty, network>',
           '`Alias for /getReservesRates`\n',
           '/rates <token> <optional: qty> <optional: network>\n\n',
+          '`Returns the reserve rates of a particular token for configured reserves`\n',
+          '/ratesWithConfig <token> <optional: qty> <optional: network>\n\n',
           '`Returns the reserve rates of a particular token using the token as the quote`\n',
           '/tRates <token> <optional: qty> <optional: network>\n\n',
           '`Returns the reserve slippage info for a particular token`\n',
           '/slippage <token> <optional: amount> <optional: slippageAmount> <optional: network>\n\n',
+          '`Returns the reserve slippage info for a particular token for configured reserves`\n',
+          '/slippageWithConfig <token> <optional: amount> <optional: slippageAmount> <optional: network>\n\n',
           '`Returns the reserve spread info for a particular token`\n',
           '/spread <token> <optional: amount> <optional: network>\n\n',
+          '`Returns the reserve spread info for a particular token for configured reserves`\n',
+          '/spreadWithConfig <token> <optional: amount> <optional: network>\n\n',
         );
         break;
       case 'hinthandler':

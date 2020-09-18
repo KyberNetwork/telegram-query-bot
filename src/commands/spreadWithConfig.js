@@ -25,7 +25,6 @@ module.exports = () => {
 
     let network = 'mainnet';
     let amount;
-    let slippageAmount;
 
     if (args[1]) {
       if (helpers.networks.includes(args[1].toLowerCase())) {
@@ -35,23 +34,12 @@ module.exports = () => {
       }
     }
 
-    if (args[2]) {
-      if (helpers.networks.includes(args[2].toLowerCase())) {
-        network = args[2].toLowerCase();
-      } else {
-        slippageAmount = args[2];
-      }
-    }
-
-    network = args[3] ? args[3].toLowerCase() : network;
+    network = args[2] ? args[2].toLowerCase() : network;
     const { ethers } = helpers.getEthLib(network);
     const currencies = (await kyber(network).get('/currencies')).data.data;
 
     if (amount == undefined) {
       amount = '0';
-    }
-    if (slippageAmount == undefined) {
-      slippageAmount = '0';
     }
 
     let token = args[0];
@@ -68,42 +56,30 @@ module.exports = () => {
       return;
     }
 
-    const getSlippageRateInfo = helpers.getRateFunction(
+    const getSpreadInfo = helpers.getRateFunction(
       network,
-      'getSlippageRateInfo'
+      'getSpreadInfoWithConfigReserves'
     );
 
     try {
-      const result = await getSlippageRateInfo(
+      const result = await getSpreadInfo(
         token.address,
-        ethers.utils.parseEther(amount),
-        ethers.utils.parseEther(slippageAmount)
+        ethers.utils.parseEther(amount)
       );
+      console.log(result);
 
-      let msg = '*BUY SLIPPAGE*\n';
+      let msg = '*SPREADS*\n';
       let reserveAscii;
       let reserveType;
-      for (let index in result.buyReserves) {
+      for (let index in result.reserves) {
         [reserveAscii, reserveType] = helpers.reserveIdToAscii(
-          result.buyReserves[index]
+          result.reserves[index]
         );
 
         msg = msg.concat(
-          `${index}] ${result.buyReserves[index].replace(/0+$/, '')}`,
+          `${index}] ${result.reserves[index].replace(/0+$/, '')}`,
           ` (${reserveAscii.replace(/_/g, '\\_')} [[${reserveType}]]) : `,
-          `\`${result.buySlippageRateBps[index]} bps\`\n`
-        );
-      }
-      msg = msg.concat('\n*SELL SLIPPAGE*\n');
-      for (let index in result.sellReserves) {
-        [reserveAscii, reserveType] = helpers.reserveIdToAscii(
-          result.sellReserves[index]
-        );
-
-        msg = msg.concat(
-          `${index}] ${result.sellReserves[index].replace(/0+$/, '')}`,
-          ` (${reserveAscii.replace(/_/g, '\\_')} [[${reserveType}]]) : `,
-          `\`${result.sellSlippageRateBps[index]} bps\`\n`
+          `\`${result.spreads[index]} bps\`\n`
         );
       }
 

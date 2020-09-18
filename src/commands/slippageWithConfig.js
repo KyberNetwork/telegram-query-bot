@@ -70,7 +70,7 @@ module.exports = () => {
 
     const getSlippageRateInfo = helpers.getRateFunction(
       network,
-      'getSlippageRateInfo'
+      'getSlippageRateInfoWithConfigReserves'
     );
 
     try {
@@ -83,25 +83,25 @@ module.exports = () => {
       let msg = '*BUY SLIPPAGE*\n';
       let reserveAscii;
       let reserveType;
-      for (let index in result.buyReserves) {
+      for (let index in result.reserves) {
         [reserveAscii, reserveType] = helpers.reserveIdToAscii(
-          result.buyReserves[index]
+          result.reserves[index]
         );
 
         msg = msg.concat(
-          `${index}] ${result.buyReserves[index].replace(/0+$/, '')}`,
+          `${index}] ${result.reserves[index].replace(/0+$/, '')}`,
           ` (${reserveAscii.replace(/_/g, '\\_')} [[${reserveType}]]) : `,
           `\`${result.buySlippageRateBps[index]} bps\`\n`
         );
       }
       msg = msg.concat('\n*SELL SLIPPAGE*\n');
-      for (let index in result.sellReserves) {
+      for (let index in result.reserves) {
         [reserveAscii, reserveType] = helpers.reserveIdToAscii(
-          result.sellReserves[index]
+          result.reserves[index]
         );
 
         msg = msg.concat(
-          `${index}] ${result.sellReserves[index].replace(/0+$/, '')}`,
+          `${index}] ${result.reserves[index].replace(/0+$/, '')}`,
           ` (${reserveAscii.replace(/_/g, '\\_')} [[${reserveType}]]) : `,
           `\`${result.sellSlippageRateBps[index]} bps\`\n`
         );

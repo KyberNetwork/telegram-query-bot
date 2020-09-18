@@ -24,9 +24,12 @@ const networkCmds = [
   'networkInfo',
   'optimiseTrade',
   'rates',
+  'ratesWithConfig',
   'tRates',
   'slippage',
+  'slippageWithConfig',
   'spread',
+  'spreadWithConfig',
 ];
 const hinthandlerCmds = [
   'buildHint',
