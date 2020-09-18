@@ -1,6 +1,6 @@
 const Extra = require('telegraf/extra');
 
-module.exports = () => {
+module.exports = (config) => {
   return async (ctx) => {
     const { axios, helpers, message, reply, replyWithMarkdown, state } = ctx;
     const { kyber } = axios;
@@ -56,14 +56,16 @@ module.exports = () => {
       return;
     }
 
-    const getSpreadInfo = helpers.getRateFunction(network, 'getSpreadInfo');
+    const getSpreadInfo = helpers.getRateFunction(
+      network,
+      config ? 'getSpreadInfoWithConfigReserves' : 'getSpreadInfo'
+    );
 
     try {
       const result = await getSpreadInfo(
         token.address,
         ethers.utils.parseEther(amount)
       );
-      console.log(result);
 
       let msg = '*SPREADS*\n';
       let reserveAscii;
@@ -76,7 +78,7 @@ module.exports = () => {
         msg = msg.concat(
           `${index}] ${result.reserves[index].replace(/0+$/, '')}`,
           ` (${reserveAscii.replace(/_/g, '\\_')} [[${reserveType}]]) : `,
-          `\`${result.spreads[index]} bps\`\n`,
+          `\`${result.spreads[index]} bps\`\n`
         );
       }
 

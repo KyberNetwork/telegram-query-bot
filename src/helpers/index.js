@@ -296,6 +296,8 @@ module.exports = (app) => {
       .replace(/0+$/, '');
     let reserveType = hex.substr(0, 2);
 
+    if (hex.length % 2 !== 0) hex += '0'; 
+
     switch (hex.substr(0, 2)) {
       case 'ff':
         reserveType = 'FPR';
