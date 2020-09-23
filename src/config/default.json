@@ -5,6 +5,10 @@
       "ropstenURL": "https://ropsten-api.kyber.network",
       "timeout": 2000
     },
+    "etherscan": {
+      "baseURL": "https://api.etherscan.io",
+      "timeout": 20000
+    },
     "ethgasstation": {
       "baseURL": "https://ethgasstation.info",
       "timeout": 20000

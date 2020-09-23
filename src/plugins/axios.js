@@ -11,6 +11,10 @@ const kyber = (network) =>
         : config.axios.kyber.ropstenURL,
     timeout: config.axios.kyber.timeout,
   });
+const etherscan = Axios.create({
+  baseURL: config.axios.etherscan.baseURL,
+  timeout: config.axios.etherscan.timeout,
+});
 const ethgasstation = Axios.create({
   baseURL: config.axios.ethgasstation.baseURL,
   timeout: config.axios.ethgasstation.timeout,
@@ -26,6 +30,7 @@ const feargreedindex = Axios.create({
 
 const axios = {
   kyber,
+  etherscan,
   ethgasstation,
   gasnow,
   feargreedindex,
