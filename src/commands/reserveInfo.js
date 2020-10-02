@@ -75,9 +75,13 @@ module.exports = () => {
     query = await getRebateAmount(result.rebateWallet);
     result.rebateAmount = helpers.toHumanWei(query);
 
-    result.enabled = (await reserveInstance.tradeEnabled())
-      ? helpers.emojis('checkMark')
-      : helpers.emojis('crossMark');
+    try {
+      result.enabled = (await reserveInstance.tradeEnabled())
+        ? helpers.emojis('checkMark')
+        : helpers.emojis('crossMark');
+    } catch (e) {
+      result.enabled = undefined;
+    }
 
     let msg = '';
     msg = msg.concat(
@@ -89,7 +93,7 @@ module.exports = () => {
       `Entitled Rebate: ${result.isEntitledRebate}\n`,
       `Rebate Wallet: \`${result.rebateWallet}\`\n`,
       `Rebate Amount: \`${result.rebateAmount} ETH\`\n`,
-      `Trade Enabled: \`${result.enabled}\`\n`,
+      (result.enabled) ? `Trade Enabled: \`${result.enabled}\`\n`: '',
       `Historical Addresses: \`${result.addresses.join('`, `')}\``,
     );
 
