@@ -85,7 +85,7 @@ module.exports = () => {
 
     let msg = '';
     msg = msg.concat(
-      `ID: \`${result.reserveId.replace(/0+$/, '')}\`\n`,
+      `ID: \`${result.reserveId}\`\n`,
       `Address: \`${result.address}\`\n`,
       `Name: \`${helpers.reserveIdToAscii(result.reserveId).join(' ')}\`\n`,
       `Type: \`${helpers.reserveTypes(result.resType)}\`\n`,
