@@ -268,7 +268,7 @@ module.exports = (app) => {
   };
 
   const to32Bytes = (reserveId) => {
-    while (reserveId.length != 66) {
+    while (reserveId.length < 66) {
       reserveId += '0';
     }
     return reserveId;
