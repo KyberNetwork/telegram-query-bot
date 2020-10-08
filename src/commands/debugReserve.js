@@ -486,6 +486,13 @@ module.exports = () => {
         'getReserveDetailsById'
       );
       reserveAddress = (await getReserveInfo(helpers.to32Bytes(reserveID))).reserveAddress;
+      if (reserveAddress == ethers.constants.AddressZero) {
+        reply(
+          'Null reserve address. Check reserve ID used.',
+          inReplyTo(message.message_id)
+        );
+        return;
+      }
     } else {
       reserveAddress = reserveID;
     }
