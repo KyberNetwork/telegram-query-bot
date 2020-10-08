@@ -164,7 +164,7 @@ async function debugAPRRate(
   let eInFp = await pricing.fromWeiToFp(reserveEthBalance);
   rate = await pricing.getRateWithE(tokenAddress, isBuy, srcQty, eInFp);
   if(rate.isZero()) {
-    result = await validateEInFp(reserveEthBalance, ethers.utils.parseUnits('10000000000'));
+    result = await validateEInFp(reserveEthBalance, pricing, ethers.utils.parseUnits('10000000000'));
     if (!result.isValid) return result.finalMessage;
 
     result = await checkDelta(pricing, srcQty, isBuy, ethers.constants.Two);
@@ -297,12 +297,13 @@ async function validateRate(pricing, rateInPrecision, isBuy) {
     maxAllowRate = await pricing.maxSellRateInPrecision();
   }
 
+  let startErrorText = isBuy ? 'Buy' : 'Sell';
   if (rateInPrecision.gt(maxAllowRate)) {
-    return 'Rate in precision > max allowed rate. ' + 
+    return startErrorText + ' rate in precision > max allowed rate. ' + 
     'Price ceiling reached; reset liquidity params.';
     
   } else if (rateInPrecision.lt(minAllowRate)) {
-    return 'Rate in precision < min allowed rate. ' +
+    return startErrorText + ' rate in precision < min allowed rate. ' +
     'Price floor reached; reset liquidity params.';
   }
 
@@ -485,6 +486,13 @@ module.exports = () => {
         'getReserveDetailsById'
       );
       reserveAddress = (await getReserveInfo(helpers.to32Bytes(reserveID))).reserveAddress;
+      if (reserveAddress == ethers.constants.AddressZero) {
+        reply(
+          'Null reserve address. Check reserve ID used.',
+          inReplyTo(message.message_id)
+        );
+        return;
+      }
     } else {
       reserveAddress = reserveID;
     }

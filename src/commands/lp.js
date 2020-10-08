@@ -1,9 +1,10 @@
 const Extra = require('telegraf/extra');
 const fs = require('fs');
+const fetch = require('node-fetch');
+const { ethers } = require('ethers');
 
 function checkRequiredArgs(args) {
   const required = [
-    'initial_price',
     'reserve'
   ];
 
@@ -20,13 +21,25 @@ async function fetchParams(reserveAddress, args, ethers, provider) {
   const tokenInstance = new ethers.Contract(tokenAddress, tokenABI, provider);
   const tokenDecimals = await tokenInstance.decimals();
 
+  // read from conversion rates contract
+  let numFpBits = (await pricingInstance.numFpBits()).toNumber();
+  let maxEthCapBuy = await pricingInstance.maxEthCapBuyInFp() / 2 ** numFpBits;
+  maxEthCapBuy = (maxEthCapBuy == 0) ? 5 : maxEthCapBuy;
+  let maxEthCapSell = await pricingInstance.maxEthCapSellInFp() / 2 ** numFpBits;
+  maxEthCapSell = (maxEthCapSell == 0) ? 5 : maxEthCapSell;
+  let feeInBps = await pricingInstance.feeInBps();
+  feeInBps = (feeInBps.eq(ethers.constants.Zero)) ? 0.05 : feeInBps / 100;
+  let initialPrice = await fetchTokenPrice(tokenAddress);
+  initialPrice = (initialPrice == 0) ? 1000 : initialPrice;
+
   // set defualt params if needed
   args['min_supported_price_factor'] = args['min_supported_price_factor'] ? args['min_supported_price_factor'] : 0.5;
   args['max_supported_price_factor'] = args['max_supported_price_factor'] ? args['max_supported_price_factor'] : 2.0;
-  args['max_tx_buy_amount_eth'] = args['max_tx_buy_amount_eth'] ? args['max_tx_buy_amount_eth'] : 5;
-  args['max_tx_sell_amount_eth'] = args['max_tx_sell_amount_eth'] ? args['max_tx_sell_amount_eth'] : 5;
-  args['fee_percent'] = args['fee_percent'] ? args['fee_percent'] : 0.05;
-  args['formula_precision_bits'] = args['formula_precision_bits'] ? args['formula_precision_bits'] : 40;
+  args['max_tx_buy_amount_eth'] = args['max_tx_buy_amount_eth'] ? args['max_tx_buy_amount_eth'] : maxEthCapBuy;
+  args['max_tx_sell_amount_eth'] = args['max_tx_sell_amount_eth'] ? args['max_tx_sell_amount_eth'] : maxEthCapSell;
+  args['fee_percent'] = args['fee_percent'] ? args['fee_percent'] : feeInBps;
+  args['formula_precision_bits'] = args['formula_precision_bits'] ? args['formula_precision_bits'] : numFpBits;
+  args['initial_price'] = args['initial_price'] ? args['initial_price'] : initialPrice;
 
   // get ether balance
   args['initial_ether_amount'] = args['initial_ether_amount'] ?
@@ -48,6 +61,18 @@ async function fetchParams(reserveAddress, args, ethers, provider) {
   }
 
   return args;
+}
+
+async function fetchTokenPrice(tokenAddress) {
+  let priceRequest = await fetch(
+    `https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=${tokenAddress}&vs_currencies=eth`
+  );
+  let result = Object.values(await priceRequest.json());
+  if (!result.length) {
+    return 0;
+  } else {
+    return result[0].eth;
+  }
 }
 
 function validateParams(args) {
