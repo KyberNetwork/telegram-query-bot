@@ -33,9 +33,8 @@ async function debugReserve(
   result = await checkReserveAddress(reserve.address, pricing);
   if (result != '') return result;
 
-  result = await fetchCheckRates(
-    await provider.getBalance(reserve.address),
-    isAPR,
+  result = await checkReserveSettings(
+    reserve,
     pricing,
     token,
     provider
@@ -43,12 +42,14 @@ async function debugReserve(
 
   finalMessage += result.finalMessage;
   if (result.isValid) {
-    finalMessage += await checkReserveSettings(
-      reserve,
+    result = await fetchCheckRates(
+      await provider.getBalance(reserve.address),
+      isAPR,
       pricing,
       token,
       provider
     );
+    finalMessage += result.finalMessage;
   }
 
   return finalMessage;
@@ -321,7 +322,8 @@ async function debugFPRRate(
 
   let rateUpdateBlock = await pricing.getRateUpdateBlock(token.address);
   let validRateDurationInBlocks = await pricing.validRateDurationInBlocks();
-  let currentBlockNumber = await provider.getBlockNumber();
+  let currentBlockNumber = BN.from(await provider.getBlockNumber());
+
   if (currentBlockNumber.gte(rateUpdateBlock.add(validRateDurationInBlocks))) {
     return 'Rate has expired. Kindly reset rates';
   }
@@ -351,25 +353,33 @@ async function checkReserveSettings(
 ) {
   // check token wallet
   let tokenWallet;
+  let result = { isValid: false, finalMessage: ''};
+
   try {
     tokenWallet = await reserve.tokenWallet(token.address);
     if (tokenWallet == ethers.constants.AddressZero) {
-      return 'Token wallet not set; kindly call approveWithdrawAddress for token.';
+      result.finalMessage = 'Token wallet not set; kindly call approveWithdrawAddress for token.'
+      return result;
     }
   } catch (e) {
     tokenWallet = reserve.address;
   }
 
   let balanceEther = await reserve.getBalance(ETH_ADDRESS);
-  if (balanceEther.isZero()) return 'Reserve has no ETH.';
+  if (balanceEther.isZero()) {
+    result.finalMessage = 'Reserve has no ETH.';
+    return result;
+  }
 
   let balanceToken = await reserve.getBalance(token.address);
   if (balanceToken.isZero()) {
     let walletBalance = await token.balanceOf(tokenWallet);
     if (walletBalance.isZero()) {
-      return `*Token wallet ${tokenWallet} has insufficient token balance.*`;
+      result.finalMessage = `*Token wallet ${tokenWallet} has insufficient token balance.*`;
+      return result;
     } else {
-      return `*Token wallet ${tokenWallet} has insufficient token allowance given to reserve*`;
+      result.finalMessage = `*Token wallet ${tokenWallet} has insufficient token allowance given to reserve*`;
+      return result;
     }
   }
 
@@ -390,14 +400,18 @@ async function checkReserveSettings(
   );
 
   if (balanceToken.lt(destQty)) {
-    return `*Token dst qty > token balance.*\nBalance: ${balanceToken}\nDest Qty: ${destQty}`;
+    result.finalMessage = `*Token dst qty > token balance.*\nBalance: ${balanceToken}\nDest Qty: ${destQty}`;
+    return result;
   }
 
   let sanityRateAddress = await reserve.sanityRatesContract();
   if (sanityRateAddress != ethers.constants.AddressZero) {
     let sanityRatesContract = new ethers.Contract(sanityRateAddress, sanityRateABI, provider);
     let sanityRate = await sanityRatesContract.getSanityRate(ETH_ADDRESS, token.address);
-    if (rate.gt(sanityRate)) return '*E2T rate exceeds sanity rates*';
+    if (rate.gt(sanityRate)) {
+      result.finalMessage = '*E2T rate exceeds sanity rates*';
+      return result;
+    }
   }
 
   rate = await pricing.getRate(
@@ -415,17 +429,21 @@ async function checkReserveSettings(
   );
 
   if (balanceEther.lt(destQty)) {
-    return `*Eth dest qty > Eth balance.*\nBalance: ${balanceEther}\nDest Qty: ${destQty}`;
+    result.finalMessage = `*Eth dest qty > Eth balance.*\nBalance: ${balanceEther}\nDest Qty: ${destQty}`;
+    return result;
   }
 
   sanityRateAddress = await reserve.sanityRatesContract();
   if (sanityRateAddress != ethers.constants.AddressZero) {
     let sanityRatesContract = new ethers.Contract(sanityRateAddress, sanityRateABI, provider);
     let sanityRate = await sanityRatesContract.getSanityRate(token.address, ETH_ADDRESS);
-    if (rate.gt(sanityRate)) return '*T2E rate exceeds sanity rates*';
+    if (rate.gt(sanityRate)) {
+      result.finalMessage = '*T2E rate exceeds sanity rates*';
+      return result;
+    }
   }
 
-  return '*reserve returns rates*\n';
+  return {isValid: true, finalMessage: '*reserve returns rates*\n'};
 }
 
 module.exports = () => {
@@ -467,7 +485,15 @@ module.exports = () => {
       helpers.networks.indexOf(network) !== -1
     ) {
       token = currencies.find((o) => o.symbol === token.toUpperCase());
-      if (token) token.tokenDecimals = token.decimals;
+      if (token) {
+        let tkDecimals = token.decimals;
+        token = new ethers.Contract(
+          token.address,
+          tokenABI,
+          provider
+        );
+        token.tokenDecimals = tkDecimals;
+      }
     } else if (token.length === 42 && token.startsWith('0x')) {
       token = new ethers.Contract(
         token,
