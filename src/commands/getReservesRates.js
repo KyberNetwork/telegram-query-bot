@@ -174,7 +174,7 @@ module.exports = (type, config) => {
           contracts[network].Medianizer
         );
         msg = msg.concat(
-          `${index}] ${buyReservesETH[index].replace(/0+$/, '')}`,
+          `${index}] ${helpers.trimReserveId(buyReservesETH[index])}`,
           ` (${reserveAscii.replace(/_/g, '\\_')} [[${reserveType}]]) : `,
           `\`${msgValue}\`\n`
         );
@@ -192,7 +192,7 @@ module.exports = (type, config) => {
           contracts[network].Medianizer
         );
         msg = msg.concat(
-          `${index}] ${sellReservesToken[index].replace(/0+$/, '')}`,
+          `${index}] ${helpers.trimReserveId(sellReservesToken[index])}`,
           ` (${reserveAscii.replace(/_/g, '\\_')} [[${reserveType}]]) : `,
           `\`${msgValue}\`\n`
         );

@@ -56,14 +56,21 @@ module.exports = () => {
     const srcReserveIds = await reservesPerTokenSrc(token.address);
     const destReserveIds = await reservesPerTokenDest(token.address);
 
+    let reserveAscii;
+    let reserveType;
     let result = srcReserveIds.concat(destReserveIds);
     result = result.filter(
       (element, index) => result.indexOf(element) === index
     );
-    result = result.map((element) => element.replace(/0+$/, ''));
+    result = result.map((element) => {
+      [reserveAscii, reserveType] = helpers.reserveIdToAscii(
+        element
+      );
+      return `\`${helpers.trimReserveId(element)}\` (${reserveAscii.replace(/_/g, '\\_')} [[${reserveType}]])`;
+    });
 
     replyWithMarkdown(
-      `ReserveIds: \`${result.join('`, `')}\``,
+      `Reserves:\n${result.join('\n')}`,
       inReplyTo(message.message_id)
     );
   };

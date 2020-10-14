@@ -83,6 +83,27 @@ module.exports = () => {
       result.enabled = undefined;
     }
 
+    try {
+      try {
+        result.maxGasPrice = ethers.utils.formatUnits(
+          await reserveInstance.maxGasPriceWei(),
+          'gwei'
+        );
+      } catch (e) {
+        const sanityInstance = helpers.getSanityInstance(
+          network,
+          await reserveInstance.sanityRatesContract(),
+          'fpr'
+        );
+        result.maxGasPrice = ethers.utils.formatUnits(
+          await sanityInstance.maxGasPriceWei(),
+          'gwei'
+        );
+      }
+    } catch (e) {
+      result.maxGasPrice = undefined;
+    }
+
     let msg = '';
     msg = msg.concat(
       `ID: \`${result.reserveId}\`\n`,
@@ -93,13 +114,13 @@ module.exports = () => {
       `Entitled Rebate: ${result.isEntitledRebate}\n`,
       `Rebate Wallet: \`${result.rebateWallet}\`\n`,
       `Rebate Amount: \`${result.rebateAmount} ETH\`\n`,
-      (result.enabled) ? `Trade Enabled: \`${result.enabled}\`\n`: '',
-      `Historical Addresses: \`${result.addresses.join('`, `')}\``,
+      result.enabled ? `Trade Enabled: \`${result.enabled}\`\n` : '',
+      result.maxGasPrice
+        ? `Max Gas Price: \`${result.maxGasPrice} gwei\`\n`
+        : '',
+      `Historical Addresses: \`${result.addresses.join('`, `')}\``
     );
 
-    replyWithMarkdown(
-      msg,
-      inReplyTo(message.message_id)
-    );
+    replyWithMarkdown(msg, inReplyTo(message.message_id));
   };
 };

@@ -1,12 +1,20 @@
 const fs = require('fs');
 const logger = require('../logger');
 
-
 module.exports = (app) => {
   const { contracts, ethereum } = app.context;
   const config = JSON.parse(fs.readFileSync('src/config/default.json', 'utf8'));
   const reserveABI = JSON.parse(
     fs.readFileSync('src/contracts/abi/KyberReserve.abi', 'utf8')
+  );
+  const conversionRatesABI = JSON.parse(
+    fs.readFileSync('src/contracts/abi/ConversionRates.abi', 'utf8')
+  );
+  const liquidityConversionRatesABI = JSON.parse(
+    fs.readFileSync('src/contracts/abi/LiquidityConversionRates.abi', 'utf8')
+  );
+  const sanityABI = JSON.parse(
+    fs.readFileSync('src/contracts/abi/SanityRates.abi', 'utf8')
   );
   const tokenABI = JSON.parse(
     fs.readFileSync('src/contracts/abi/ERC20.abi', 'utf8')
@@ -219,6 +227,22 @@ module.exports = (app) => {
     return new ethers.Contract(address, reserveABI, provider);
   };
 
+  const getPricingInstance = (network, address, type) => {
+    const { ethers, provider } = getEthLib(network);
+
+    if (type == 'apr') {
+      return new ethers.Contract(address, liquidityConversionRatesABI, provider);
+    } else {
+      return new ethers.Contract(address, conversionRatesABI, provider);
+    }
+  };
+
+  const getSanityInstance = (network, address) => {
+    const { ethers, provider } = getEthLib(network);
+
+    return new ethers.Contract(address, sanityABI, provider);
+  };
+
   const getTokenInstance = (network, address) => {
     const { ethers, provider } = getEthLib(network);
 
@@ -296,7 +320,7 @@ module.exports = (app) => {
       .replace(/0+$/, '');
     let reserveType = hex.substr(0, 2);
 
-    if (hex.length % 2 !== 0) hex += '0'; 
+    if (hex.length % 2 !== 0) hex += '0';
 
     switch (hex.substr(0, 2)) {
       case 'ff':
@@ -334,6 +358,14 @@ module.exports = (app) => {
     return resTypes[resType];
   };
 
+  const trimReserveId = (reserveId) => {
+    let hex = reserveId.toString().replace(/0+$/, '');
+
+    if (hex.length % 2 !== 0) hex += '0';
+
+    return hex;
+  };
+
   app.context.helpers = {
     emojis,
     getProxyFunction,
@@ -346,16 +378,19 @@ module.exports = (app) => {
     getDaoFunction,
     getRateFunction,
     getReserveInstance,
+    getPricingInstance,
+    getSanityInstance,
     getTokenInstance,
     getEthLib,
     formatTime,
     hexToAscii,
     networks,
+    reserveIdToAscii,
+    reserveTypes,
     to32Bytes,
     toHumanNum,
     toHumanWei,
-    reserveIdToAscii,
-    reserveTypes,
+    trimReserveId,
   };
 
   logger.info('Initialized helpers');

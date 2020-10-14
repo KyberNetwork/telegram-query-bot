@@ -76,7 +76,7 @@ module.exports = (config) => {
         );
 
         msg = msg.concat(
-          `${index}] ${result.reserves[index].replace(/0+$/, '')}`,
+          `${index}] ${helpers.trimReserveId(result.reserves[index])}`,
           ` (${reserveAscii.replace(/_/g, '\\_')} [[${reserveType}]]) : `,
           `\`${result.spreads[index]} bps\`\n`
         );

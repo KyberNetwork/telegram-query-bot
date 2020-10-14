@@ -93,7 +93,7 @@ module.exports = (config) => {
         );
 
         msg = msg.concat(
-          `${index}] ${buyReserves[index].replace(/0+$/, '')}`,
+          `${index}] ${helpers.trimReserveId(buyReserves[index])}`,
           ` (${reserveAscii.replace(/_/g, '\\_')} [[${reserveType}]]) : `,
           `\`${result.buySlippageRateBps[index]} bps\`\n`
         );
@@ -105,7 +105,7 @@ module.exports = (config) => {
         );
 
         msg = msg.concat(
-          `${index}] ${sellReserves[index].replace(/0+$/, '')}`,
+          `${index}] ${helpers.trimReserveId(sellReserves[index])}`,
           ` (${reserveAscii.replace(/_/g, '\\_')} [[${reserveType}]]) : `,
           `\`${result.sellSlippageRateBps[index]} bps\`\n`
         );
