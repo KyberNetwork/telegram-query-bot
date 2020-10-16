@@ -73,12 +73,17 @@ async function fetchCheckRates(
 
   let currentBlockNumber = await provider.getBlockNumber();
   // check buy rate first
-  let rate = await pricing.getRate(
-    token.address,
-    currentBlockNumber,
-    true, // buy
-    SRC_QTY,
-  );
+  let rate;
+  try {
+    rate = await pricing.getRate(
+      token.address,
+      currentBlockNumber,
+      true, // buy
+      SRC_QTY,
+    );
+  } catch (e) {
+    rate = ethers.constants.Zero
+  }
 
   if (rate.isZero()) {
     if (isAPR) {
@@ -111,13 +116,20 @@ async function fetchCheckRates(
     )
   );
 
+  // set arbitary srcQty
+  if (srcQty.isZero()) srcQty = new BN.from(1000000);
+
   // check sell rate
-  rate = await pricing.getRate(
-    token.address,
-    currentBlockNumber,
-    false, // sell
-    srcQty,
-  );
+  try {
+    rate = await pricing.getRate(
+      token.address,
+      currentBlockNumber,
+      false, // sell
+      srcQty,
+    );
+  } catch (e) {
+    rate = ethers.constants.Zero
+  }
 
   if (rate.isZero()) {
     if (isAPR) {
@@ -321,7 +333,7 @@ async function debugFPRRate(
 
   let rateUpdateBlock = await pricing.getRateUpdateBlock(token.address);
   let validRateDurationInBlocks = await pricing.validRateDurationInBlocks();
-  let currentBlockNumber = await provider.getBlockNumber();
+  let currentBlockNumber = new BN.from(await provider.getBlockNumber());
   if (currentBlockNumber.gte(rateUpdateBlock.add(validRateDurationInBlocks))) {
     return 'Rate has expired. Kindly reset rates';
   }
@@ -467,7 +479,15 @@ module.exports = () => {
       helpers.networks.indexOf(network) !== -1
     ) {
       token = currencies.find((o) => o.symbol === token.toUpperCase());
-      if (token) token.tokenDecimals = token.decimals;
+      if (token) {
+        let tkDecimals = token.decimals;
+        token = new ethers.Contract(
+          token.address,
+          tokenABI,
+          provider
+        );
+        token.tokenDecimals = tkDecimals;
+      }
     } else if (token.length === 42 && token.startsWith('0x')) {
       token = new ethers.Contract(
         token,
