@@ -136,63 +136,56 @@ module.exports = (type, config) => {
       tokenABI,
       provider
     );
-    const decimals = token.decimals || (await tokenInstance.decimals());
     const symbol = token.symbol || (await tokenInstance.symbol());
-    const qtyToken = Math.round(qty * 10 ** decimals).toLocaleString(
-      'fullwide',
-      { useGrouping: false }
-    );
     const qtyETH = utils.parseEther(qty);
 
     const getReservesRates = helpers.getRateFunction(
       network,
       config ? 'getReservesRatesWithConfigReserves' : 'getReservesRates'
     );
-    let resultETH;
-    let resultToken;
+    let result;
     try {
-      resultETH = await getReservesRates(token.address, qtyETH);
-      resultToken = await getReservesRates(token.address, qtyToken);
-      const buyReservesETH =
-        resultToken[config ? 'reserves' : 'buyReserves'];
-      const sellReservesToken =
-        resultToken[config ? 'reserves' : 'sellReserves'];
+      result = await getReservesRates(token.address, qtyETH);
+      const buyReserves =
+      result[config ? 'reserves' : 'buyReserves'];
+      const sellReserves =
+      result[config ? 'reserves' : 'sellReserves'];
 
       let msg = `*BUY${formatLabel(type, symbol)}*\n`;
       let msgValue = '';
       let reserveAscii;
       let reserveType;
-      for (let index in buyReservesETH) {
+      for (let index in buyReserves) {
         [reserveAscii, reserveType] = helpers.reserveIdToAscii(
-          buyReservesETH[index]
+          buyReserves[index]
         );
         msgValue = await formatValue(
           utils,
           type,
-          resultETH.buyRates[index],
+          result.buyRates[index],
           true,
           contracts[network].Medianizer
         );
         msg = msg.concat(
-          `${index}] ${helpers.trimReserveId(buyReservesETH[index])}`,
+          `${index}] ${helpers.trimReserveId(buyReserves[index])}`,
           ` (${reserveAscii.replace(/_/g, '\\_')} [[${reserveType}]]) : `,
           `\`${msgValue}\`\n`
         );
       }
       msg = msg.concat(`\n*SELL${formatLabel(type, symbol)}*\n`);
-      for (let index in sellReservesToken) {
+      for (let index in sellReserves) {
         [reserveAscii, reserveType] = helpers.reserveIdToAscii(
-          sellReservesToken[index]
+          sellReserves[index]
         );
         msgValue = await formatValue(
           utils,
           type,
-          resultToken.sellRates[index],
+          result.sellRates[index],
           false,
           contracts[network].Medianizer
         );
         msg = msg.concat(
-          `${index}] ${helpers.trimReserveId(sellReservesToken[index])}`,
+          `${index}] ${helpers.trimReserveId(sellReserves[index])}`,
           ` (${reserveAscii.replace(/_/g, '\\_')} [[${reserveType}]]) : `,
           `\`${msgValue}\`\n`
         );
