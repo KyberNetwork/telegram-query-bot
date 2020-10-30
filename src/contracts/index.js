@@ -459,15 +459,88 @@ module.exports = (app) => {
   KyberNetworkProxyAddress = config.contracts.kovan.KyberNetworkProxy;
   KyberNetworkProxy = new ethers.Contract(
     KyberNetworkProxyAddress,
-    KyberNetworkProxyABI
+    KyberNetworkProxyABI,
+    provider
   );
 
   KyberNetworkAddress = config.contracts.kovan.KyberNetwork;
-  KyberNetwork = new ethers.Contract(KyberNetworkAddress, KyberNetworkABI);
+  KyberNetwork = new ethers.Contract(
+    KyberNetworkAddress,
+    KyberNetworkABI,
+    provider
+  );
+
+  KyberMatchingEngineAddress = config.contracts.kovan.KyberMatchingEngine;
+  KyberMatchingEngine = new ethers.Contract(
+    KyberMatchingEngineAddress,
+    KyberMatchingEngineABI,
+    provider
+  );
+
+  KyberStorageAddress = config.contracts.kovan.KyberStorage;
+  KyberStorage = new ethers.Contract(
+    KyberStorageAddress,
+    KyberStorageABI,
+    provider
+  );
+
+  NetworkHistoryAddress = config.contracts.kovan.NetworkHistory;
+  NetworkHistory = new ethers.Contract(
+    NetworkHistoryAddress,
+    KyberHistoryABI,
+    provider
+  );
+
+  FeeHandlerHistoryAddress = config.contracts.kovan.FeeHandlerHistory;
+  FeeHandlerHistory = new ethers.Contract(
+    FeeHandlerHistoryAddress,
+    KyberHistoryABI,
+    provider
+  );
+
+  DaoHistoryAddress = config.contracts.kovan.DaoHistory;
+  DaoHistory = new ethers.Contract(
+    DaoHistoryAddress,
+    KyberHistoryABI,
+    provider
+  );
+
+  MatchingEngineHistoryAddress = config.contracts.kovan.MatchingEngineHistory;
+  MatchingEngineHistory = new ethers.Contract(
+    MatchingEngineHistoryAddress,
+    KyberHistoryABI,
+    provider
+  );
+
+  KyberFeeHandlerAddress = config.contracts.kovan.KyberFeeHandler;
+  KyberFeeHandler = new ethers.Contract(
+    KyberFeeHandlerAddress,
+    KyberFeeHandlerABI,
+    provider
+  );
+
+  KyberStakingAddress = config.contracts.kovan.KyberStaking;
+  KyberStaking = new ethers.Contract(
+    KyberStakingAddress,
+    KyberStakingABI,
+    provider
+  );
+
+  KyberDaoAddress = config.contracts.kovan.KyberDao;
+  KyberDao = new ethers.Contract(KyberDaoAddress, KyberDaoABI, provider);
 
   const kovan = {
     KyberNetworkProxy: KyberNetworkProxy,
     KyberNetwork: KyberNetwork,
+    KyberMatchingEngine: KyberMatchingEngine,
+    KyberStorage: KyberStorage,
+    NetworkHistory: NetworkHistory,
+    FeeHandlerHistory: FeeHandlerHistory,
+    DaoHistory: DaoHistory,
+    MatchingEngineHistory: MatchingEngineHistory,
+    KyberFeeHandler: KyberFeeHandler,
+    KyberStaking: KyberStaking,
+    KyberDao: KyberDao,
   };
 
   app.context.contracts = {

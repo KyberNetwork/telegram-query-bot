@@ -90,17 +90,17 @@
       "RateHelper": "0xf2756ed51434a23Ff019b3d58FA72B7faf041558"
     },
     "kovan": {
-      "KyberNetworkProxy": "0xd719c34261e099Fdb33030ac8909d5788D3039C4",
-      "KyberNetwork": "0x920B322D4B8BAB34fb6233646F5c87F87e79952b",
-      "KyberStorage": "0x688bf5EeC43E0799c5B9c1612F625F7b93FE5434",
-      "KyberFeeHandler": "0xfF456D9A8cbB5352eF77dEc2337bAC8dEC63bEAC",
-      "KyberStaking": "0x9A73c6217cd595bc449bA6fEF6efF53f29014f42",
-      "KyberMatchingEngine": "0x63f773c026093eEf988e803BdD5772DD235a8E71",
-      "KyberDao": "0x2Be7dC494362e4FCa2c228522047663B17aE17F9",
-      "NetworkHistory": "0xCaEcf8B41247F188C174c06170c0fA13c66fF6D9",
-      "FeeHandlerHistory": "0x89e35C62e71955288bC5Ed785A5C15E11DEd152F",
-      "DaoHistory": "0x701f73CE836e9E57e3F8641EB1ce3479C631e4d8",
-      "MatchingEngineHistory": "0x7EB9C4C20E1ff590505567b158C91a9578Fe9165",
+      "KyberNetworkProxy": "0xc153eead19e0dbbdb3462dcc2b703cc6d738a37c",
+      "KyberNetwork": "0x9CB7bB6D4795A281860b9Bfb7B1441361Cc9A794",
+      "KyberStorage": "0xb18d90be9add2a6c9f2c3943b264c3dc86e30cf5",
+      "KyberFeeHandler": "0xa943b542d1d5683d3454bd0d7ee86c48f36ecfd5",
+      "KyberStaking": "0xcDD5845CfC31C2B3A9B6BA88090108f55910736F",
+      "KyberMatchingEngine": "0x9cf739155941a3a7964e711543a8bc902613ff17",
+      "KyberDao": "0xba38833516c10ad08598eb5d40a3a84c2cd24227",
+      "NetworkHistory": "0x9b53d7bb657f5f14a7f73c2d2b90cc084cae1fe4",
+      "FeeHandlerHistory": "0xe938445B6a3E8C97C86f0a8777254172480B7ffe",
+      "DaoHistory": "0xf2bcfcf8892c7279b2743e2fef1893ac622eb38a",
+      "MatchingEngineHistory": "0xb222bc4e4ffcb39e392c93af9b480019b59f4cc2",
       "RateHelper": "0xf2756ed51434a23Ff019b3d58FA72B7faf041558"
     }
   }
