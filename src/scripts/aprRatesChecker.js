@@ -71,7 +71,7 @@ module.exports = async (app) => {
   const { ethers, provider } = helpers.getEthLib('mainnet');
 
   const job = new CronJob(
-    '0 0 11 * * *',
+    '0 0 4 * * *',
     async () => {
       const eth = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 
@@ -179,7 +179,7 @@ module.exports = async (app) => {
       if (ctrBuy > 0 || ctrSell > 0) {
         await app.telegram.sendMessage(
           chat_id = process.env.MONITORING_CHAT,
-          text = result.concat(msgInventory),
+          text = result.concat(msgInventory, '\n\n🆘 🆘 @shaneHk @e13sunny 🆘 🆘'),
           Extra.markdown()
         );
       }
