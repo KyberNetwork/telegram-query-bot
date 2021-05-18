@@ -69,6 +69,10 @@ const feehandlerCmds = [
   'prrFees',
   'rewards',
 ];
+const dmmCmds = [
+  'dmmAmpFromDiff',
+  'dmmRangeFromAmp',
+];
 const reservesCmds = [
   'checkAPRRate',
   'collectedFeesInTwei',
@@ -101,7 +105,7 @@ let help = '';
 help = help.concat(
   'I can query Kyber data for you.\n',
   'For more help details of a particular category, do:\n\n',
-  '/h [[network|hinthandler|staking|dao|storage|feehandler|reserves|misc]]\n\n',
+  '/h [[network|hinthandler|staking|dao|storage|feehandler|dmm|reserves|misc]]\n\n',
   'Brief list of commands:\n\n',
   '**NETWORK**\n',
   '=========\n',
@@ -121,6 +125,9 @@ help = help.concat(
   '**FEE HANDLER**\n',
   '============\n',
   `\`${feehandlerCmds.join('`, `')}\`\n\n`,
+  '**DMM**\n',
+  '============\n',
+  `\`${dmmCmds.join('`, `')}\`\n\n`,
   '**RESERVES**\n',
   '============\n',
   `\`${reservesCmds.join('`, `')}\`\n\n`,

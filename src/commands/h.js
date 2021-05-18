@@ -153,6 +153,16 @@ module.exports = () => {
           '/reserveRebates <reserveId/address/rebateWallet><optional: network>\n\n'
         );
         break;
+      case 'dmm':
+        help = help.concat(
+          '**DMM**\n',
+          '============\n',
+          '`Returns the AMP value given the price difference in %`\n',
+          '/dmmAmpFromDiff <percentDiff>\n\n',
+          '`Returns the price range given the initial price and AMP value`\n',
+          '/dmmRangeFromAmp <p0> <amp>\n\n'
+        );
+        break;
       case 'reserves':
         help = help.concat(
           '**RESERVES**\n',
