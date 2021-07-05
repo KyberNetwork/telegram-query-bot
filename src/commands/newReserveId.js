@@ -33,6 +33,9 @@ module.exports = () => {
       case 'BRIDGE':
         type = 'bb';
         break;
+      case 'CUSTOM':
+        type = 'cc';
+        break;
       case 'UTILITY':
         type = '00';
         break;
