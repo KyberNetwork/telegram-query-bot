@@ -26,6 +26,12 @@ module.exports = () => {
     const network = args[1] ? args[1].toLowerCase() : 'mainnet';
     const currencies = (await kyber(network).get('/currencies')).data.data;
     const token = args[0].toUpperCase();
+
+    if (token === 'ZERO') {
+      replyWithMarkdown('0x0000000000000000000000000000000000000000', inReplyTo(message.message_id));
+      return;
+    }
+
     const result = currencies.find((o) => o.symbol === token);
 
     if (!result) {
