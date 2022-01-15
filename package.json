@@ -26,7 +26,7 @@
     "cron": "^1.8.2",
     "dotenv": "^8.2.0",
     "ethers": "^5.0.5",
-    "shelljs": "^0.8.4",
+    "shelljs": "^0.8.5",
     "telegraf": "^3.38.0",
     "winston": "^3.3.3"
   },
